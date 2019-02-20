@@ -262,3 +262,6 @@ __pycache__/
 
 # API key file
 DL444.ImgurUwp.App/Assets/ApiKey.json
+
+# Test console project
+DL444.ImgurUwp.TestConsole/

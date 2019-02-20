@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using static DL444.ImgurUwp.ApiClient.DisplayParams;
+using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.ApiClient
 {
-    public class ApiClient
+    public partial class ApiClient
     {
         HttpClient client = new HttpClient();
 
@@ -15,22 +20,40 @@ namespace DL444.ImgurUwp.ApiClient
         public string AccessToken { get; }
         public string Username { get; }
 
-
-        static string GetDataToken(string jsonText)
+        static (bool success, int status, string dataToken) GetDataToken(string jsonText)
         {
             Newtonsoft.Json.Linq.JObject obj = Newtonsoft.Json.Linq.JObject.Parse(jsonText);
-            if(obj.ContainsKey("data"))
+            int statusCode = obj["status"].ToObject<int>();
+
+            if ((bool)obj["success"])
             {
-                return (string)obj["data"];
+                return (true, statusCode, obj["data"].ToString());
             }
             else
             {
-                return null;
+                return (false, statusCode, obj["data"].ToString());
             }
         }
 
-        public ApiClient(string host, string clientId, string clientSecret, string username = "", string accessToken = "", string mashapeKey = "")
+        public ApiClient(string host, string clientId, string clientSecret, string accessToken, string username = "", string mashapeKey = "")
         {
+            if(string.IsNullOrEmpty(host))
+            {
+                throw new ArgumentNullException(nameof(host));
+            }
+            if(string.IsNullOrEmpty(clientId))
+            {
+                throw new ArgumentNullException(nameof(clientId));
+            }
+            if(string.IsNullOrEmpty(clientSecret))
+            {
+                throw new ArgumentNullException(nameof(clientSecret));
+            }
+            if(string.IsNullOrEmpty(accessToken))
+            {
+                throw new ArgumentNullException(nameof(accessToken));
+            }
+
             Host = host;
             ClientId = clientId;
             ClientSecret = clientSecret;
@@ -38,7 +61,32 @@ namespace DL444.ImgurUwp.ApiClient
             AccessToken = accessToken;
             Username = username;
 
-            client.BaseAddress = new Uri(Host);
+            client.BaseAddress = new Uri($"https://{host}");
+            if(!string.IsNullOrEmpty(mashapeKey))
+            {
+                client.DefaultRequestHeaders.Add("X-RapidAPI-Key", mashapeKey);
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+            }
+        }
+    }
+
+    public class ApiRequestException : Exception
+    {
+        public int Status { get; set; }
+
+        public ApiRequestException() : base() { }
+
+        public ApiRequestException(string message) : base(message) { }
+
+        public ApiRequestException(string message, Exception innerException) : base(message, innerException) { }
+    }
+
+    static class Convert
+    {
+        static DateTime baseTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static DateTime ToDateTime(int epoch)
+        {
+            return baseTime.AddSeconds(epoch);
         }
     }
 }

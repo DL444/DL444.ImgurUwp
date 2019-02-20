@@ -1,4 +1,4 @@
-# ImgurUwp
+# ImgUn
 __Imgur app on Universal Windows Platform.__
 
 ## How to build

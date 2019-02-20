@@ -5,9 +5,11 @@ VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DL444.ImgurUwp.App", "DL444.ImgurUwp.App\DL444.ImgurUwp.App.csproj", "{B470AD30-2C94-468C-9E02-BAA4E6BE7434}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DL444.ImgurUwp.Models", "DL444.ImgurUwp.Models\DL444.ImgurUwp.Models.csproj", "{57C9E3BA-BE4F-4050-9FCB-F886DBA65BD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DL444.ImgurUwp.Models", "DL444.ImgurUwp.Models\DL444.ImgurUwp.Models.csproj", "{57C9E3BA-BE4F-4050-9FCB-F886DBA65BD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DL444.ImgurUwp.ApiClient", "DL444.ImgurUwp.ApiClient\DL444.ImgurUwp.ApiClient.csproj", "{A92F5819-CDE1-4516-A7F3-2E9A93CB6314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DL444.ImgurUwp.ApiClient", "DL444.ImgurUwp.ApiClient\DL444.ImgurUwp.ApiClient.csproj", "{A92F5819-CDE1-4516-A7F3-2E9A93CB6314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DL444.ImgurUwp.TestConsole", "DL444.ImgurUwp.TestConsole\DL444.ImgurUwp.TestConsole.csproj", "{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +91,26 @@ Global
 		{A92F5819-CDE1-4516-A7F3-2E9A93CB6314}.Release|x64.Build.0 = Release|Any CPU
 		{A92F5819-CDE1-4516-A7F3-2E9A93CB6314}.Release|x86.ActiveCfg = Release|Any CPU
 		{A92F5819-CDE1-4516-A7F3-2E9A93CB6314}.Release|x86.Build.0 = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|ARM.Build.0 = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|x64.Build.0 = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|ARM.ActiveCfg = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|ARM.Build.0 = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|ARM64.Build.0 = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|x64.ActiveCfg = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|x64.Build.0 = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{AE32DDAA-9AF7-41F4-AA60-7B6BCAFCA1E0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
