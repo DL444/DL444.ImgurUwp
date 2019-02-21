@@ -14,6 +14,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.ApplicationModel.Core;
+using Windows.UI.ViewManagement;
+using Windows.UI;
 
 namespace DL444.ImgurUwp.App
 {
@@ -36,10 +39,17 @@ namespace DL444.ImgurUwp.App
         /// Invoked when the application is launched normally by the end user.  Other entry points
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
-        /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        /// <param name="args">Details about the launch request and process.</param>
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             Frame rootFrame = Window.Current.Content as Frame;
+
+            var titleBarCore = CoreApplication.GetCurrentView().TitleBar;
+            titleBarCore.ExtendViewIntoTitleBar = true;
+
+            var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ButtonBackgroundColor = Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -50,7 +60,7 @@ namespace DL444.ImgurUwp.App
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
+                if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
                     //TODO: Load state from previously suspended application
                 }
@@ -59,14 +69,24 @@ namespace DL444.ImgurUwp.App
                 Window.Current.Content = rootFrame;
             }
 
-            if (e.PrelaunchActivated == false)
+            if (args.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    var credentialVault = new Windows.Security.Credentials.PasswordVault();
+                    var credentialList = credentialVault.RetrieveAll();
+                    if (credentialList.Count > 0)
+                    {
+                        var credential = credentialVault.Retrieve("Imgur", "AccessToken");
+                        (Window.Current.Content as Frame).Navigate(typeof(FrontPage));
+                    }
+                    else
+                    {
+                        rootFrame.Navigate(typeof(LoginPage), args.Arguments);
+                    }
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
