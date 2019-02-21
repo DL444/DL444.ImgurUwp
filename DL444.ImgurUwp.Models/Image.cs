@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace DL444.ImgurUwp.Models
 {
-    public class Image
+    public class Image : IItem
     {
         public string Id { get; set; }
         public string Title { get; set; }
@@ -32,5 +32,7 @@ namespace DL444.ImgurUwp.Models
         public string Vote { get; set; }
         [JsonProperty(PropertyName = "in_gallery")]
         public bool InGallery { get; set; }
+        [JsonProperty(PropertyName = "is_album")]
+        public bool? IsAlbum { get; set; }
     }
 }
