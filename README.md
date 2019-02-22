@@ -13,11 +13,13 @@ Example:
 {
   "clientId": "000000000000000",
   "clientSecret": "0000000000000000000000000000000000000000",
-  "mashapeKey": "000000000000000000000000000000000000000000000000000"
+  "mashapeKey": "000000000000000000000000000000000000000000000000000",
+  "host": "api.imgur.com"
 }
 ```
 - `clientId`: The client ID received after you registered your app.
 - `clientSecret`: The client secret key received after you registered your app.
 - `mashapeKey`: If you want to use the Imgur API commercially, you have to register and pay through RapidAPI (previously Mashape). After registering there, you will receive a `X-RapidAPI-Key` string to be used in request header. Supply that key here. 
+- `host`: The API host you want to use in the app. If you use the non-commercial API from Imgur, the host should be `api.imgur.com`. If you use the commercial API, it should be `imgur-apiv3.p.rapidapi.com`.
 ## Known issues
 - It is said that Imgur might block some China users from completing OAuth authentication. Personal experiment also suggests so. If you are in China and are experiencing authentication issues, please try again from _outside_ of China.
