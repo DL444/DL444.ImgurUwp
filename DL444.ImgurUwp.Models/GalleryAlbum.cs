@@ -48,5 +48,8 @@ namespace DL444.ImgurUwp.Models
         public List<Image> Images { get; set; }
         [JsonProperty(PropertyName = "in_most_viral")]
         public bool InMostViral { get; set; }
+        [JsonProperty(PropertyName = "in_gallery")]
+        public bool InGallery { get; set; }
+
     }
 }

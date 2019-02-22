@@ -18,7 +18,6 @@ namespace DL444.ImgurUwp.ApiClient
         public string ClientSecret { get; }
         public string MashapeKey { get; }
         public string AccessToken { get; }
-        public string Username { get; }
 
         static (bool success, int status, string dataToken) GetDataToken(string jsonText)
         {
@@ -35,7 +34,7 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public ApiClient(string host, string clientId, string clientSecret, string accessToken, string username = "", string mashapeKey = "")
+        public ApiClient(string host, string clientId, string clientSecret, string accessToken, string mashapeKey = "")
         {
             if(string.IsNullOrEmpty(host))
             {
@@ -59,7 +58,6 @@ namespace DL444.ImgurUwp.ApiClient
             ClientSecret = clientSecret;
             MashapeKey = mashapeKey;
             AccessToken = accessToken;
-            Username = username;
 
             client.BaseAddress = new Uri($"https://{host}");
             if(!string.IsNullOrEmpty(mashapeKey))
@@ -79,14 +77,5 @@ namespace DL444.ImgurUwp.ApiClient
         public ApiRequestException(string message) : base(message) { }
 
         public ApiRequestException(string message, Exception innerException) : base(message, innerException) { }
-    }
-
-    static class Convert
-    {
-        static DateTime baseTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        public static DateTime ToDateTime(int epoch)
-        {
-            return baseTime.AddSeconds(epoch);
-        }
     }
 }

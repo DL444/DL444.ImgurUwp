@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DL444.ImgurUwp.Models
+﻿namespace DL444.ImgurUwp.Models
 {
     public interface IItem
     {

@@ -7,6 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Microsoft.UI.Xaml.Controls"
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -27,7 +29,7 @@
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.PaneFooter>
                 <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}">
-                    <ui:PersonPicture Margin="-12"/>
+                    <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
                     <Button.Flyout>
                         <MenuFlyout Placement="BottomEdgeAlignedRight">
                             <cc:MenuFlyoutContentItem>
@@ -38,17 +40,17 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
 
-                                        <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2"/>
+                                        <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
                                         <Grid Margin="12,0" VerticalAlignment="Center" Grid.Column="1">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
                                                 <RowDefinition/>
                                             </Grid.RowDefinitions>
                                             
-                                            <TextBlock Text="DL444"  Style="{ThemeResource BaseTextBlockStyle}"/>
+                                            <TextBlock Text="{x:Bind CurrentAccount.Username}"  Style="{ThemeResource BaseTextBlockStyle}"/>
                                             <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                <TextBlock Text="0 pts" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                <TextBlock Text="Neutral" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                <TextBlock Text="{x:Bind CurrentAccount.Reputation}" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                <TextBlock Text="{x:Bind CurrentAccount.ReputationName}" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                             </StackPanel>
                                         </Grid>
                                     </Grid>
@@ -69,6 +71,44 @@
                     </Button.Flyout>
                 </Button>
             </ui:NavigationView.PaneFooter>
+
+            <GridView ItemsSource="{x:Bind FrontPageItems.GalleryItems, Mode=OneWay}" Padding="0,16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <GridView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:GalleryItemViewModel">
+                        <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <cc:ImagePresenter SourceUrl="{x:Bind DisplayImage.Link, Mode=OneWay}" MaxHeight="500"/>
+                            <!--<Image Source="{x:Bind DisplayImage.Link, Mode=OneWay}" MaxHeight="500"/>-->
+                            <Grid Grid.Row="1" Margin="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,4"/>
+                                <TextBlock Text="{x:Bind Ups, Mode=OneWay}" Grid.Row="1"/>
+                                <TextBlock Text="{x:Bind Downs, Mode=OneWay}" Grid.Row="1" Grid.Column="1"/>
+                                <TextBlock Text="{x:Bind CommentCount, Mode=OneWay}" Grid.Row="1" Grid.Column="2"/>
+                                <TextBlock Text="{x:Bind Views, Mode=OneWay}" Grid.Row="1" Grid.Column="3"/>
+                            </Grid>
+                        </Grid>
+                    </DataTemplate>
+                </GridView.ItemTemplate>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <tkc:StaggeredPanel DesiredColumnWidth="250" HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </GridView>
         </ui:NavigationView>
     </Grid>
 </Page>

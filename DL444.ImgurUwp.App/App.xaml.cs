@@ -81,6 +81,8 @@ namespace DL444.ImgurUwp.App
                     if (credentialList.Count > 0)
                     {
                         var credential = credentialVault.Retrieve("Imgur", "AccessToken");
+                        credential.RetrievePassword();
+                        ApiClient.InitializeApiClient(credential.Password);
                         (Window.Current.Content as Frame).Navigate(typeof(FrontPage));
                     }
                     else

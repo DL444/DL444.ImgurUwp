@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace DL444.ImgurUwp.Models
 {
@@ -48,5 +45,7 @@ namespace DL444.ImgurUwp.Models
         public bool IsAlbum { get; set; }
         [JsonProperty(PropertyName = "in_most_viral")]
         public bool InMostViral { get; set; }
+        [JsonProperty(PropertyName = "in_gallery")]
+        public bool InGallery { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace DL444.ImgurUwp.ApiClient
 {
     public partial class ApiClient
     {
-        public async Task<IEnumerable<IGalleryItem>> GetGalleryItems(Sort sort = Sort.Viral, int page = 0,
+        public async Task<IEnumerable<IGalleryItem>> GetGalleryItemsAsync(Sort sort = Sort.Viral, int page = 0,
             Section section = Section.Hot, Window window = Window.Day, bool showViral = true)
         {
             List<IGalleryItem> result = new List<IGalleryItem>();
