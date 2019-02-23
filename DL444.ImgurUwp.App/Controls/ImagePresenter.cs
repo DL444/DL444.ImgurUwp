@@ -19,7 +19,14 @@ namespace DL444.ImgurUwp.App.Controls
         public ImagePresenter()
         {
             this.DefaultStyleKey = typeof(ImagePresenter);
+            this.Loaded += ImagePresenter_Loaded;
         }
+
+        private void ImagePresenter_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetVisualState(IsAnimated);
+        }
+
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register("ImageSource", typeof(BitmapSource), typeof(ImagePresenter), null);
         public BitmapSource ImageSource
         {
@@ -52,24 +59,30 @@ namespace DL444.ImgurUwp.App.Controls
             }
         }
 
-        //public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register("IsAnimated", typeof(bool), typeof(ImagePresenter), new PropertyMetadata(false, IsAnimatedChanged));
-        //public bool IsAnimated
-        //{
-        //    get => (bool)GetValue(IsAnimatedProperty);
-        //    set => SetValue(IsAnimatedProperty, value);
-        //}
+        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register("IsAnimated", typeof(bool), typeof(ImagePresenter), new PropertyMetadata(false, IsAnimatedChanged));
+        public bool IsAnimated
+        {
+            get => (bool)GetValue(IsAnimatedProperty);
+            set => SetValue(IsAnimatedProperty, value);
+        }
 
-        //static void IsAnimatedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        //{
-        //    if((bool)e.NewValue == true)
-        //    {
-        //        VisualStateManager.GoToState(sender as ImagePresenter, "GifVideo", false);
-        //    }
-        //    else
-        //    {
-        //        VisualStateManager.GoToState(sender as ImagePresenter, "StaticImage", false);
-        //    }
-        //}
+        static void IsAnimatedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ImagePresenter instance = sender as ImagePresenter;
+            instance.SetVisualState(instance.IsAnimated);
+        }
+
+        void SetVisualState(bool isAnimated)
+        {
+            if (isAnimated)
+            {
+                VisualStateManager.GoToState(this, "GifVideo", false);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "StaticImage", false);
+            }
+        }
 
         // TODO: We still need that IsAnimated for "GIF" tag display!
         // And also Autoplay property.

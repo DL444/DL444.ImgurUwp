@@ -63,4 +63,51 @@ namespace DL444.ImgurUwp.App.ViewModels
             };
         }
     }
+
+    public class NumberStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            int number = (int)value;
+            int abs = number < 0 ? -number : number;
+            if(abs < 1_000)
+            {
+                return number.ToString();
+            }
+            else if(abs < 1_000_000)
+            {
+                return $"{GetApprox(number, 1000)}K";
+            }
+            else if(abs < 1_000_000_000)
+            {
+                return $"{GetApprox(number, 1000000)}M";
+            }
+            else
+            {
+                return $"{GetApprox(number, 1000000000)}B";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotSupportedException();
+        }
+
+        string GetApprox(int number, int baseValue)
+        {
+            int intDigit = number / baseValue;
+            if (Abs(intDigit) < 10)
+            {
+                int decDigit = (number % baseValue) / (baseValue / 10);
+                return $"{intDigit}.{decDigit}";
+            }
+            else
+            {
+                return intDigit.ToString();
+            }
+
+
+            int Abs(int value) => value < 0 ? -value : value;
+        }
+    }
 }
