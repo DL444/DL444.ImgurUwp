@@ -123,6 +123,7 @@
     <Compile Include="Controls\MenuFlyoutContentItem.cs" />
     <Compile Include="Controls\SymbolTextButton.cs" />
     <Compile Include="Controls\SymbolTextLabel.cs" />
+    <Compile Include="Controls\SymbolTextToggleButton.cs" />
     <Compile Include="FrontPage.xaml.cs">
       <DependentUpon>FrontPage.xaml</DependentUpon>
     </Compile>

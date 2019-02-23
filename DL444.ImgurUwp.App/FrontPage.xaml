@@ -73,7 +73,12 @@
                 </Button>
             </ui:NavigationView.PaneFooter>
 
-            <GridView ItemsSource="{x:Bind FrontPageItems.GalleryItems, Mode=OneWay}" Padding="0,16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+            <GridView ItemsSource="{x:Bind FrontPageItems.GalleryItems, Mode=OneWay}" Margin="8,0" Padding="0,16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
                 <GridView.ItemTemplate>
                     <DataTemplate x:DataType="vm:GalleryItemViewModel">
                         <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
@@ -82,7 +87,7 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <cc:ImagePresenter SourceUrl="{x:Bind DisplayImage.Link, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" MaxHeight="500"/>
+                            <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" MaxHeight="500" Autoplay="True"/>
                             <Grid Grid.Row="1" Margin="8">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -94,7 +99,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,4"/>
+                                <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8"/>
                                 <cc:SymbolTextButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen"/>
                                 <cc:SymbolTextButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed">
                                     <cc:SymbolTextButton.Icon>
@@ -109,7 +114,7 @@
                 </GridView.ItemTemplate>
                 <GridView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <tkc:StaggeredPanel DesiredColumnWidth="250" HorizontalAlignment="Center"/>
+                        <tkc:StaggeredPanel DesiredColumnWidth="250"/>
                     </ItemsPanelTemplate>
                 </GridView.ItemsPanel>
             </GridView>

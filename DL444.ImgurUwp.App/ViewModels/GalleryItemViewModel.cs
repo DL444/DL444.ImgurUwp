@@ -36,6 +36,27 @@ namespace DL444.ImgurUwp.App.ViewModels
                 {
                     DisplayImage = (value as GalleryImage).ToImage();
                 }
+
+                if (DisplayImage != null)
+                {
+                    string link = DisplayImage.Link;
+                    if (string.IsNullOrWhiteSpace(link)) { _thumbnail = null; }
+                    else
+                    {
+                        // TODO: Disturb this to reproduce layout bug.
+                        if (DisplayImage.Animated)
+                        {
+                            _thumbnail = DisplayImage.Link.Replace(DisplayImage.Id, $"{DisplayImage.Id}_lq");
+                            // It is recognized that there are some plain GIF images. 
+                            // However, their thumbnails do not animate, so use MP4 instead.
+                        }
+                        else
+                        {
+                            _thumbnail = $"{DisplayImage.Link.Replace(DisplayImage.Id, $"{DisplayImage.Id}_d")}?maxwidth=360&shape=thumb&fidelity=high";
+                        }
+                    }
+                }
+
                 NotifyPropertyChanged();
             }
         }
@@ -59,6 +80,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         public int Views => _item.Views;
         public bool InMostViral => _item.InMostViral;
         public bool Favorite => _item.Favorite;
+
+        string _thumbnail;
+        public string Thumbnail => _thumbnail;
 
         public Image DisplayImage
         {

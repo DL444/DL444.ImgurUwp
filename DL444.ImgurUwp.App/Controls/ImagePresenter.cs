@@ -66,6 +66,13 @@ namespace DL444.ImgurUwp.App.Controls
             set => SetValue(IsAnimatedProperty, value);
         }
 
+        public static readonly DependencyProperty AutoplayProperty = DependencyProperty.Register("Autoplay", typeof(bool), typeof(ImagePresenter), null);
+        public bool Autoplay
+        {
+            get => (bool)GetValue(AutoplayProperty);
+            set => SetValue(AutoplayProperty, value);
+        }
+
         static void IsAnimatedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             ImagePresenter instance = sender as ImagePresenter;
@@ -83,8 +90,5 @@ namespace DL444.ImgurUwp.App.Controls
                 VisualStateManager.GoToState(this, "StaticImage", false);
             }
         }
-
-        // TODO: We still need that IsAnimated for "GIF" tag display!
-        // And also Autoplay property.
     }
 }
