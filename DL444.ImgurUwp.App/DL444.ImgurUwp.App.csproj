@@ -116,16 +116,20 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AccountDetailsPage.xaml.cs">
+      <DependentUpon>AccountDetailsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ClickEditTextBox.cs" />
     <Compile Include="Controls\ImagePresenter.cs" />
     <Compile Include="Controls\MenuFlyoutContentItem.cs" />
     <Compile Include="Controls\SymbolTextButton.cs" />
     <Compile Include="Controls\SymbolTextLabel.cs" />
     <Compile Include="Controls\SymbolTextToggleButton.cs" />
-    <Compile Include="FrontPage.xaml.cs">
-      <DependentUpon>FrontPage.xaml</DependentUpon>
+    <Compile Include="GalleryView.xaml.cs">
+      <DependentUpon>GalleryView.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
@@ -165,7 +169,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="FrontPage.xaml">
+    <Page Include="AccountDetailsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GalleryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

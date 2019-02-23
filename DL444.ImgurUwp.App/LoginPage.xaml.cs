@@ -46,7 +46,7 @@ namespace DL444.ImgurUwp.App
             credentialVault.Add(new Windows.Security.Credentials.PasswordCredential("Imgur", "AccessToken", userToken.AccessToken));
             credentialVault.Add(new Windows.Security.Credentials.PasswordCredential("Imgur", "RefreshToken", userToken.RefreshToken));
             ApiClient.InitializeApiClient(userToken.AccessToken);
-            (Window.Current.Content as Frame).Navigate(typeof(FrontPage));
+            (Window.Current.Content as Frame).Navigate(typeof(MainPage));
         }
     }
 }
