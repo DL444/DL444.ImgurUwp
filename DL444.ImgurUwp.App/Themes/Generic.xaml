@@ -126,7 +126,8 @@
                           Padding="{TemplateBinding Padding}"
                           CornerRadius="{TemplateBinding CornerRadius}"
                           MaxHeight="{TemplateBinding MaxHeight}"
-                          MaxWidth="{TemplateBinding MaxWidth}">
+                          MaxWidth="{TemplateBinding MaxWidth}"
+                          Height="{TemplateBinding PlaceholderHeight}">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="LoadingStates">
                                 <VisualState x:Name="Loaded"/>
@@ -148,7 +149,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Image x:Name="ImageBox" Source="{TemplateBinding ImageSource}" HorizontalAlignment="Stretch"/>
+                        <Image x:Name="ImageBox" Source="{TemplateBinding ImageSource}" VerticalAlignment="Top"/>
                         <MediaElement x:Name="VideoBox" Grid.Row="1" Visibility="Collapsed" 
                                       AutoPlay="{TemplateBinding Autoplay}" AreTransportControlsEnabled="False" IsLooping="True" IsMuted="True"
                                       Source="{TemplateBinding VideoSource}"/>

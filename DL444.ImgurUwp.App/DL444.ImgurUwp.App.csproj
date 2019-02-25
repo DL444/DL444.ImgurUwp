@@ -125,6 +125,7 @@
     <Compile Include="Controls\ClickEditTextBox.cs" />
     <Compile Include="Controls\ImagePresenter.cs" />
     <Compile Include="Controls\MenuFlyoutContentItem.cs" />
+    <Compile Include="Controls\StaggeredPanel.cs" />
     <Compile Include="Controls\SymbolTextButton.cs" />
     <Compile Include="Controls\SymbolTextLabel.cs" />
     <Compile Include="Controls\SymbolTextToggleButton.cs" />

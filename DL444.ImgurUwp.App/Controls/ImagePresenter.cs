@@ -20,6 +20,14 @@ namespace DL444.ImgurUwp.App.Controls
         {
             this.DefaultStyleKey = typeof(ImagePresenter);
             this.Loaded += ImagePresenter_Loaded;
+            SizeChanged += ImagePresenter_SizeChanged;
+        }
+
+        private void ImagePresenter_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(e.NewSize.Width == e.PreviousSize.Width) { return; }
+            double width = e.NewSize.Width;
+            PlaceholderHeight = ImageHeight * (width / ImageWidth);
         }
 
         private void ImagePresenter_Loaded(object sender, RoutedEventArgs e)
@@ -51,7 +59,7 @@ namespace DL444.ImgurUwp.App.Controls
         {
             string url = e.NewValue as string;
             ImagePresenter instance = sender as ImagePresenter;
-            if (url == null) { instance.ImageSource = null; }
+            if (string.IsNullOrWhiteSpace(url)) { instance.ImageSource = null; }
             else
             {
                 instance.ImageSource = new BitmapImage(new Uri(url));
@@ -77,6 +85,26 @@ namespace DL444.ImgurUwp.App.Controls
         {
             ImagePresenter instance = sender as ImagePresenter;
             instance.SetVisualState(instance.IsAnimated);
+        }
+
+        // These two values are used to calculate placeholder dimensions.
+        public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register("ImageHeight", typeof(double), typeof(ImagePresenter), null);
+        public double ImageHeight
+        {
+            get => (double)GetValue(ImageHeightProperty);
+            set => SetValue(ImageHeightProperty, value);
+        }
+        public static readonly DependencyProperty ImageWidthProperty = DependencyProperty.Register("ImageWidth", typeof(double), typeof(ImagePresenter), null);
+        public double ImageWidth
+        {
+            get => (double)GetValue(ImageWidthProperty);
+            set => SetValue(ImageWidthProperty, value);
+        }
+        public static readonly DependencyProperty PlaceholderHeightProperty = DependencyProperty.Register("PlaceholderHeight", typeof(double), typeof(ImagePresenter), null);
+        public double PlaceholderHeight
+        {
+            get => (double)GetValue(PlaceholderHeightProperty);
+            private set => SetValue(PlaceholderHeightProperty, value);
         }
 
         void SetVisualState(bool isAnimated)

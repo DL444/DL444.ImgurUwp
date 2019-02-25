@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    xmlns:ui="using:Microsoft.UI.Xaml.Controls"
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
@@ -13,53 +14,86 @@
 
     <Page.Resources>
         <vm:NumberStringConverter x:Key="NumberStringConverter"/>
-    </Page.Resources>
+        <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
+            <ContentControl>
+                <ContentControl.Template>
+                    <ControlTemplate TargetType="ContentControl">
+                        <ContentPresenter HorizontalAlignment="Stretch"/>
+                    </ControlTemplate>
+                </ContentControl.Template>
+                <ContentControl.ContextFlyout>
+                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                        <ui:CommandBarFlyout.PrimaryCommands>
+                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share"/>
+                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download"/>
+                        </ui:CommandBarFlyout.PrimaryCommands>
+                        <ui:CommandBarFlyout.SecondaryCommands>
+                            <AppBarButton Label="Report" Icon="Flag"/>
+                        </ui:CommandBarFlyout.SecondaryCommands>
+                    </ui:CommandBarFlyout>
+                </ContentControl.ContextFlyout>
+                <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
+                    <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
+                                       ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
+                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" Autoplay="False"/>
+                    <Grid Grid.Row="1" Margin="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8"/>
+                        <cc:SymbolTextButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen"/>
+                        <cc:SymbolTextButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed">
+                            <cc:SymbolTextButton.Icon>
+                                <FontIcon Glyph="&#xE1FD;"/>
+                            </cc:SymbolTextButton.Icon>
+                        </cc:SymbolTextButton>
+                        <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="1" Grid.Column="2"/>
+                        <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="1" Grid.Column="3"/>
+                    </Grid>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Minimal">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Label="Sort" Icon="Sort">
+                    <AppBarButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Text="Popular" Icon="Like"/>
+                            <MenuFlyoutItem Text="Newest" Icon="Clock"/>
+                        </MenuFlyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+                <AppBarButton Label="Random" Icon="Shuffle"/>
+                <AppBarButton Label="Go Top" Icon="Up"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
     <Grid>
-        <GridView ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Margin="8,0" Padding="0,16" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" SelectionMode="None" IsItemClickEnabled="True">
+        <GridView ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Margin="8,0" Padding="0,16" ItemTemplate="{ThemeResource GalleryViewItemTemplate}" SelectionMode="Single" IsItemClickEnabled="True">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <cc:StaggeredPanel DesiredColumnWidth="250"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
             <GridView.ItemContainerStyle>
                 <Style TargetType="GridViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </GridView.ItemContainerStyle>
-            <GridView.ItemTemplate>
-                <DataTemplate x:DataType="vm:GalleryItemViewModel">
-                    <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" MaxHeight="500" Autoplay="True"/>
-                        <Grid Grid.Row="1" Margin="8">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8"/>
-                            <cc:SymbolTextButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen"/>
-                            <cc:SymbolTextButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed">
-                                <cc:SymbolTextButton.Icon>
-                                    <FontIcon Glyph="&#xE1FD;"/>
-                                </cc:SymbolTextButton.Icon>
-                            </cc:SymbolTextButton>
-                            <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="1" Grid.Column="2"/>
-                            <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="1" Grid.Column="3"/>
-                        </Grid>
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <tkc:StaggeredPanel DesiredColumnWidth="250"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
         </GridView>
     </Grid>
 </Page>
