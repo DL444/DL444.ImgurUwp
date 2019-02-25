@@ -33,17 +33,6 @@ namespace DL444.ImgurUwp.App.Controls
 
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(nameof(Padding), typeof(Thickness), typeof(StaggeredPanel), new PropertyMetadata(default(Thickness), OnPaddingChanged));
 
-        public static readonly DependencyProperty ItemsHorizontalStretchProperty = DependencyProperty.Register("ItemsHorizontalStretch", typeof(bool), typeof(StaggeredPanel), new PropertyMetadata(true, OnItemsHorizontalStretchProperty));
-        public bool ItemsHorizontalStretch
-        {
-            get => (bool)GetValue(ItemsHorizontalStretchProperty);
-            set => SetValue(ItemsHorizontalStretchProperty, value);
-        }
-        static void OnItemsHorizontalStretchProperty(DependencyObject obj, DependencyPropertyChangedEventArgs e)
-        {
-            (obj as StaggeredPanel).InvalidateArrange();
-        }
-
         protected override Size MeasureOverride(Size availableSize)
         {
             availableSize.Width = availableSize.Width - Padding.Left - Padding.Right;
@@ -97,7 +86,13 @@ namespace DL444.ImgurUwp.App.Controls
                 var child = Children[i];
                 var elementSize = child.DesiredSize;
 
-                double elementWidth = ItemsHorizontalStretch ? _columnWidth : elementSize.Width;
+                HorizontalAlignment childHorizontalAlignment = HorizontalAlignment.Left;
+                if(child is ContentControl contentControl)
+                {
+                    childHorizontalAlignment = contentControl.HorizontalContentAlignment;
+                }
+
+                double elementWidth = childHorizontalAlignment == HorizontalAlignment.Stretch ? _columnWidth : elementSize.Width;
                 double elementHeight = elementSize.Height;
                 if (elementWidth > _columnWidth)
                 {
@@ -106,7 +101,17 @@ namespace DL444.ImgurUwp.App.Controls
                     elementWidth = _columnWidth;
                 }
 
-                Rect bounds = new Rect(horizontalOffset + (_columnWidth * columnIndex), columnHeights[columnIndex] + verticalOffset, elementWidth, elementHeight);
+                double finalHorizontalOffset = horizontalOffset + (_columnWidth * columnIndex);
+                if(childHorizontalAlignment == HorizontalAlignment.Right)
+                {
+                    finalHorizontalOffset += _columnWidth - elementSize.Width;
+                }
+                else if(childHorizontalAlignment == HorizontalAlignment.Center)
+                {
+                    finalHorizontalOffset += (_columnWidth - elementSize.Width) / 2;
+                }
+
+                Rect bounds = new Rect(finalHorizontalOffset, columnHeights[columnIndex] + verticalOffset, elementWidth, elementHeight);
                 child.Arrange(bounds);
 
                 columnHeights[columnIndex] += elementSize.Height;
