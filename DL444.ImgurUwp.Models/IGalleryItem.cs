@@ -36,5 +36,6 @@ namespace DL444.ImgurUwp.Models
         bool Favorite { get; set; }
         bool InGallery { get; set; }
 
+        string Vote { get; set; }
     }
 }

@@ -28,9 +28,11 @@ namespace DL444.ImgurUwp.App.ViewModels
             Task = task;
             if(!Task.IsCompleted)
             {
-                var _ = WatchTaskAsync(Task);
+                CompletionWatch = WatchTaskAsync(Task);
             }
         }
+
+        public Task CompletionWatch { get; private set; }
 
         async Task WatchTaskAsync(Task task)
         {

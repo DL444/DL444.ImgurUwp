@@ -24,50 +24,59 @@
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Most Viral" Icon="OutlineStar" Tag="viral"/>
                 <ui:NavigationViewItem Content="User Submitted" Icon="People" Tag="user"/>
+                <ui:NavigationViewItem Content="Random" Icon="Shuffle" Tag="random"/>
             </ui:NavigationView.MenuItems>
+            <ui:NavigationView.AutoSuggestBox>
+                <AutoSuggestBox PlaceholderText="Search gallery" Width="180" QueryIcon="Find"/>
+            </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.PaneFooter>
-                <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}">
-                    <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
-                    <Button.Flyout>
-                        <MenuFlyout Placement="BottomEdgeAlignedRight">
-                            <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
-                                <cc:MenuFlyoutContentItem.Content>
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}" ToolTipService.ToolTip="New post">
+                        <FontIcon Glyph="&#xE82E;"/>
+                    </Button>
+                    <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}">
+                        <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
+                        <Button.Flyout>
+                            <MenuFlyout Placement="BottomEdgeAlignedRight">
+                                <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
+                                    <cc:MenuFlyoutContentItem.Content>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition/>
+                                            </Grid.ColumnDefinitions>
 
-                                        <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
-                                        <Grid Margin="12,0" VerticalAlignment="Center" Grid.Column="1">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
-                                            </Grid.RowDefinitions>
+                                            <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
+                                            <Grid Margin="12,0" VerticalAlignment="Center" Grid.Column="1">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
 
-                                            <TextBlock Text="{x:Bind CurrentAccount.Username}"  Style="{ThemeResource BaseTextBlockStyle}"/>
-                                            <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                <TextBlock Text="{x:Bind CurrentAccount.Reputation}" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                <TextBlock Text="{x:Bind CurrentAccount.ReputationName}" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                            </StackPanel>
+                                                <TextBlock Text="{x:Bind CurrentAccount.Username}"  Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                                    <TextBlock Text="{x:Bind CurrentAccount.Reputation}" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                    <TextBlock Text="{x:Bind CurrentAccount.ReputationName}" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                </StackPanel>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                </cc:MenuFlyoutContentItem.Content>
-                            </cc:MenuFlyoutContentItem>
-                            <MenuFlyoutItem Icon="PreviewLink" Text="Posts"/>
-                            <MenuFlyoutItem Text="Favorites">
-                                <MenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xE006;"/>
-                                </MenuFlyoutItem.Icon>
-                            </MenuFlyoutItem>
-                            <MenuFlyoutItem Icon="Message" Text="Comments"/>
-                            <MenuFlyoutItem Icon="Pictures" Text="Images"/>
-                            <MenuFlyoutSeparator/>
-                            <MenuFlyoutItem Icon="Setting" Text="Settings"/>
-                            <MenuFlyoutItem Icon="Permissions" Text="Sign out" Click="Signout_Click"/>
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
+                                    </cc:MenuFlyoutContentItem.Content>
+                                </cc:MenuFlyoutContentItem>
+                                <MenuFlyoutItem Icon="PreviewLink" Text="Posts"/>
+                                <MenuFlyoutItem Text="Favorites">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE006;"/>
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem Icon="Message" Text="Comments"/>
+                                <MenuFlyoutItem Icon="Pictures" Text="Images"/>
+                                <MenuFlyoutSeparator/>
+                                <MenuFlyoutItem Icon="Setting" Text="Settings" Click="Settings_Click"/>
+                                <MenuFlyoutItem Icon="Permissions" Text="Sign out" Click="Signout_Click"/>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
             </ui:NavigationView.PaneFooter>
 
             <Frame x:Name="ContentFrame"/>

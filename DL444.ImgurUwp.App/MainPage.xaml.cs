@@ -19,6 +19,7 @@ using Windows.UI.ViewManagement;
 using DL444.ImgurUwp.App.ViewModels;
 using System.ComponentModel;
 using Windows.UI;
+using DL444.ImgurUwp.ApiClient;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -63,8 +64,6 @@ namespace DL444.ImgurUwp.App
             var meAccount = await ApiClient.Client.GetAccountAsync("me");
             CurrentAccount = new AccountViewModel(meAccount);
             Bindings.Update();
-            var galleryItems = await ApiClient.Client.GetGalleryItemsAsync();
-            ContentFrame.Navigate(typeof(GalleryView), new GalleryCollectionViewModel(galleryItems));
         }
 
         void SetTitleBarButtonColor()
@@ -76,7 +75,17 @@ namespace DL444.ImgurUwp.App
 
         private void RootNavView_SelectionChanged(UI.NavigationView sender, UI.NavigationViewSelectionChangedEventArgs args)
         {
+            UI.NavigationViewItem item = args.SelectedItem as UI.NavigationViewItem;
+            if(item == null) { return; }
 
+            if(item.Tag as string == "viral")
+            {
+                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
+            }
+            else if(item.Tag as string == "user")
+            {
+                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
+            }
         }
 
         private void Signout_Click(object sender, RoutedEventArgs e)
@@ -92,9 +101,16 @@ namespace DL444.ImgurUwp.App
 
         private void AccountDetails_Click(object sender, RoutedEventArgs e)
         {
+            RootNavView.SelectedItem = null;
             ContentFrame.Navigate(typeof(AccountDetailsPage), CurrentAccount);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            RootNavView.SelectedItem = null;
+            ContentFrame.Navigate(typeof(Settings.SettingsFrame));
+        }
     }
 }

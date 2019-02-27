@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
 using System.ComponentModel;
+using DL444.ImgurUwp.ApiClient;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -36,19 +37,47 @@ namespace DL444.ImgurUwp.App
             }
         }
 
+        private DisplayParams.Section _section;
+        public DisplayParams.Section Section
+        {
+            get => _section;
+            set
+            {
+                if(value != _section)
+                {
+                    _section = value;
+                    // TODO: Request items.
+                }
+            }
+        }
+        private DisplayParams.Sort _sort;
+        public DisplayParams.Sort Sort
+        {
+            get => _sort;
+            set
+            {
+                if(value != _sort)
+                {
+                    _sort = value;
+                    // TODO: Request items.
+                }
+            }
+        }
+
         public GalleryView()
         {
             this.InitializeComponent();
         }
 
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
-            if(e.Parameter is GalleryCollectionViewModel vm)
+            if(e.Parameter is DisplayParams.Section sect)
             {
-                ViewModel = vm;
+                var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
+                ViewModel = new GalleryCollectionViewModel(galleryItems);
             }
         }
 

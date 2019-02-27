@@ -1,0 +1,38 @@
+﻿<Page
+    x:Class="DL444.ImgurUwp.App.Settings.SettingsFrame"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DL444.ImgurUwp.App.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <ListView Background="{ThemeResource SystemControlAcrylicWindowBrush}" ItemsSource="{x:Bind Pages}"
+                  ScrollViewer.VerticalScrollMode="Disabled" SelectionChanged="PageList_SelectionChanged" SelectedIndex="0">
+            <ListView.Header>
+                <TextBlock Text="Settings" Style="{ThemeResource TitleTextBlockStyle}" Margin="16,12,0,16"/>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:SettingsPageModel">
+                    <StackPanel Padding="0,8">
+                        <TextBlock Text="{x:Bind Title}" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="4,0,0,2"/>
+                        <TextBlock Text="{x:Bind Description}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Margin="4,2,0,0" TextTrimming="Clip" TextWrapping="NoWrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <!--<local:SettingsPageModel Title="General" Description="Options, appearance"/>
+            <local:SettingsPageModel Title="Account" Description="Privacy, content, communication"/>
+            <local:SettingsPageModel Title="About" Description="Information, feedback, contribution"/>-->
+        </ListView>
+
+        <Frame x:Name="ContentFrame" Grid.Column="1"/>
+    </Grid>
+</Page>

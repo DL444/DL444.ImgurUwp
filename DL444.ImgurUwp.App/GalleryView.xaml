@@ -24,10 +24,17 @@
                 <ContentControl.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share"/>
-                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download"/>
+                            <AppBarButton Label="Favorite" ToolTipService.ToolTip="Favorite">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE006;"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                            <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
+                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
+                            <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
                             <AppBarButton Label="Report" Icon="Flag"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
@@ -40,7 +47,7 @@
 
                     <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
                                        ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
-                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" Autoplay="False"/>
+                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500"/>
                     <Grid Grid.Row="1" Margin="8">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -52,13 +59,13 @@
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8"/>
-                        <cc:SymbolTextButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen"/>
-                        <cc:SymbolTextButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed">
-                            <cc:SymbolTextButton.Icon>
+                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+                        <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
+                        <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
+                            <cc:SymbolTextToggleButton.Icon>
                                 <FontIcon Glyph="&#xE1FD;"/>
-                            </cc:SymbolTextButton.Icon>
-                        </cc:SymbolTextButton>
+                            </cc:SymbolTextToggleButton.Icon>
+                        </cc:SymbolTextToggleButton>
                         <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="1" Grid.Column="2"/>
                         <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="1" Grid.Column="3"/>
                     </Grid>
@@ -72,8 +79,8 @@
                 <AppBarButton Label="Sort" Icon="Sort">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <MenuFlyoutItem Text="Popular" Icon="Like"/>
-                            <MenuFlyoutItem Text="Newest" Icon="Clock"/>
+                            <ToggleMenuFlyoutItem Text="Popular" Icon="Like"/>
+                            <ToggleMenuFlyoutItem Text="Newest" Icon="Clock"/>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>

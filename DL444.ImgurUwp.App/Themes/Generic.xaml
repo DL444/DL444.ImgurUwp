@@ -139,6 +139,7 @@
                                     <VisualState.Setters>
                                         <Setter Target="VideoBox.Visibility" Value="Visible"/>
                                         <Setter Target="ImageBox.Visibility" Value="Collapsed"/>
+                                        <!--<Setter Target="AnimationIndicator.Visibility" Value="Visible"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -153,6 +154,13 @@
                         <MediaElement x:Name="VideoBox" Grid.Row="1" Visibility="Collapsed" 
                                       AutoPlay="{TemplateBinding Autoplay}" AreTransportControlsEnabled="False" IsLooping="True" IsMuted="True"
                                       Source="{TemplateBinding VideoSource}"/>
+
+                        <!--<Grid x:Name="AnimationIndicator" Grid.RowSpan="2" Grid.ColumnSpan="2" Visibility="Collapsed">
+                            <Grid Height="Auto" Width="Auto" Background="{ThemeResource SystemAccentColorBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,8,8,0">
+                                <TextBlock Text="GIF"/>
+                            </Grid>
+                        </Grid>-->
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -329,25 +337,16 @@
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=HoverForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconContent" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=HoverForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=HoverForeground}"/>
+                                        <Setter Target="IconContent.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=HoverForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconContent" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}"/>
+                                        <Setter Target="IconContent.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
@@ -358,37 +357,22 @@
                                 </VisualState>
                                 
                                 <VisualState x:Name="Checked">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconContent" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedForeground}"/>
+                                        <Setter Target="IconContent.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CheckedPointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedHoverForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconContent" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedHoverForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedHoverForeground}"/>
+                                        <Setter Target="IconContent.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=CheckedHoverForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CheckedPressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="IconContent" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentPresenter" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenter.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}"/>
+                                        <Setter Target="IconContent.Foreground" Value="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=PressedForeground}"/>
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="CheckedDisabled">
                                     <Storyboard>
@@ -603,6 +587,38 @@
                                    AutomationProperties.AccessibilityView="Raw" />
                     </Grid>
 
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="cc:HeaderCaptionControl">
+        <Setter Property="Background" Value="{ThemeResource MenuFlyoutItemRevealBackground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource MenuFlyoutItemRevealBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource MenuFlyoutItemRevealBorderThickness}" />
+        <Setter Property="Foreground" Value="{ThemeResource MenuFlyoutItemForeground}" />
+        <Setter Property="Padding" Value="{ThemeResource MenuFlyoutItemThemePadding}" />
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="cc:HeaderCaptionControl">
+                    <StackPanel
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+
+                        <TextBlock Text="{TemplateBinding Header}"/>
+                        <TextBlock Text="{TemplateBinding Caption}" Style="{ThemeResource CaptionTextBlockStyle}" 
+                                   Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Margin="0,2"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </StackPanel>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
