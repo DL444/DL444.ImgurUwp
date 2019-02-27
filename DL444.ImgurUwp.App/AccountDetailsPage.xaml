@@ -16,6 +16,18 @@
         <vm:DateStringConverter x:Key="DateStringConverter"/>
         <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{StaticResource SystemChromeAltHighColor}" BackgroundSource="Backdrop"
                       TintOpacity="0.3" FallbackColor="Transparent"/>
+        <Style x:Key="HeaderedTextBlockTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+            <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextLineBounds" Value="TrimToBaseline" />
+            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Light" />
+            <Setter Property="LineHeight" Value="28" />
+        </Style>
     </Page.Resources>
 
     <ScrollViewer x:Name="RootScrollView">
@@ -41,9 +53,15 @@
 
             <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <tkc:HeaderedTextBlock Header="Joined" Text="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}" Margin="24,8"/>
-                    <tkc:HeaderedTextBlock Header="Points" Grid.Column="1" Text="{x:Bind ViewModel.Reputation}" Margin="24,8"/>
-                    <tkc:HeaderedTextBlock Header="Notoriety" Grid.Column="2" Text="{x:Bind ViewModel.ReputationName}" Margin="24,8"/>
+                    <tkc:HeaderedContentControl Header="Joined" Margin="24,8">
+                        <TextBlock Text="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
+                    </tkc:HeaderedContentControl>
+                    <tkc:HeaderedContentControl Header="Points" Margin="24,8">
+                        <TextBlock Text="{x:Bind ViewModel.Reputation}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
+                    </tkc:HeaderedContentControl>
+                    <tkc:HeaderedContentControl Header="Notoriety" Margin="24,8">
+                        <TextBlock Text="{x:Bind ViewModel.ReputationName}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
+                    </tkc:HeaderedContentControl>
                 </StackPanel>
             </Grid>
             <GridView Grid.Row="2" VerticalAlignment="Top" Margin="8,0" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled">
