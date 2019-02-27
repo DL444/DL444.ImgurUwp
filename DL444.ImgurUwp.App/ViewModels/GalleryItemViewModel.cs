@@ -15,6 +15,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         string _thumbnail;
         private bool _upvoted;
         private bool _downvoted;
+        private bool _favorite;
 
         public IGalleryItem Item
         {
@@ -72,6 +73,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                     }
                 }
 
+                _favorite = _item.Favorite;
                 _upvoted = _item.Vote == "up";
                 _downvoted = _item.Vote == "down";
                 NotifyPropertyChanged();
@@ -140,7 +142,15 @@ namespace DL444.ImgurUwp.App.ViewModels
         public int Score => _item.Score;
         public int Views => _item.Views;
         public bool InMostViral => _item.InMostViral;
-        public bool Favorite => _item.Favorite;
+        public bool Favorite
+        {
+            get => _favorite;
+            set
+            {
+                _favorite = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Favorite)));
+            }
+        }
 
 
         public string Thumbnail => _thumbnail;
@@ -229,6 +239,30 @@ namespace DL444.ImgurUwp.App.ViewModels
             var request = args.Request;
             request.Data.SetWebLink(new Uri(Link));
             request.Data.Properties.Title = $"{Title} - Imgur";
+        }
+    }
+
+    public class FavoriteIconConverter : Windows.UI.Xaml.Data.IValueConverter
+    {
+        static string falseIcon = "\xE006";
+        static string trueIcon = "\xE00B";
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            bool val = (bool)value;
+            if(val == true)
+            {
+                return trueIcon;
+            }
+            else
+            {
+                return falseIcon;
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotSupportedException();
         }
     }
 }

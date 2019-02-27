@@ -134,11 +134,14 @@
                                 <VisualState x:Name="Loading"/>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="ContentType">
-                                <VisualState x:Name="StaticImage"/>
+                                <VisualState x:Name="StaticImage">
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageBox.Visibility" Value="Visible"/>
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="GifVideo">
                                     <VisualState.Setters>
                                         <Setter Target="VideoBox.Visibility" Value="Visible"/>
-                                        <Setter Target="ImageBox.Visibility" Value="Collapsed"/>
                                         <!--<Setter Target="AnimationIndicator.Visibility" Value="Visible"/>-->
                                     </VisualState.Setters>
                                 </VisualState>
@@ -150,8 +153,8 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Image x:Name="ImageBox" Source="{TemplateBinding ImageSource}" VerticalAlignment="Top"/>
-                        <MediaElement x:Name="VideoBox" Grid.Row="1" Visibility="Collapsed" 
+                        <Image x:Name="ImageBox" x:Load="False" Source="{TemplateBinding ImageSource}" VerticalAlignment="Top"/>
+                        <MediaElement x:Name="VideoBox" x:Load="False" Grid.Row="1"
                                       AutoPlay="{TemplateBinding Autoplay}" AreTransportControlsEnabled="False" IsLooping="True" IsMuted="True"
                                       Source="{TemplateBinding VideoSource}"/>
 
