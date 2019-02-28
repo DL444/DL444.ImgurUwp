@@ -48,7 +48,7 @@
 
                     <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
                                        ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
-                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500"/>
+                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" ImageCount="{x:Bind ImageCount, Mode=OneWay}"/>
                     <Grid Grid.Row="1" Margin="8">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>

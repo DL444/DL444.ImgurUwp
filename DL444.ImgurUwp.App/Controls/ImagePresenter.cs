@@ -32,7 +32,7 @@ namespace DL444.ImgurUwp.App.Controls
 
         private void ImagePresenter_Loaded(object sender, RoutedEventArgs e)
         {
-            SetVisualState(IsAnimated);
+            SetVisualState(IsAnimated, ImageCount);
         }
 
         public static readonly DependencyProperty ImageSourceProperty = DependencyProperty.Register("ImageSource", typeof(BitmapSource), typeof(ImagePresenter), null);
@@ -67,7 +67,7 @@ namespace DL444.ImgurUwp.App.Controls
             }
         }
 
-        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register("IsAnimated", typeof(bool), typeof(ImagePresenter), new PropertyMetadata(false, IsAnimatedChanged));
+        public static readonly DependencyProperty IsAnimatedProperty = DependencyProperty.Register("IsAnimated", typeof(bool), typeof(ImagePresenter), new PropertyMetadata(false, PropertyValueChanged));
         public bool IsAnimated
         {
             get => (bool)GetValue(IsAnimatedProperty);
@@ -79,12 +79,6 @@ namespace DL444.ImgurUwp.App.Controls
         {
             get => (bool)GetValue(AutoplayProperty);
             set => SetValue(AutoplayProperty, value);
-        }
-
-        static void IsAnimatedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            ImagePresenter instance = sender as ImagePresenter;
-            instance.SetVisualState(instance.IsAnimated);
         }
 
         // These two values are used to calculate placeholder dimensions.
@@ -107,7 +101,20 @@ namespace DL444.ImgurUwp.App.Controls
             private set => SetValue(PlaceholderHeightProperty, value);
         }
 
-        void SetVisualState(bool isAnimated)
+        public static readonly DependencyProperty ImageCountProperty = DependencyProperty.Register("ImageCount", typeof(int), typeof(ImagePresenter), new PropertyMetadata(1, PropertyValueChanged));
+        public int ImageCount
+        {
+            get => (int)GetValue(ImageCountProperty);
+            set => SetValue(ImageCountProperty, value);
+        }
+
+        static void PropertyValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            ImagePresenter instance = sender as ImagePresenter;
+            instance.SetVisualState(instance.IsAnimated, instance.ImageCount);
+        }
+
+        void SetVisualState(bool isAnimated, int imageCount)
         {
             if (isAnimated)
             {
@@ -116,6 +123,15 @@ namespace DL444.ImgurUwp.App.Controls
             else
             {
                 VisualStateManager.GoToState(this, "StaticImage", false);
+            }
+
+            if(imageCount > 1)
+            {
+                VisualStateManager.GoToState(this, "Album", false);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Image", false);
             }
         }
     }

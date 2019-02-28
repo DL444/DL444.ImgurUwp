@@ -152,6 +152,16 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+        public int ImageCount
+        {
+            get
+            {
+                if(Item == null) { return 0; }
+                else if(Item is GalleryImage) { return 1; }
+                else if(Item is GalleryAlbum a) { return a.ImageCount; }
+                else { return 0; }
+            }
+        }
 
         public string Thumbnail => _thumbnail;
 
