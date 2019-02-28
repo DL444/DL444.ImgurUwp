@@ -91,7 +91,7 @@
         </CommandBar>
     </Page.BottomAppBar>
     <Grid>
-        <GridView ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Margin="8,0" Padding="0,16" ItemTemplate="{ThemeResource GalleryViewItemTemplate}" SelectionMode="Single" IsItemClickEnabled="True">
+        <GridView ItemsSource="{x:Bind ViewModel, Mode=OneWay}" Margin="8,0" Padding="0,16" ItemTemplate="{ThemeResource GalleryViewItemTemplate}" SelectionMode="Single" IsItemClickEnabled="True">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <cc:StaggeredPanel DesiredColumnWidth="250"/>

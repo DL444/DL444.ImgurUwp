@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
 using System.ComponentModel;
 using DL444.ImgurUwp.ApiClient;
+using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -27,15 +28,8 @@ namespace DL444.ImgurUwp.App
     {
         private GalleryCollectionViewModel _viewModel;
 
-        GalleryCollectionViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                _viewModel = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
-            }
-        }
+        IncrementalLoadingCollection<GalleryItemsSource, GalleryItemViewModel> ViewModel { get; set; }
+            = new IncrementalLoadingCollection<GalleryItemsSource, GalleryItemViewModel>();
 
         private DisplayParams.Section _section;
         public DisplayParams.Section Section
@@ -74,11 +68,11 @@ namespace DL444.ImgurUwp.App
         {
             base.OnNavigatedTo(e);
 
-            if(e.Parameter is DisplayParams.Section sect)
-            {
-                var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
-                ViewModel = new GalleryCollectionViewModel(galleryItems);
-            }
+            //if(e.Parameter is DisplayParams.Section sect)
+            //{
+            //    var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
+            //    ViewModel = new GalleryCollectionViewModel(galleryItems);
+            //}
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
