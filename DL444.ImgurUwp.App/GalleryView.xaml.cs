@@ -28,7 +28,18 @@ namespace DL444.ImgurUwp.App
     {
         private GalleryCollectionViewModel _viewModel;
 
-        IncrementalLoadingCollection<GalleryItemsSource, GalleryItemViewModel> ViewModel { get; set; }
+        GalleryCollectionViewModel ViewModel
+        {
+            get => _viewModel;
+            set
+            {
+                _viewModel = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
+            }
+        }
+
+
+        IncrementalLoadingCollection<GalleryItemsSource, GalleryItemViewModel> ViewModel_New { get; set; }
             = new IncrementalLoadingCollection<GalleryItemsSource, GalleryItemViewModel>();
 
         private DisplayParams.Section _section;
@@ -68,11 +79,11 @@ namespace DL444.ImgurUwp.App
         {
             base.OnNavigatedTo(e);
 
-            //if(e.Parameter is DisplayParams.Section sect)
-            //{
-            //    var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
-            //    ViewModel = new GalleryCollectionViewModel(galleryItems);
-            //}
+            if (e.Parameter is DisplayParams.Section sect)
+            {
+                var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 1, sect);
+                ViewModel = new GalleryCollectionViewModel(galleryItems);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

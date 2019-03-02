@@ -91,17 +91,14 @@
         </CommandBar>
     </Page.BottomAppBar>
     <Grid>
-        <GridView ItemsSource="{x:Bind ViewModel, Mode=OneWay}" Margin="8,0" Padding="0,16" ItemTemplate="{ThemeResource GalleryViewItemTemplate}" SelectionMode="Single" IsItemClickEnabled="True">
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <cc:StaggeredPanel DesiredColumnWidth="250"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <GridView.ItemContainerStyle>
-                <Style TargetType="GridViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </GridView.ItemContainerStyle>
-        </GridView>
+        <Grid.Resources>
+            <cc:StaggeredLayout x:Key="StaggeredLayout"/>
+            <cc:PinterestLayout Width="250" x:Key="PinterestLayout"/>
+        </Grid.Resources>
+        <ui:ScrollAnchorProvider HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <ui:ItemsRepeater ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Layout="{StaticResource StaggeredLayout}" Margin="8,0" ItemTemplate="{StaticResource GalleryViewItemTemplate}"/>
+            </ScrollViewer>
+        </ui:ScrollAnchorProvider>
     </Grid>
 </Page>

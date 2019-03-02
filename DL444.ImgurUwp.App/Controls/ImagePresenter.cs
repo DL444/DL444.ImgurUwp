@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -106,6 +107,27 @@ namespace DL444.ImgurUwp.App.Controls
         {
             get => (int)GetValue(ImageCountProperty);
             set => SetValue(ImageCountProperty, value);
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            Size initSize = base.MeasureOverride(availableSize);
+            if (initSize.Height == 0)
+            {
+                double width = availableSize.Width;
+                double placeholderHeight = ImageHeight * (width / ImageWidth);
+                initSize.Height += placeholderHeight;
+                if (initSize.Height > MaxHeight)
+                {
+                    initSize.Height = MaxHeight;
+                }
+            }
+            return initSize;
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return base.ArrangeOverride(finalSize);
         }
 
         static void PropertyValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
