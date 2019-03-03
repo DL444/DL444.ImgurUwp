@@ -16,7 +16,7 @@
         <vm:NumberStringConverter x:Key="NumberStringConverter"/>
         <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
-            <Button Margin="4" Style="{ThemeResource FrontpageItemButtonStyle}">
+            <cc:FrontpageItemButton Margin="4" Tag="{x:Bind}">
                 <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -64,7 +64,7 @@
                     <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="2" Grid.Column="3"/>
                     <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="2" Grid.Column="4"/>
                 </Grid>
-            </Button>
+            </cc:FrontpageItemButton>
         </DataTemplate>
     </Page.Resources>
     <Page.BottomAppBar>
@@ -88,7 +88,7 @@
             <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ui:ItemsRepeater ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Margin="8,0" ItemTemplate="{StaticResource GalleryViewItemTemplate}">
                     <ui:ItemsRepeater.Layout>
-                        <cc:StaggeredLayout/>
+                        <cc:StaggeredLayout x:Name="FrontpageLayout"/>
                     </ui:ItemsRepeater.Layout>
                 </ui:ItemsRepeater>
             </ScrollViewer>

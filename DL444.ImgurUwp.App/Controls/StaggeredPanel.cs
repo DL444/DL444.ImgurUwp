@@ -5,6 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls;
 using System.Collections.Generic;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace DL444.ImgurUwp.App.Controls
 {
@@ -91,6 +92,8 @@ namespace DL444.ImgurUwp.App.Controls
 
                 // It turns out this measurement is pretty important for elements to stay within their bounds.
                 child.Measure(new Size(rect.Width, rect.Height));
+                // I know this is rather inelegant, but since ItemsRepeater has no click support whatsoever, so...
+                SubscribeClickEvent(child);
                 child.Arrange(rect);
                 index++;
             }
@@ -119,6 +122,20 @@ namespace DL444.ImgurUwp.App.Controls
             var panel = (StaggeredLayout)d;
             panel.InvalidateMeasure();
         }
+
+        void SubscribeClickEvent(UIElement element)
+        {
+            if(element is FrontpageItemButton btn && !btn.ClickEventAttached)
+            {
+                WeakEventListener<Button, object, RoutedEventArgs> itemClickListener
+                    = new WeakEventListener<Button, object, RoutedEventArgs>(btn);
+                itemClickListener.OnEventAction = (_, source, args) => ItemClicked?.Invoke(source, args);
+                btn.Click += itemClickListener.OnEvent;
+                btn.ClickEventAttached = true;
+            }
+        }
+
+        public event RoutedEventHandler ItemClicked;
 
         internal class StaggeredLayoutState
         {

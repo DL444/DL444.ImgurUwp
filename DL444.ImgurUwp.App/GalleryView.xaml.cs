@@ -72,8 +72,14 @@ namespace DL444.ImgurUwp.App
         public GalleryView()
         {
             this.InitializeComponent();
+            // Universal Windows Platform does not allow custom RoutedEvent. So have to use code-behind.
+            FrontpageLayout.ItemClicked += FrontpageLayout_ItemClicked;
         }
 
+        private void FrontpageLayout_ItemClicked(object sender, RoutedEventArgs e)
+        {
+            // TODO: Handle click event.
+        }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -82,10 +88,6 @@ namespace DL444.ImgurUwp.App
             if (e.Parameter is DisplayParams.Section sect)
             {
                 var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
-                //for(int i = 0; i < galleryItems.Count(); i++)
-                //{
-                //    galleryItems.ElementAt(i).Title = i.ToString();
-                //}
                 ViewModel = new GalleryCollectionViewModel(galleryItems);
             }
         }
