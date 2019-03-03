@@ -122,7 +122,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ClickEditTextBox.cs" />
     <Compile Include="Controls\FrontpageImagePresenter.cs" />
     <Compile Include="Controls\ImagePresenter.cs" />
     <Compile Include="Controls\MenuFlyoutContentItem.cs" />

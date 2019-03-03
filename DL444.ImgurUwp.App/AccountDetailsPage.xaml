@@ -12,22 +12,36 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <SolidColorBrush x:Key="DarkAccentColorBrush" Color="{ThemeResource SystemAccentColorDark3}"/>
-        <vm:DateStringConverter x:Key="DateStringConverter"/>
-        <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{StaticResource SystemChromeAltHighColor}" BackgroundSource="Backdrop"
+        <ResourceDictionary>
+            <vm:DateStringConverter x:Key="DateStringConverter"/>
+            <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{StaticResource SystemChromeAltHighColor}" BackgroundSource="Backdrop"
                       TintOpacity="0.3" FallbackColor="Transparent"/>
-        <Style x:Key="HeaderedTextBlockTextStyle" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
-            <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-            <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}" />
-            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-            <Setter Property="TextWrapping" Value="Wrap" />
-            <Setter Property="TextLineBounds" Value="TrimToBaseline" />
-            <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="FontWeight" Value="Light" />
-            <Setter Property="LineHeight" Value="28" />
-        </Style>
+            <Style x:Key="HeaderedTextBlockTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="TextLineBounds" Value="TrimToBaseline" />
+                <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Light" />
+                <Setter Property="LineHeight" Value="28" />
+            </Style>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorDark1}"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorLight1}"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAltHighColor}"/>
+                    <!-- Not sure the value is correct. -->
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
 
     <ScrollViewer x:Name="RootScrollView">
@@ -38,16 +52,16 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.RowSpan="2" Background="{ThemeResource DarkAccentColorBrush}">
+            <Grid Grid.RowSpan="2" Background="{ThemeResource ImagePlaceholderAccentColorBrush}">
                 <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" VerticalAlignment="Center"/>
             </Grid>
 
             <Grid Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16">
                     <PersonPicture HorizontalAlignment="Center" Height="96" ProfilePicture="{x:Bind ViewModel.AvatarUrl}"/>
-                    <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0" RequestedTheme="Dark"/>
-                    <cc:ClickEditTextBox Text="{x:Bind ViewModel.Biography}" PlaceholderText="Tell Imgur a little about yourself..." 
-                                         HorizontalAlignment="Center" Margin="0,8,0,0" RequestedTheme="Dark" MaxWidth="800" IsSpellCheckEnabled="False"/>
+                    <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0"/>
+                    <TextBox Text="{x:Bind ViewModel.Biography}" PlaceholderText="Tell Imgur a little about yourself..." Style="{ThemeResource ClickEditTextBoxStyle}"
+                                         HorizontalAlignment="Center" Margin="0,8,0,0" MaxWidth="800" IsSpellCheckEnabled="False"/>
                 </StackPanel>
             </Grid>
 

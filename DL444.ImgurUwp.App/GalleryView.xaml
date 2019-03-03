@@ -16,53 +16,55 @@
         <vm:NumberStringConverter x:Key="NumberStringConverter"/>
         <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
-            <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="8"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="8"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="8"/>
-                </Grid.ColumnDefinitions>
-                <Grid.ContextFlyout>
-                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
-                        <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}">
-                                <AppBarToggleButton.Icon>
-                                    <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
-                                </AppBarToggleButton.Icon>
-                            </AppBarToggleButton>
-                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
-                            <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
-                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
-                        </ui:CommandBarFlyout.PrimaryCommands>
-                        <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
-                            <AppBarButton Label="Report" Icon="Flag"/>
-                        </ui:CommandBarFlyout.SecondaryCommands>
-                    </ui:CommandBarFlyout>
-                </Grid.ContextFlyout>
-                <!--<cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" Grid.ColumnSpan="6"
+            <Button Margin="4" Style="{ThemeResource FrontpageItemButtonStyle}">
+                <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="8"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="8"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.ContextFlyout>
+                        <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                            <ui:CommandBarFlyout.PrimaryCommands>
+                                <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}">
+                                    <AppBarToggleButton.Icon>
+                                        <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
+                                    </AppBarToggleButton.Icon>
+                                </AppBarToggleButton>
+                                <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                                <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
+                                <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
+                            </ui:CommandBarFlyout.PrimaryCommands>
+                            <ui:CommandBarFlyout.SecondaryCommands>
+                                <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
+                                <AppBarButton Label="Report" Icon="Flag"/>
+                            </ui:CommandBarFlyout.SecondaryCommands>
+                        </ui:CommandBarFlyout>
+                    </Grid.ContextFlyout>
+                    <!--<cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" Grid.ColumnSpan="6"
                                        ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
                                        Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" ImageCount="{x:Bind ImageCount, Mode=OneWay}"/>-->
-                <cc:FrontpageImagePresenter Grid.ColumnSpan="6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" Source="{x:Bind Thumbnail}" ImageWidth="{x:Bind DisplayImage.Width}" ImageHeight="{x:Bind DisplayImage.Height}" IsAnimated="{x:Bind DisplayImage.Animated}" ImageCount="{x:Bind ImageCount}"/>
-                <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="2" Grid.Column="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
-                    <cc:SymbolTextToggleButton.Icon>
-                        <FontIcon Glyph="&#xE1FD;"/>
-                    </cc:SymbolTextToggleButton.Icon>
-                </cc:SymbolTextToggleButton>
-                <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="2" Grid.Column="3"/>
-                <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="2" Grid.Column="4"/>
-            </Grid>
+                    <cc:FrontpageImagePresenter Grid.ColumnSpan="6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" Source="{x:Bind Thumbnail}" ImageWidth="{x:Bind DisplayImage.Width}" ImageHeight="{x:Bind DisplayImage.Height}" IsAnimated="{x:Bind DisplayImage.Animated}" ImageCount="{x:Bind ImageCount}"/>
+                    <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="2" Grid.Column="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
+                        <cc:SymbolTextToggleButton.Icon>
+                            <FontIcon Glyph="&#xE1FD;"/>
+                        </cc:SymbolTextToggleButton.Icon>
+                    </cc:SymbolTextToggleButton>
+                    <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="2" Grid.Column="3"/>
+                    <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="2" Grid.Column="4"/>
+                </Grid>
+            </Button>
         </DataTemplate>
     </Page.Resources>
     <Page.BottomAppBar>
