@@ -19,49 +19,13 @@ namespace DL444.ImgurUwp.App.Controls
         public SymbolTextToggleButton()
         {
             this.DefaultStyleKey = typeof(SymbolTextToggleButton);
-            this.Loaded += SymbolTextToggleButton_Loaded;
-        }
-        private void SymbolTextToggleButton_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Icon == null)
-            {
-                IconOn = false;
-            }
-            else
-            {
-                IconOn = true;
-            }
         }
 
-        public static DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(IconElement), typeof(SymbolTextToggleButton), new PropertyMetadata(null, Icon_Changed));
+        public static DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(IconElement), typeof(SymbolTextToggleButton), null);
         public IconElement Icon
         {
             get => GetValue(IconProperty) as IconElement;
             set => SetValue(IconProperty, value);
-        }
-
-        private bool _iconOn;
-        bool IconOn
-        {
-            get => _iconOn;
-            set
-            {
-                _iconOn = value;
-                SetVisualState(IconOn);
-            }
-        }
-
-        static void Icon_Changed(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            SymbolTextToggleButton instance = sender as SymbolTextToggleButton;
-            if (e.NewValue == null)
-            {
-                instance.IconOn = false;
-            }
-            else
-            {
-                instance.IconOn = true;
-            }
         }
 
         public static DependencyProperty HoverForegroundProperty = DependencyProperty.Register("HoverForeground", typeof(Brush), typeof(SymbolTextToggleButton), null);
@@ -90,18 +54,6 @@ namespace DL444.ImgurUwp.App.Controls
         {
             get => GetValue(CheckedHoverForegroundProperty) as Brush;
             set => SetValue(CheckedHoverForegroundProperty, value);
-        }
-
-        void SetVisualState(bool isIconOn)
-        {
-            if (isIconOn)
-            {
-                VisualStateManager.GoToState(this, "IconOn", false);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "IconOff", false);
-            }
         }
     }
 }

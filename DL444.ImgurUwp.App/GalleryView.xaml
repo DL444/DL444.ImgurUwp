@@ -16,13 +16,22 @@
         <vm:NumberStringConverter x:Key="NumberStringConverter"/>
         <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
-            <ContentControl>
-                <ContentControl.Template>
-                    <ControlTemplate TargetType="ContentControl">
-                        <ContentPresenter HorizontalAlignment="Stretch"/>
-                    </ControlTemplate>
-                </ContentControl.Template>
-                <ContentControl.ContextFlyout>
+            <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="8"/>
+                </Grid.ColumnDefinitions>
+                <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
                             <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}">
@@ -39,39 +48,21 @@
                             <AppBarButton Label="Report" Icon="Flag"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
-                </ContentControl.ContextFlyout>
-                <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
+                </Grid.ContextFlyout>
+                <!--<cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
                                        ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
-                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" ImageCount="{x:Bind ImageCount, Mode=OneWay}"/>
-                    <Grid Grid.Row="1" Margin="8">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
-                        <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
-                        <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
-                            <cc:SymbolTextToggleButton.Icon>
-                                <FontIcon Glyph="&#xE1FD;"/>
-                            </cc:SymbolTextToggleButton.Icon>
-                        </cc:SymbolTextToggleButton>
-                        <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="1" Grid.Column="2"/>
-                        <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="1" Grid.Column="3"/>
-                    </Grid>
-                </Grid>
-            </ContentControl>
+                                       Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" ImageCount="{x:Bind ImageCount, Mode=OneWay}"/>-->
+                <Image Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="6" Source="{x:Bind Thumbnail, Mode=OneWay}" Height="500"/>
+                <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="2" Grid.Column="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
+                    <cc:SymbolTextToggleButton.Icon>
+                        <FontIcon Glyph="&#xE1FD;"/>
+                    </cc:SymbolTextToggleButton.Icon>
+                </cc:SymbolTextToggleButton>
+                <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="2" Grid.Column="3"/>
+                <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="2" Grid.Column="4"/>
+            </Grid>
         </DataTemplate>
     </Page.Resources>
     <Page.BottomAppBar>

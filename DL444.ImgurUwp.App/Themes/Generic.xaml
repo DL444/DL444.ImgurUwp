@@ -237,15 +237,6 @@
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
-                            
-                            <VisualStateGroup x:Name="IconStates">
-                                <VisualState x:Name="IconOff"/>
-                                <VisualState x:Name="IconOn">
-                                    <VisualState.Setters>
-                                        <Setter Target="IconRoot.Visibility" Value="Visible"/>
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         
                         <Grid.ColumnDefinitions>
@@ -257,7 +248,7 @@
                             VerticalAlignment="Center"
                             Width="16" 
                             Height="16"
-                            Visibility="Collapsed">
+                            Visibility="Visible">
                             <ContentPresenter x:Name="IconContent" Content="{TemplateBinding Icon}"/>
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 
@@ -290,17 +281,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="cc:SymbolTextLabel">
                     <Grid x:Name="LayoutRoot">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="IconStates">
-                                <VisualState x:Name="IconOff"/>
-                                <VisualState x:Name="IconOn">
-                                    <VisualState.Setters>
-                                        <Setter Target="IconRoot.Visibility" Value="Visible"/>
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
@@ -310,7 +290,7 @@
                             VerticalAlignment="Center"
                             Width="16" 
                             Height="16"
-                            Visibility="Collapsed">
+                            Visibility="Visible">
                             <ContentPresenter x:Name="IconContent" Content="{TemplateBinding Icon}"/>
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 
@@ -404,15 +384,6 @@
                                 <VisualState x:Name="IndeterminatePressed"/>
                                 <VisualState x:Name="IndeterminateDisabled"/>
                             </VisualStateGroup>
-                            
-                            <VisualStateGroup x:Name="IconStates">
-                                <VisualState x:Name="IconOff"/>
-                                <VisualState x:Name="IconOn">
-                                    <VisualState.Setters>
-                                        <Setter Target="IconRoot.Visibility" Value="Visible"/>
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         
                         <Grid.ColumnDefinitions>
@@ -425,7 +396,7 @@
                             VerticalAlignment="Center"
                             Width="16" 
                             Height="16"
-                            Visibility="Collapsed">
+                            Visibility="Visible">
                             <ContentPresenter x:Name="IconContent" Content="{TemplateBinding Icon}"/>
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 

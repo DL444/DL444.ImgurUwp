@@ -12,6 +12,7 @@ namespace DL444.ImgurUwp.App.Controls
     public class StaggeredLayout : VirtualizingLayout
     {
         private double _columnWidth;
+        StaggeredLayoutState state = null;
 
         public double DesiredColumnWidth
         {
@@ -27,12 +28,6 @@ namespace DL444.ImgurUwp.App.Controls
         }
         public static readonly DependencyProperty PaddingProperty = DependencyProperty.Register(nameof(Padding), typeof(Thickness), typeof(StaggeredLayout), new PropertyMetadata(default(Thickness), OnPaddingChanged));
 
-        protected override void UninitializeForContextCore(VirtualizingLayoutContext context)
-        {
-            base.UninitializeForContextCore(context);
-            context.LayoutState = null;
-        }
-
         protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
         {
             availableSize.Width = availableSize.Width/* - Padding.Left - Padding.Right*/;
@@ -43,19 +38,22 @@ namespace DL444.ImgurUwp.App.Controls
             int numColumns = (int)Math.Floor(availableSize.Width / _columnWidth);
             _columnWidth = availableSize.Width / numColumns;
 
-            if(context.LayoutState == null)
+            if(state == null || state.Width != context.RealizationRect.Width)
             {
-                context.LayoutState = new StaggeredLayoutState(numColumns, _columnWidth);
+                state = new StaggeredLayoutState(numColumns, _columnWidth, context.RealizationRect.Width);
             }
-            var state = context.LayoutState as StaggeredLayoutState;
 
             if(context.ItemCount == 0) { return new Size(availableSize.Width, 0); }
 
+            // The viewport consists the current view, one view before, and one view after.
             double viewUpperBound = context.RealizationRect.Top;
             double viewLowerBound = context.RealizationRect.Bottom;
+            System.Diagnostics.Debug.WriteLine($"Viewport: {viewUpperBound}, {viewLowerBound}");
 
             int firstIndex = state.GetFirstItemInView(viewUpperBound);
             int lastIndex = state.GetLastItemInView(viewLowerBound);
+            System.Diagnostics.Debug.WriteLine($"Bounds: {firstIndex}, {lastIndex}");
+
             int index = firstIndex;
 
             while(state.CacheCount < context.ItemCount)
@@ -69,6 +67,10 @@ namespace DL444.ImgurUwp.App.Controls
 
                 // The culpit might be auto recycling. Supressing it solves the problem, 
                 // but defeats virtualization and raises runtime expections, so must fix it.
+
+                // Okay, the real problem is the custom image control. Without that this implementation works just fine.
+                // The culpit is the video control. Even using that alone produces the issue.
+                // So might consider extract the first frame and put it in an image box.
 
                 var child = context.GetOrCreateElementAt(lastIndex/*, ElementRealizationOptions.SuppressAutoRecycle*/);
                 rect = state.CreateRectForChild(lastIndex, child);
@@ -88,9 +90,21 @@ namespace DL444.ImgurUwp.App.Controls
                 {
                     rect = state.CreateRectForChild(index, child);
                 }
+
+                // It turns out this measurement is pretty important for elements to stay within their bounds.
+                child.Measure(new Size(rect.Width, rect.Height));
                 child.Arrange(rect);
                 index++;
             }
+
+            // Use this to reproduce bug.
+
+            //var firstElement = context.GetOrCreateElementAt(0);
+            //context.RecycleElement(firstElement);
+            //firstElement = context.GetOrCreateElementAt(0);
+            //firstElement.Measure(new Size(_columnWidth, availableSize.Height));
+            //Rect r = state.GetRect(0);
+            //firstElement.Arrange(r);
 
             double desiredHeight = state.GetTotalHeight();
             return new Size(availableSize.Width, desiredHeight);
@@ -110,6 +124,7 @@ namespace DL444.ImgurUwp.App.Controls
 
         internal class StaggeredLayoutState
         {
+            public double Width { get; }
             // Including (returned index in view and cached)
             public int GetFirstItemInView(double viewportUpperBound)
             {
@@ -180,186 +195,13 @@ namespace DL444.ImgurUwp.App.Controls
             public double[] height;
             private double _columnWidth;
 
-            public StaggeredLayoutState(int columnCount, double columnWidth)
+            public StaggeredLayoutState(int columnCount, double columnWidth, double width)
             {
                 ColumnCount = columnCount;
                 height = new double[columnCount];
                 _columnWidth = columnWidth;
+                Width = width;
             }
         }
-    }
-
-    // See GitHub: Microsoft/UI-Xaml-Gallery
-    public class PinterestLayout : VirtualizingLayout
-    {
-        public PinterestLayout()
-        {
-            Width = 250.0;
-        }
-
-        public double Width { get; set; }
-
-        protected override Size MeasureOverride(VirtualizingLayoutContext context, Size availableSize)
-        {
-            var viewport = context.RealizationRect;
-            System.Diagnostics.Debug.WriteLine("Measure: " + viewport);
-
-            if (availableSize.Width != m_lastAvailableWidth)
-            {
-                UpdateCachedBounds(availableSize);
-                m_lastAvailableWidth = availableSize.Width;
-            }
-
-            // Initialize column offsets
-            int numColumns = (int)(availableSize.Width / Width);
-            if (m_columnOffsets.Count == 0)
-            {
-                for (int i = 0; i < numColumns; i++)
-                {
-                    m_columnOffsets.Add(0);
-                }
-            }
-
-            double horizontalOffset = (availableSize.Width - numColumns * Width) / 2;
-
-            m_firstIndex = GetStartIndex(viewport);
-            int currentIndex = m_firstIndex;
-            double nextOffset = -1.0;
-
-            // Measure items from start index to when we hit the end of the viewport.
-            while (currentIndex < context.ItemCount && nextOffset < viewport.Bottom)
-            {
-                System.Diagnostics.Debug.WriteLine("Measuring " + currentIndex);
-                var child = context.GetOrCreateElementAt(currentIndex);
-                child.Measure(new Size(Width, availableSize.Height));
-
-                if (currentIndex >= m_cachedBounds.Count)
-                {
-                    // We do not have bounds for this index. Lay it out and cache it.
-                    int columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
-                    m_cachedBounds.Add(new Rect(columnIndex * Width + horizontalOffset, nextOffset, Width, child.DesiredSize.Height));
-                    m_columnOffsets[columnIndex] += child.DesiredSize.Height;
-                }
-                else
-                {
-                    if (currentIndex + 1 == m_cachedBounds.Count)
-                    {
-                        // Last element. Use the next offset.
-                        GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
-                    }
-                    else
-                    {
-                        nextOffset = m_cachedBounds[currentIndex + 1].Top;
-                    }
-                }
-
-                child.Arrange(m_cachedBounds[currentIndex]);
-
-                m_lastIndex = currentIndex;
-                currentIndex++;
-            }
-
-            var extent = GetExtentSize(availableSize);
-            return extent;
-        }
-
-        // The children are arranged during measure, so ArrangeOverride can be a no-op.
-        //protected override Size ArrangeOverride(VirtualizingLayoutContext context, Size finalSize)
-        //{
-        //    Debug.WriteLine("Arrange: " + context.RealizationRect);
-        //    for (int index = m_firstIndex; index <= m_lastIndex; index++)
-        //    {
-        //        Debug.WriteLine("Arranging " + index);
-        //        var child = context.GetElementAt(index);
-        //        child.Arrange(m_cachedBounds[index]);
-        //    }
-        //    return finalSize;
-        //}
-
-        private void UpdateCachedBounds(Size availableSize)
-        {
-            int numColumns = (int)(availableSize.Width / Width);
-            m_columnOffsets.Clear();
-            for (int i = 0; i < numColumns; i++)
-            {
-                m_columnOffsets.Add(0);
-            }
-
-            double horizontalOffset = (availableSize.Width - numColumns * Width) / 2;
-
-            for (int index = 0; index < m_cachedBounds.Count; index++)
-            {
-                double nextOffset = 0.0;
-                int columnIndex = GetIndexOfLowestColumn(m_columnOffsets, out nextOffset);
-                var oldHeight = m_cachedBounds[index].Height;
-                m_cachedBounds[index] = new Rect(columnIndex * Width + horizontalOffset, nextOffset, Width, oldHeight);
-                m_columnOffsets[columnIndex] += oldHeight;
-            }
-        }
-
-        private int GetStartIndex(Rect viewport)
-        {
-            int startIndex = 0;
-            if (m_cachedBounds.Count == 0)
-            {
-                startIndex = 0;
-            }
-            else
-            {
-                // find first index that intersects the viewport
-                // perhaps this can be done more efficiently than walking
-                // from the start of the list.
-                for (int i = 0; i < m_cachedBounds.Count; i++)
-                {
-                    var currentBounds = m_cachedBounds[i];
-                    if (currentBounds.Y < viewport.Bottom &&
-                        currentBounds.Bottom > viewport.Top)
-                    {
-                        startIndex = i;
-                        break;
-                    }
-                }
-            }
-
-            return startIndex;
-        }
-
-        private int GetIndexOfLowestColumn(List<double> columnOffsets, out double lowestOffset)
-        {
-            int lowestIndex = 0;
-            lowestOffset = columnOffsets[lowestIndex];
-            for (int index = 0; index < columnOffsets.Count; index++)
-            {
-                var currentOffset = columnOffsets[index];
-                if (lowestOffset > currentOffset)
-                {
-                    lowestOffset = currentOffset;
-                    lowestIndex = index;
-                }
-            }
-
-            return lowestIndex;
-        }
-
-        private Size GetExtentSize(Size availableSize)
-        {
-            double largestColumnOffset = m_columnOffsets[0];
-            for (int index = 0; index < m_columnOffsets.Count; index++)
-            {
-                var currentOffset = m_columnOffsets[index];
-                if (largestColumnOffset < currentOffset)
-                {
-                    largestColumnOffset = currentOffset;
-                }
-            }
-
-            return new Size(availableSize.Width, largestColumnOffset);
-        }
-
-        int m_firstIndex = 0;
-        int m_lastIndex = 0;
-        double m_lastAvailableWidth = 0.0;
-        List<double> m_columnOffsets = new List<double>();
-        List<Rect> m_cachedBounds = new List<Rect>();
     }
 }

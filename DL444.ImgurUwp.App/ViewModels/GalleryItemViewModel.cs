@@ -48,23 +48,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                     {
                         if (DisplayImage.Animated)
                         {
-                            if (DisplayImage.Type == "image/gif")
-                            {
-                                if (DisplayImage.Link.Contains($"{DisplayImage.Id}h"))
-                                {
-                                    _thumbnail = DisplayImage.Link.Replace($"{DisplayImage.Id}h.gif", $"{DisplayImage.Id}_lq.mp4");
-                                }
-                                else
-                                {
-                                    _thumbnail = DisplayImage.Link.Replace($"{DisplayImage.Id}.gif", $"{DisplayImage.Id}_lq.mp4");
-                                }
-                                // It is recognized that there are some plain GIF images. 
-                                // However, their thumbnails do not animate, so use low-quality MP4 instead.
-                            }
-                            else
-                            {
-                                _thumbnail = DisplayImage.Link.Replace(DisplayImage.Id, $"{DisplayImage.Id}_lq");
-                            }
+                            _thumbnail = $"{DisplayImage.Link.Remove(DisplayImage.Link.LastIndexOf('/'))}/{DisplayImage.Id}_d.jpg?maxwidth=520&shape=thumb&fidelity=mid";
                         }
                         else
                         {

@@ -125,11 +125,6 @@ namespace DL444.ImgurUwp.App.Controls
             return initSize;
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            return base.ArrangeOverride(finalSize);
-        }
-
         static void PropertyValueChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             ImagePresenter instance = sender as ImagePresenter;

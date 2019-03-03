@@ -82,6 +82,10 @@ namespace DL444.ImgurUwp.App
             if (e.Parameter is DisplayParams.Section sect)
             {
                 var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 1, sect);
+                //for(int i = 0; i < galleryItems.Count(); i++)
+                //{
+                //    galleryItems.ElementAt(i).Title = i.ToString();
+                //}
                 ViewModel = new GalleryCollectionViewModel(galleryItems);
             }
         }
