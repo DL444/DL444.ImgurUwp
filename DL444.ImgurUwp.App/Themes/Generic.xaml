@@ -611,4 +611,56 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style TargetType="cc:FrontpageImagePresenter">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="cc:FrontpageImagePresenter">
+                    <Grid
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        MaxHeight="{TemplateBinding MaxHeight}"
+                        MaxWidth="{TemplateBinding MaxWidth}"
+                        Height="{TemplateBinding PlaceholderHeight}">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="LoadingStates">
+                                <VisualState x:Name="Loaded"/>
+                                <VisualState x:Name="Loading"/>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Image x:Name="ImageBox" HorizontalAlignment="Stretch" Source="{TemplateBinding Source}" VerticalAlignment="Top"/>
+                        <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="0,8,8,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                            <StackPanel.Resources>
+                                <cc:ImageCountVisibilityConverter x:Key="ImageCountVisibilityConverter"/>
+                                <cc:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+                            </StackPanel.Resources>
+                            <Grid x:Name="AnimationIndicator" Visibility="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsAnimated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
+                                <TextBlock Text="GIF"/>
+                            </Grid>
+
+                            <Grid x:Name="AlbumIndicator" Visibility="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ImageCount, Converter={StaticResource ImageCountVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,4,0,0">
+                                <TextBlock Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ImageCount}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

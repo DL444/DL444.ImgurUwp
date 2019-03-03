@@ -48,11 +48,9 @@ namespace DL444.ImgurUwp.App.Controls
             // The viewport consists the current view, one view before, and one view after.
             double viewUpperBound = context.RealizationRect.Top;
             double viewLowerBound = context.RealizationRect.Bottom;
-            System.Diagnostics.Debug.WriteLine($"Viewport: {viewUpperBound}, {viewLowerBound}");
 
             int firstIndex = state.GetFirstItemInView(viewUpperBound);
             int lastIndex = state.GetLastItemInView(viewLowerBound);
-            System.Diagnostics.Debug.WriteLine($"Bounds: {firstIndex}, {lastIndex}");
 
             int index = firstIndex;
 

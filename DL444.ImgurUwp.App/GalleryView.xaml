@@ -49,10 +49,10 @@
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
                 </Grid.ContextFlyout>
-                <!--<cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" 
+                <!--<cc:ImagePresenter SourceUrl="{x:Bind Thumbnail, Mode=OneWay}" IsAnimated="{x:Bind DisplayImage.Animated, Mode=OneWay}" Grid.ColumnSpan="6"
                                        ImageHeight="{x:Bind DisplayImage.Height, Mode=OneWay}" ImageWidth="{x:Bind DisplayImage.Width, Mode=OneWay}" 
                                        Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" ImageCount="{x:Bind ImageCount, Mode=OneWay}"/>-->
-                <Image Stretch="UniformToFill" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="6" Source="{x:Bind Thumbnail, Mode=OneWay}" Height="500"/>
+                <cc:FrontpageImagePresenter Grid.ColumnSpan="6" Background="{ThemeResource SystemControlBackgroundAltMediumLowBrush}" MaxHeight="500" Source="{x:Bind Thumbnail}" ImageWidth="{x:Bind DisplayImage.Width}" ImageHeight="{x:Bind DisplayImage.Height}" IsAnimated="{x:Bind DisplayImage.Animated}" ImageCount="{x:Bind ImageCount}"/>
                 <TextBlock Text="{x:Bind Title, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,8" MaxLines="3" TextTrimming="CharacterEllipsis"/>
                 <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="2" Grid.Column="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
                 <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="2" Grid.Column="2" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
@@ -82,13 +82,13 @@
         </CommandBar>
     </Page.BottomAppBar>
     <Grid>
-        <Grid.Resources>
-            <cc:StaggeredLayout x:Key="StaggeredLayout"/>
-            <cc:PinterestLayout Width="250" x:Key="PinterestLayout"/>
-        </Grid.Resources>
         <ui:ScrollAnchorProvider HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
             <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <ui:ItemsRepeater ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Layout="{StaticResource StaggeredLayout}" Margin="8,0" ItemTemplate="{StaticResource GalleryViewItemTemplate}"/>
+                <ui:ItemsRepeater ItemsSource="{x:Bind ViewModel.GalleryItems, Mode=OneWay}" Margin="8,0" ItemTemplate="{StaticResource GalleryViewItemTemplate}">
+                    <ui:ItemsRepeater.Layout>
+                        <cc:StaggeredLayout/>
+                    </ui:ItemsRepeater.Layout>
+                </ui:ItemsRepeater>
             </ScrollViewer>
         </ui:ScrollAnchorProvider>
     </Grid>
