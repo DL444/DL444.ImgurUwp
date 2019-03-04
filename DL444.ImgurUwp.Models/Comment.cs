@@ -17,7 +17,7 @@ namespace DL444.ImgurUwp.Models
         public int Downs { get; set; }
         public int Points { get; set; }
         public int DateTime { get; set; }
-        public string ParentId { get; set; }
+        public int ParentId { get; set; }
         public bool Deleted { get; set; }
         public string Vote { get; set; }
         public List<Comment> Children { get; set; }

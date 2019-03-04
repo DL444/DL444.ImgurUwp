@@ -13,11 +13,10 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <vm:NumberStringConverter x:Key="NumberStringConverter"/>
         <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
             <cc:FrontpageItemButton Margin="4" Tag="{x:Bind}">
-                <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>

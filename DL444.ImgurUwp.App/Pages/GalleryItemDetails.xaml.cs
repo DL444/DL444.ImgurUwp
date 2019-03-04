@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.Models;
 using DL444.ImgurUwp.App.ViewModels;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,11 +24,11 @@ namespace DL444.ImgurUwp.App.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class GalleryItemDetails : Page
+    public sealed partial class GalleryItemDetails : Page, INotifyPropertyChanged
     {
         GalleryItemViewModel ViewModel { get; set; }
         ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
-        ObservableCollection<Comment> Comments { get; } = new ObservableCollection<Comment>();
+        ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
         
         public GalleryItemDetails()
         {
@@ -36,7 +37,7 @@ namespace DL444.ImgurUwp.App.Pages
             SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             // The front page model only contains the first 3 images. If there's more, we would need to request them.
             base.OnNavigatedTo(e);
@@ -56,9 +57,13 @@ namespace DL444.ImgurUwp.App.Pages
                     Images.Add(new ImageViewModel(vm.DisplayImage));
                 }
 
-                //var comments = ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
+                var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
+                Comments = new ObservableCollection<CommentViewModel>(CommentViewModelFactory.BuildCommentViewModels(comments));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class SubItemTemplateSelector : DataTemplateSelector

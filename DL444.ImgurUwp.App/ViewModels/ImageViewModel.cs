@@ -45,9 +45,54 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool Nsfw => Image.Nsfw == true;
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;
-        
+
+        public Command CopyUrlCommand { get; private set; }
+        public Command ShareCommand { get; private set; }
+        public AsyncCommand<object> DownloadCommand { get; private set; }
+
+        void CopyUrl()
+        {
+            var package = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            package.SetText(Link);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(package);
+        }
+        void Share()
+        {
+            var transferMgr = Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView();
+            transferMgr.DataRequested += TransferMgr_DataRequested;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
+        }
+        async Task<object> Download()
+        {
+            var pictureLib = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Pictures);
+            var defaultFolder = pictureLib.SaveFolder;
+
+            using (var imageStream = System.IO.WindowsRuntimeStreamExtensions.AsInputStream(await ApiClient.Client.DownloadMediaAsync(Link)))
+            {
+                string filename = Link.Substring(Link.LastIndexOf('/') + 1);
+                var file = await defaultFolder.CreateFileAsync(filename);
+                using (var fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite))
+                {
+                    await Windows.Storage.Streams.RandomAccessStream.CopyAndCloseAsync(imageStream, fileStream);
+                }
+            }
+            return null;
+        }
+        private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
+        {
+            var request = args.Request;
+            request.Data.SetWebLink(new Uri($"https://imgur.com/{Id}"));
+            request.Data.Properties.Title = $"Image from Imgur";
+        }
+
         public ImageViewModel() { }
-        public ImageViewModel(Image image) => Image = image;
+        public ImageViewModel(Image image)
+        {
+            Image = image;
+            CopyUrlCommand = new Command(CopyUrl);
+            ShareCommand = new Command(Share);
+            DownloadCommand = new AsyncCommand<object>(Download);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
