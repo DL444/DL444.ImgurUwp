@@ -15,7 +15,7 @@
     </Page.Resources>
 
     <Grid>
-        <ui:NavigationView PaneDisplayMode="Top" x:Name="RootNavView" SelectionChanged="RootNavView_SelectionChanged" IsSettingsVisible="False">
+        <ui:NavigationView PaneDisplayMode="Top" x:Name="RootNavView" ItemInvoked="RootNavView_ItemInvoked" IsSettingsVisible="False" BackRequested="RootNavView_BackRequested" IsBackEnabled="{x:Bind ContentFrame.CanGoBack, Mode=OneWay}">
             <ui:NavigationView.Resources>
                 <AcrylicBrush x:Key="NavigationViewTopPaneBackground" TintColor="{ThemeResource SystemAccentColor}" FallbackColor="{ThemeResource SystemAccentColor}" TintOpacity="0.7" BackgroundSource="HostBackdrop"/>
                 <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="{ThemeResource SystemBaseMediumLowColor}"/>
@@ -79,7 +79,7 @@
                 </StackPanel>
             </ui:NavigationView.PaneFooter>
 
-            <Frame x:Name="ContentFrame"/>
+            <Frame x:Name="ContentFrame" Navigated="ContentFrame_Navigated"/>
 
         </ui:NavigationView>
     </Grid>

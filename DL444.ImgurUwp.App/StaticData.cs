@@ -40,18 +40,15 @@ namespace DL444.ImgurUwp.App
     static class Navigation
     {
         public static Frame ContentFrame { get; private set; }
-        public static UI.NavigationView NavigationView { get; private set; }
 
-        public static void Navigate(Type pageType, object parameter, bool clearNavView = true)
+        public static void Navigate(Type pageType, object parameter/*, bool clearNavView = true*/)
         {
             ContentFrame.Navigate(pageType, parameter);
-            if (clearNavView) { NavigationView.SelectedItem = null; }
         }
 
-        public static void InitializeNavigationHelper(Frame contentFrame, UI.NavigationView navView)
+        public static void InitializeNavigationHelper(Frame contentFrame)
         {
             ContentFrame = contentFrame;
-            NavigationView = navView;
         }
     }
 }

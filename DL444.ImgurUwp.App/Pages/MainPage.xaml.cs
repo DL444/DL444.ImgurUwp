@@ -47,20 +47,14 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             SetTitleBarButtonColor();
             this.ActualThemeChanged += (sender, e) => SetTitleBarButtonColor();
-            Navigation.InitializeNavigationHelper(ContentFrame, RootNavView);
+            Navigation.InitializeNavigationHelper(ContentFrame);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            foreach (var i in RootNavView.MenuItems)
-            {
-                var item = (i as UI.NavigationViewItem);
-                if (item.Tag as string == "viral")
-                {
-                    RootNavView.SelectedItem = item;
-                }
-            }
+
+            ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
 
             var meAccount = await ApiClient.Client.GetAccountAsync("me");
             CurrentAccount = new AccountViewModel(meAccount);
@@ -72,21 +66,6 @@ namespace DL444.ImgurUwp.App.Pages
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
             titleBar.ButtonForegroundColor = (Color)Application.Current.Resources["SystemBaseHighColor"];
             titleBar.ButtonInactiveForegroundColor = (Color)Application.Current.Resources["SystemBaseMediumColor"];
-        }
-
-        private void RootNavView_SelectionChanged(UI.NavigationView sender, UI.NavigationViewSelectionChangedEventArgs args)
-        {
-            UI.NavigationViewItem item = args.SelectedItem as UI.NavigationViewItem;
-            if(item == null) { return; }
-
-            if(item.Tag as string == "viral")
-            {
-                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
-            }
-            else if(item.Tag as string == "user")
-            {
-                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
-            }
         }
 
         private void Signout_Click(object sender, RoutedEventArgs e)
@@ -106,12 +85,48 @@ namespace DL444.ImgurUwp.App.Pages
             ContentFrame.Navigate(typeof(AccountDetails), CurrentAccount);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             RootNavView.SelectedItem = null;
             ContentFrame.Navigate(typeof(Settings.SettingsFrame));
         }
+
+        private void RootNavView_BackRequested(UI.NavigationView sender, UI.NavigationViewBackRequestedEventArgs args)
+        {
+            if(ContentFrame.CanGoBack)
+            {
+                ContentFrame.GoBack();
+            }
+        }
+
+        private void ContentFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            if(e.SourcePageType == typeof(GalleryView))
+            {
+                if(e.Parameter is DisplayParams.Section s)
+                {
+                    if(s == DisplayParams.Section.Hot) { RootNavView.SelectedItem = RootNavView.MenuItems[0]; return; }
+                    else if(s == DisplayParams.Section.User) { RootNavView.SelectedItem = RootNavView.MenuItems[1]; return; }
+                }
+            }
+            RootNavView.SelectedItem = null;
+        }
+
+        private void RootNavView_ItemInvoked(UI.NavigationView sender, UI.NavigationViewItemInvokedEventArgs args)
+        {
+            UI.NavigationViewItem item = args.InvokedItemContainer as UI.NavigationViewItem;
+            if (item == null) { return; }
+
+            if (item.Tag as string == "viral")
+            {
+                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
+            }
+            else if (item.Tag as string == "user")
+            {
+                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
