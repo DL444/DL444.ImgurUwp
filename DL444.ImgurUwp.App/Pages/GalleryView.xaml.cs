@@ -78,7 +78,8 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void FrontpageLayout_ItemClicked(object sender, RoutedEventArgs e)
         {
-            // TODO: Handle click event.
+            GalleryItemViewModel item = (sender as Button).Tag as GalleryItemViewModel;
+            Navigation.Navigate(typeof(GalleryItemDetails), item);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

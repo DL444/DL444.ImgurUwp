@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
+using Windows.UI.Xaml.Controls;
+using UI = Microsoft.UI.Xaml.Controls;
 
 namespace DL444.ImgurUwp.App
 {
@@ -31,6 +34,24 @@ namespace DL444.ImgurUwp.App
         {
             Client = new ImgurUwp.ApiClient.ApiClient(ApiKey.Host,
                 ApiKey.ClientId, ApiKey.ClientSecret, accessToken, ApiKey.MashapeKey);
+        }
+    }
+
+    static class Navigation
+    {
+        public static Frame ContentFrame { get; private set; }
+        public static UI.NavigationView NavigationView { get; private set; }
+
+        public static void Navigate(Type pageType, object parameter, bool clearNavView = true)
+        {
+            ContentFrame.Navigate(pageType, parameter);
+            if (clearNavView) { NavigationView.SelectedItem = null; }
+        }
+
+        public static void InitializeNavigationHelper(Frame contentFrame, UI.NavigationView navView)
+        {
+            ContentFrame = contentFrame;
+            NavigationView = navView;
         }
     }
 }

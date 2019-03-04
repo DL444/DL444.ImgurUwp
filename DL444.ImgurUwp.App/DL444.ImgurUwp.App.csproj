@@ -130,6 +130,9 @@
     <Compile Include="Controls\SymbolTextButton.cs" />
     <Compile Include="Controls\SymbolTextLabel.cs" />
     <Compile Include="Controls\SymbolTextToggleButton.cs" />
+    <Compile Include="Pages\GalleryItemDetails.xaml.cs">
+      <DependentUpon>GalleryItemDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\GalleryView.xaml.cs">
       <DependentUpon>GalleryView.xaml</DependentUpon>
     </Compile>
@@ -157,6 +160,7 @@
     <Compile Include="ViewModels\Defaults.cs" />
     <Compile Include="ViewModels\GalleryCollectionViewModel.cs" />
     <Compile Include="ViewModels\GalleryItemViewModel.cs" />
+    <Compile Include="ViewModels\ImageViewModel.cs" />
     <Compile Include="ViewModels\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +186,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Pages\AccountDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\GalleryItemDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

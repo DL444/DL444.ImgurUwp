@@ -1,0 +1,82 @@
+﻿<Page
+    x:Class="DL444.ImgurUwp.App.Pages.GalleryItemDetails"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DL444.ImgurUwp.App.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
+        <DataTemplate x:Key="ImageTemplate" x:DataType="vm:ImageViewModel">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Source="{x:Bind Link}"/>
+                <TextBlock Grid.Row="1"  Text="{x:Bind Description}"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="VideoTemplate" x:DataType="vm:ImageViewModel">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <!-- Implement a custom light-weight transport control. -->
+                    <MediaElement Source="{x:Bind Link}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
+                    <TextBlock Grid.Row="1" Text="{x:Bind Description}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="420"/>
+        </Grid.ColumnDefinitions>
+
+        <ListView Margin="16,0" Padding="0,8" MaxWidth="800" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
+                  SelectionMode="None" IsItemClickEnabled="False">
+            <ListView.Header>
+                <Grid ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind ViewModel.Title}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                    <cc:SymbolTextButton Icon="Contact" Content="{x:Bind ViewModel.AccountUrl}" Grid.Row="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    <!-- Implement friendly DateTime converter -->
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <Grid>
+                    <TextBlock Text="{x:Bind ViewModel.Description}"/>
+                </Grid>
+            </ListView.Footer>
+        </ListView>
+
+        <Grid Grid.Column="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+            <Pivot>
+                <PivotItem Header="Comments">
+                    
+                </PivotItem>
+                <PivotItem Header="Gallery">
+                    
+                </PivotItem>
+            </Pivot>
+        </Grid>
+    </Grid>
+</Page>

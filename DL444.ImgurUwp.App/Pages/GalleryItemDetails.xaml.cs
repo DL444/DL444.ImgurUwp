@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
+using Windows.Foundation.Collections;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
+using DL444.ImgurUwp.Models;
+using DL444.ImgurUwp.App.ViewModels;
+using System.Collections.ObjectModel;
+
+// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
+
+namespace DL444.ImgurUwp.App.Pages
+{
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
+    public sealed partial class GalleryItemDetails : Page
+    {
+        GalleryItemViewModel ViewModel { get; set; }
+        ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
+        ObservableCollection<Comment> Comments { get; } = new ObservableCollection<Comment>();
+        
+        public GalleryItemDetails()
+        {
+            this.InitializeComponent();
+            SubItemTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
+            SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // The front page model only contains the first 3 images. If there's more, we would need to request them.
+            base.OnNavigatedTo(e);
+            if(e.Parameter is GalleryItemViewModel vm)
+            {
+                ViewModel = vm;
+                if(vm.IsAlbum)
+                {
+                    var album = vm.Item as GalleryAlbum;
+                    foreach(var i in album.Images)
+                    {
+                        Images.Add(new ImageViewModel(i));
+                    }
+                }
+                else
+                {
+                    Images.Add(new ImageViewModel(vm.DisplayImage));
+                }
+
+                //var comments = ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
+            }
+        }
+    }
+
+    public class SubItemTemplateSelector : DataTemplateSelector
+    {
+        public static DataTemplate ImageTemplate { get; set; }
+        public static DataTemplate VideoTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            // item: ViewModel, container: ListViewItem
+            if (item is ImageViewModel i)
+            {
+                if(i.IsAnimated && i.Type != "image/gif") { return VideoTemplate; }
+                else { return ImageTemplate; }
+            }
+            else
+            {
+                return base.SelectTemplateCore(item);
+            }
+        }
+    }
+}

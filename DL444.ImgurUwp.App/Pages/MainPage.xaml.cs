@@ -47,6 +47,7 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             SetTitleBarButtonColor();
             this.ActualThemeChanged += (sender, e) => SetTitleBarButtonColor();
+            Navigation.InitializeNavigationHelper(ContentFrame, RootNavView);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
