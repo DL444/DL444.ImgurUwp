@@ -17,12 +17,12 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace DL444.ImgurUwp.App
+namespace DL444.ImgurUwp.App.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class AccountDetailsPage : Page, INotifyPropertyChanged
+    public sealed partial class AccountDetails : Page, INotifyPropertyChanged
     {
         private AccountViewModel _viewModel;
 
@@ -36,7 +36,7 @@ namespace DL444.ImgurUwp.App
             }
         }
 
-        public AccountDetailsPage()
+        public AccountDetails()
         {
             this.InitializeComponent();
         }

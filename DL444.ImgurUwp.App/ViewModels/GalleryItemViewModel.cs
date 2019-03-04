@@ -207,7 +207,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         async Task<object> OpenBrowser()
         {
-            await Windows.System.Launcher.LaunchUriAsync(new Uri(Link));
+            await Windows.System.Launcher.LaunchUriAsync(new Uri($"https://imgur.com/{Id}"));
             return null;
         }
 
@@ -231,7 +231,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
         {
             var request = args.Request;
-            request.Data.SetWebLink(new Uri(Link));
+            request.Data.SetWebLink(new Uri($"https://imgur.com/{Id}"));
             request.Data.Properties.Title = $"{Title} - Imgur";
         }
     }

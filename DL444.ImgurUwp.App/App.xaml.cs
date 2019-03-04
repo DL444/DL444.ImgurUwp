@@ -83,11 +83,11 @@ namespace DL444.ImgurUwp.App
                         var credential = credentialVault.Retrieve("Imgur", "AccessToken");
                         credential.RetrievePassword();
                         ApiClient.InitializeApiClient(credential.Password);
-                        (Window.Current.Content as Frame).Navigate(typeof(MainPage));
+                        (Window.Current.Content as Frame).Navigate(typeof(Pages.MainPage));
                     }
                     else
                     {
-                        rootFrame.Navigate(typeof(LoginPage), args.Arguments);
+                        rootFrame.Navigate(typeof(Pages.Login), args.Arguments);
                     }
                 }
                 // Ensure the current window is active

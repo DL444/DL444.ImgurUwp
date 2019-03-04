@@ -16,14 +16,14 @@ using DL444.ImgurUwp.Models;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace DL444.ImgurUwp.App
+namespace DL444.ImgurUwp.App.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class LoginPage : Page
+    public sealed partial class Login : Page
     {
-        public LoginPage()
+        public Login()
         {
             this.InitializeComponent();
         }

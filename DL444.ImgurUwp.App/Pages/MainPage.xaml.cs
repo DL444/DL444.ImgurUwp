@@ -23,7 +23,7 @@ using DL444.ImgurUwp.ApiClient;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
-namespace DL444.ImgurUwp.App
+namespace DL444.ImgurUwp.App.Pages
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -96,13 +96,13 @@ namespace DL444.ImgurUwp.App
             {
                 credentialVault.Remove(i);
             }
-            (Window.Current.Content as Frame).Navigate(typeof(LoginPage));
+            (Window.Current.Content as Frame).Navigate(typeof(Login));
         }
 
         private void AccountDetails_Click(object sender, RoutedEventArgs e)
         {
             RootNavView.SelectedItem = null;
-            ContentFrame.Navigate(typeof(AccountDetailsPage), CurrentAccount);
+            ContentFrame.Navigate(typeof(AccountDetails), CurrentAccount);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
