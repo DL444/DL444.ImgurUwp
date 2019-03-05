@@ -46,6 +46,8 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;
 
+        public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
+
         public Command CopyUrlCommand { get; private set; }
         public Command ShareCommand { get; private set; }
         public AsyncCommand<object> DownloadCommand { get; private set; }

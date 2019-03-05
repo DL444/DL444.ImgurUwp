@@ -14,7 +14,7 @@
     <Page.Resources>
         <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
         <DataTemplate x:Key="ImageTemplate" x:DataType="vm:ImageViewModel">
-            <Grid>
+            <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
@@ -31,12 +31,14 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Image Source="{x:Bind Link}"/>
-                <TextBlock Grid.Row="1"  Text="{x:Bind Description}"/>
+                <Viewbox>
+                    <Image Source="{x:Bind Link}" Height="{x:Bind Height}" Width="{x:Bind Width}"/>
+                </Viewbox>
+                <TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="VideoTemplate" x:DataType="vm:ImageViewModel">
-            <Grid>
+            <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
@@ -54,12 +56,30 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <!-- Implement a custom light-weight transport control. -->
-                <MediaElement Source="{x:Bind Link}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
-                <TextBlock Grid.Row="1" Text="{x:Bind Description}"/>
+                <Viewbox>
+                    <MediaElement Source="{x:Bind Link}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
+                </Viewbox>
+                <TextBlock Grid.Row="1" Margin="12" Text="{x:Bind Description}" TextWrapping="Wrap"/>
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CommentTemplate" x:DataType="vm:CommentViewModel">
             <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Padding="12" Margin="0" RowSpacing="4" ColumnSpacing="12">
+                <Grid.ContextFlyout>
+                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                        <ui:CommandBarFlyout.PrimaryCommands>
+                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply">
+                                <AppBarButton.Icon>
+                                    <FontIcon Glyph="&#xE11F;"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
+                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share"/>
+                        </ui:CommandBarFlyout.PrimaryCommands>
+                        <ui:CommandBarFlyout.SecondaryCommands>
+                            <AppBarButton Icon="Flag" Label="Report"/>
+                        </ui:CommandBarFlyout.SecondaryCommands>
+                    </ui:CommandBarFlyout>
+                </Grid.ContextFlyout>
+                
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
@@ -91,10 +111,10 @@
             <ColumnDefinition Width="420"/>
         </Grid.ColumnDefinitions>
 
-        <ListView Margin="16,0" Padding="0,12" MaxWidth="800" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
+        <ListView Margin="16,0" Padding="0,12" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
                   SelectionMode="None" IsItemClickEnabled="False">
             <ListView.Header>
-                <Grid ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
+                <Grid MaxWidth="800" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -110,10 +130,45 @@
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
-                <Grid>
-                    <TextBlock Text="{x:Bind ViewModel.Description}"/>
+                <Grid MaxWidth="800" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" ColumnSpacing="16" Padding="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                        <cc:SymbolTextToggleButton.Icon>
+                            <FontIcon Glyph="&#xE1FD;"/>
+                        </cc:SymbolTextToggleButton.Icon>
+                    </cc:SymbolTextToggleButton>
+                    <cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" Grid.Column="2">
+                        <cc:SymbolTextToggleButton.Icon>
+                            <FontIcon Glyph="&#xE006;"/>
+                        </cc:SymbolTextToggleButton.Icon>
+                    </cc:SymbolTextToggleButton>
+                    <cc:SymbolTextButton Icon="Share" ToolTipService.ToolTip="Share" Grid.Column="4"/>
+                    <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Column="5">
+                        <cc:SymbolTextButton.Flyout>
+                            <MenuFlyout Placement="TopEdgeAlignedRight">
+                                <MenuFlyoutItem Icon="Download" Text="Download all"/>
+                                <MenuFlyoutItem Icon="Flag" Text="Report"/>
+                            </MenuFlyout>
+                        </cc:SymbolTextButton.Flyout>
+                    </cc:SymbolTextButton>
                 </Grid>
             </ListView.Footer>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0,8"/>
+                    <Setter Property="MaxWidth" Value="800"/>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <Grid Grid.Column="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
@@ -133,12 +188,14 @@
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     <Setter Property="Margin" Value="0,4"/>
-                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Padding" Value="0,0,16,0"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
                         </ListView>
-                        <TextBox Grid.Row="1" PlaceholderText="Any comment?"/>
-                        <Button Grid.Row="1" Grid.Column="1" Content="Send"/>
+                        <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
+                        <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                            <SymbolIcon Symbol="Send"/>
+                        </Button>
                     </Grid>
                 </PivotItem>
                 <PivotItem Header="Gallery">

@@ -39,7 +39,6 @@ namespace DL444.ImgurUwp.App.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            // The front page model only contains the first 3 images. If there's more, we would need to request them.
             base.OnNavigatedTo(e);
             if(e.Parameter is GalleryItemViewModel vm)
             {
@@ -55,6 +54,16 @@ namespace DL444.ImgurUwp.App.Pages
                 else
                 {
                     Images.Add(new ImageViewModel(vm.DisplayImage));
+                }
+
+                // The front page model only contains the first 3 images. If there's more, we would need to request them.
+                if (vm.IsAlbum && vm.ImageCount > 3)
+                {
+                    var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(vm.Id);
+                    for (int i = 3; i < fullAlbum.ImageCount; i++)
+                    {
+                        Images.Add(new ImageViewModel(fullAlbum.Images[i]));
+                    }
                 }
 
                 var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);

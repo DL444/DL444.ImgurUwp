@@ -187,6 +187,8 @@
     <Style TargetType="cc:SymbolTextButton">
         <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
+        <Setter Property="HoverForeground" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}"/>
+        <Setter Property="PressedForeground" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
@@ -313,6 +315,10 @@
         <Setter Property="Background" Value="{ThemeResource ToggleButtonBackground}" />
         <!--<Setter Property="BackgroundSizing" Value="OuterBorderEdge" />-->
         <Setter Property="Foreground" Value="{ThemeResource ToggleButtonForeground}" />
+        <Setter Property="HoverForeground" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}"/>
+        <Setter Property="PressedForeground" Value="{ThemeResource ToggleButtonPressedForegroundThemeBrush}"/>
+        <Setter Property="CheckedForeground" Value="{ThemeResource ToggleButtonCheckedForegroundThemeBrush}"/>
+        <Setter Property="CheckedHoverForeground" Value="{ThemeResource ToggleButtonCheckedForegroundThemeBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource ToggleButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
@@ -481,7 +487,6 @@
                                     VerticalAlignment="Top" Margin="0,8,8,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
                             <StackPanel.Resources>
                                 <cc:ImageCountVisibilityConverter x:Key="ImageCountVisibilityConverter"/>
-                                <cc:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
                             </StackPanel.Resources>
                             <Grid x:Name="AnimationIndicator" Visibility="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=IsAnimated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
                               HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
