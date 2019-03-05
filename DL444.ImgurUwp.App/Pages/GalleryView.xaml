@@ -45,7 +45,7 @@
                             </ui:CommandBarFlyout.PrimaryCommands>
                             <ui:CommandBarFlyout.SecondaryCommands>
                                 <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
-                                <AppBarButton Label="Report" Icon="Flag"/>
+                                <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
                             </ui:CommandBarFlyout.SecondaryCommands>
                         </ui:CommandBarFlyout>
                     </Grid.ContextFlyout>

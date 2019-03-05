@@ -8,7 +8,7 @@ using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class GalleryItemViewModel : INotifyPropertyChanged
+    public class GalleryItemViewModel : INotifyPropertyChanged, IReportable
     {
         IGalleryItem _item;
         private Image _displayImage;
@@ -169,6 +169,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             ShareCommand = new Command(Share);
             OpenBrowserCommand = new AsyncCommand<object>(OpenBrowser);
             DownloadCommand = new AsyncCommand<object>(Download);
+            ReportCommand = new AsyncCommand<bool>(Report);
         }
 
         protected void NotifyPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -181,6 +182,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public Command ShareCommand { get; private set; }
         public AsyncCommand<object> OpenBrowserCommand { get; private set; }
         public AsyncCommand<object> DownloadCommand { get; private set; }
+        public AsyncCommand<bool> ReportCommand { get; private set; }
 
         public async Task<bool> Vote(ImgurUwp.ApiClient.Vote vote)
         {
@@ -226,6 +228,17 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
             }
             return null;
+        }
+
+        async Task<bool> Report()
+        {
+            Controls.ReportConfirmDialog dialog = new Controls.ReportConfirmDialog(this);
+            var result = await dialog.ShowAsync();
+            if(result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                return await ApiClient.Client.ReportGalleryItemAsync(this.Id, dialog.SelectedReason);
+            }
+            return true;
         }
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)

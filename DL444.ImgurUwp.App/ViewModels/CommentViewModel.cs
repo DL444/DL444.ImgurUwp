@@ -8,7 +8,7 @@ using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class CommentViewModel : INotifyPropertyChanged
+    public class CommentViewModel : INotifyPropertyChanged, IReportable
     {
         Comment _comment;
 
@@ -45,6 +45,19 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             Comment = comment;
             Level = level;
+            ReportCommand = new AsyncCommand<bool>(Report);
+        }
+
+        public AsyncCommand<bool> ReportCommand { get; private set; }
+        async Task<bool> Report()
+        {
+            Controls.ReportConfirmDialog dialog = new Controls.ReportConfirmDialog(this);
+            var result = await dialog.ShowAsync();
+            if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                return await ApiClient.Client.ReportCommentAsync(this.Id, dialog.SelectedReason);
+            }
+            return true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

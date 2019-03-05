@@ -124,4 +124,6 @@ namespace DL444.ImgurUwp.App.ViewModels
             throw new NotSupportedException();
         }
     }
+
+    public interface IReportable { }
 }

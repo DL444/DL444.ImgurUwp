@@ -75,7 +75,7 @@
                             <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Icon="Flag" Label="Report"/>
+                            <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
                 </Grid.ContextFlyout>
@@ -140,8 +140,8 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand}" IsChecked="{x:Bind ViewModel.Upvoted}" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand}" IsChecked="{x:Bind ViewModel.Downvoted}" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
                         <cc:SymbolTextToggleButton.Icon>
                             <FontIcon Glyph="&#xE1FD;"/>
                         </cc:SymbolTextToggleButton.Icon>
@@ -151,12 +151,12 @@
                             <FontIcon Glyph="&#xE006;"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
-                    <cc:SymbolTextButton Icon="Share" ToolTipService.ToolTip="Share" Grid.Column="4"/>
+                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Column="4"/>
                     <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Column="5">
                         <cc:SymbolTextButton.Flyout>
                             <MenuFlyout Placement="TopEdgeAlignedRight">
                                 <MenuFlyoutItem Icon="Download" Text="Download all"/>
-                                <MenuFlyoutItem Icon="Flag" Text="Report"/>
+                                <MenuFlyoutItem Icon="Flag" Text="Report" Command="{x:Bind ViewModel.ReportCommand}"/>
                             </MenuFlyout>
                         </cc:SymbolTextButton.Flyout>
                     </cc:SymbolTextButton>
