@@ -186,7 +186,14 @@
                             <ColumnDefinition/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ListView ItemsSource="{x:Bind Comments, Mode=OneWay}" Grid.ColumnSpan="2" SelectionMode="None" ItemTemplate="{ThemeResource CommentTemplate}">
+                        <ui:TreeView ItemsSource="{x:Bind Comments, Mode=OneWay}" CanReorderItems="False" CanDragItems="False" Grid.ColumnSpan="2" SelectionMode="None">
+                            <ui:TreeView.ItemTemplate>
+                                <DataTemplate x:DataType="vm:CommentViewModel">
+                                    <cc:CommentTreeViewItem ContentTemplate="{ThemeResource CommentTemplate}" HorizontalContentAlignment="Stretch" ItemsSource="{x:Bind Children}" Content="{x:Bind}"/>
+                                </DataTemplate>
+                            </ui:TreeView.ItemTemplate>
+                        </ui:TreeView>
+                        <!--<ListView ItemsSource="{x:Bind Comments, Mode=OneWay}" Grid.ColumnSpan="2" SelectionMode="None" ItemTemplate="{ThemeResource CommentTemplate}">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -194,7 +201,7 @@
                                     <Setter Property="Padding" Value="0,0,16,0"/>
                                 </Style>
                             </ListView.ItemContainerStyle>
-                        </ListView>
+                        </ListView>-->
                         <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
                         <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
                             <SymbolIcon Symbol="Send"/>

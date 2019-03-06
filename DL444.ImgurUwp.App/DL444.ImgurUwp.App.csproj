@@ -116,6 +116,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\CommentTreeViewItem.cs" />
     <Compile Include="Controls\ReportConfirmDialog.xaml.cs">
       <DependentUpon>ReportConfirmDialog.xaml</DependentUpon>
     </Compile>

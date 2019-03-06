@@ -20,6 +20,10 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 _comment = value;
                 RichContentBox = RichTextParser.GetRichContentBox(Content);
+                foreach (var c in _comment.Children)
+                {
+                    Children.Add(new CommentViewModel(c));
+                }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
@@ -38,7 +42,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool Deleted => Comment.Deleted;
         public string Vote => Comment.Vote;
 
-        public List<Comment> Children => Comment.Children;
+        public List<CommentViewModel> Children { get; } = new List<CommentViewModel>();
 
         public int Level { get; private set; }
 
@@ -69,22 +73,12 @@ namespace DL444.ImgurUwp.App.ViewModels
 
     static class CommentViewModelFactory
     {
-        public static IEnumerable<CommentViewModel> BuildCommentViewModels(IEnumerable<Comment> comments, int baseLevel = 0)
+        public static IEnumerable<CommentViewModel> BuildCommentViewModels(IEnumerable<Comment> comments)
         {
             List<CommentViewModel> result = new List<CommentViewModel>();
             foreach(var c in comments)
             {
-                result.AddRange(BuildCommentViewModels(c, baseLevel));
-            }
-            return result;
-        }
-        public static IEnumerable<CommentViewModel> BuildCommentViewModels(Comment comment, int level = 0)
-        {
-            List<CommentViewModel> result = new List<CommentViewModel>();
-            result.Add(new CommentViewModel(comment, level));
-            foreach(var c in comment.Children)
-            {
-                result.AddRange(BuildCommentViewModels(c, level + 1));
+                result.Add(new CommentViewModel(c));
             }
             return result;
         }
