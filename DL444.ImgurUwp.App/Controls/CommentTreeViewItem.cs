@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -19,7 +20,7 @@ namespace DL444.ImgurUwp.App.Controls
         {
             this.DefaultStyleKey = typeof(CommentTreeViewItem);
         }
-        protected override void OnApplyTemplate()
+        protected override Size ArrangeOverride(Size finalSize)
         {
             if ((this.ItemsSource as IEnumerable<object>).Count() == 0)
             {
@@ -29,7 +30,7 @@ namespace DL444.ImgurUwp.App.Controls
             {
                 ChevronVisibility = Visibility.Visible;
             }
-            base.OnApplyTemplate();
+            return base.ArrangeOverride(finalSize);
         }
 
         public static readonly DependencyProperty ChevronVisibilityProperty = DependencyProperty.Register(nameof(ChevronVisibility), 
