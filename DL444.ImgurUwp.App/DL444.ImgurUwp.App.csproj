@@ -165,6 +165,7 @@
     <Compile Include="ViewModels\GalleryCollectionViewModel.cs" />
     <Compile Include="ViewModels\GalleryItemViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\RichTextParser.cs" />
     <Compile Include="ViewModels\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

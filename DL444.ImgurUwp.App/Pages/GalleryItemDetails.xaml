@@ -23,7 +23,7 @@
                             <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Label="Report" Icon="Flag"/>
+                            <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
                 </Grid.ContextFlyout>
@@ -47,7 +47,7 @@
                             <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Label="Report" Icon="Flag"/>
+                            <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
                 </Grid.ContextFlyout>
@@ -92,7 +92,8 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                <TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>
+                <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
+                <ContentControl Content="{x:Bind RichContentBox}" Grid.Row="1" Grid.ColumnSpan="3"/>
                 <TextBlock Text="{x:Bind DateTime}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
 
                 <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>

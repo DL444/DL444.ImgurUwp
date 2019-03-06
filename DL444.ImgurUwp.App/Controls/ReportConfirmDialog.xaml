@@ -26,6 +26,16 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="ImageTemplate" x:DataType="vm:ImageViewModel">
+            <Grid Margin="0,4" ColumnSpacing="12" Padding="12" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Width="72" Height="72" Stretch="UniformToFill" Source="{x:Bind Thumbnail}"/>
+                <TextBlock Text="{x:Bind Description, TargetNullValue='(No description)'}" Grid.Column="1" HorizontalAlignment="Left" MaxWidth="240" TextWrapping="Wrap" MaxLines="3"/>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="CommentTemplate" x:DataType="vm:CommentViewModel">
             <StackPanel Margin="0,4" Padding="12" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                 <TextBlock Text="{x:Bind Content}" HorizontalAlignment="Left" MaxWidth="280" TextWrapping="Wrap" MaxLines="3"/>

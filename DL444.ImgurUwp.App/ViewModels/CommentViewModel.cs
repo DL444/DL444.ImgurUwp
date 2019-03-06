@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
+using Windows.UI.Xaml;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -18,6 +19,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             set
             {
                 _comment = value;
+                RichContentBox = TextContentParser.GetRichContentBox(Content);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
@@ -39,6 +41,8 @@ namespace DL444.ImgurUwp.App.ViewModels
         public List<Comment> Children => Comment.Children;
 
         public int Level { get; private set; }
+
+        public FrameworkElement RichContentBox { get; private set; }
 
         public CommentViewModel() { }
         public CommentViewModel(Comment comment, int level = 0)
@@ -63,7 +67,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public static class CommentViewModelFactory
+    static class CommentViewModelFactory
     {
         public static IEnumerable<CommentViewModel> BuildCommentViewModels(IEnumerable<Comment> comments, int baseLevel = 0)
         {
@@ -85,87 +89,4 @@ namespace DL444.ImgurUwp.App.ViewModels
             return result;
         }
     }
-
-    static class CommentContentParser
-    {
-        public static IEnumerable<CommentComponent> ParseComment(string comment)
-        {
-            List<CommentComponent> result = new List<CommentComponent>();
-            StringBuilder strBuilder = new StringBuilder();
-            string[] words = comment.Split(' ');
-            foreach (var w in words)
-            {
-                if (IsUri(w))
-                {
-                    if (strBuilder.Length != 0)
-                    {
-                        result.Add(new TextComponent(strBuilder.ToString()));
-                        strBuilder.Clear();
-                    }
-                    result.Add(new UriComponent(w));
-                }
-                else
-                {
-                    strBuilder.Append($"{w} ");
-                }
-            }
-            result.Add(new TextComponent(strBuilder.ToString()));
-            return result;
-        }
-
-        static bool IsUri(string str)
-        {
-            if (Uri.TryCreate(str, UriKind.Absolute, out System.Uri uri) == true)
-            {
-                if (uri.Scheme != "http" && uri.Scheme != "https") { return false; }
-                return true;
-            }
-            else { return false; }
-        }
-    }
-
-    abstract class CommentComponent
-    {
-        public string Text { get; set; }
-    }
-    class TextComponent : CommentComponent
-    {
-        public override string ToString() => Text;
-        public TextComponent(string text) => Text = text;
-    }
-    class UriComponent : CommentComponent
-    {
-        public override string ToString() => $"{Type}: {Text}";
-        public UriType Type { get; set; }
-        public UriComponent(string uri)
-        {
-            Text = uri;
-            var ext = uri.Substring(uri.LastIndexOf('.') + 1).ToLower();
-            switch (ext)
-            {
-                case "jpg":
-                case "jpeg":
-                case "png":
-                case "gif":
-                case "apng":
-                case "tif":
-                case "tiff":
-                    Type = UriType.Image;
-                    break;
-                case "mp4":
-                case "gifv":
-                    Type = UriType.Video;
-                    break;
-                default:
-                    Type = UriType.Normal;
-                    break;
-            }
-        }
-    }
-    enum UriType
-    {
-        Normal, Image, Video
-    }
-
-    // There are also @user, #tag, and #imageId.
 }

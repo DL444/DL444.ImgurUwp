@@ -24,6 +24,7 @@ namespace DL444.ImgurUwp.App.Controls
             this.InitializeComponent();
             ReportTemplateSelector.GalleryItemTemplate = this.Resources["GalleryItemTemplate"] as DataTemplate;
             ReportTemplateSelector.CommentTemplate = this.Resources["CommentTemplate"] as DataTemplate;
+            ReportTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
         }
         public ReportConfirmDialog(ViewModels.IReportable item) : this()
         {
@@ -51,11 +52,13 @@ namespace DL444.ImgurUwp.App.Controls
     {
         public static DataTemplate GalleryItemTemplate { get; set; }
         public static DataTemplate CommentTemplate { get; set; }
+        public static DataTemplate ImageTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
             if(item is ViewModels.GalleryItemViewModel) { return GalleryItemTemplate; }
             else if(item is ViewModels.CommentViewModel) { return CommentTemplate; }
+            else if(item is ViewModels.ImageViewModel) { return ImageTemplate; }
             else { return base.SelectTemplateCore(item); }
         }
     }

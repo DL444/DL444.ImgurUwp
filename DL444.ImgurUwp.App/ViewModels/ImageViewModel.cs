@@ -8,7 +8,7 @@ using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class ImageViewModel : INotifyPropertyChanged
+    public class ImageViewModel : INotifyPropertyChanged, IReportable
     {
         Image _image;
 
@@ -18,6 +18,22 @@ namespace DL444.ImgurUwp.App.ViewModels
             set
             {
                 _image = value;
+                if (_image != null)
+                {
+                    string link = _image.Link;
+                    if (string.IsNullOrWhiteSpace(link)) { Thumbnail = null; }
+                    else
+                    {
+                        if (_image.Animated)
+                        {
+                            Thumbnail = $"{_image.Link.Remove(_image.Link.LastIndexOf('/'))}/{_image.Id}_d.jpg?maxwidth=520&shape=thumb&fidelity=mid";
+                        }
+                        else
+                        {
+                            Thumbnail = $"{_image.Link.Replace(_image.Id, $"{_image.Id}_d")}?maxwidth=520&shape=thumb&fidelity=mid";
+                        }
+                    }
+                }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
@@ -46,11 +62,13 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;
 
+        public string Thumbnail { get; private set; }
         public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
 
         public Command CopyUrlCommand { get; private set; }
         public Command ShareCommand { get; private set; }
         public AsyncCommand<object> DownloadCommand { get; private set; }
+        public AsyncCommand<bool> ReportCommand { get; private set; }
 
         void CopyUrl()
         {
@@ -80,6 +98,16 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
             return null;
         }
+        async Task<bool> Report()
+        {
+            Controls.ReportConfirmDialog dialog = new Controls.ReportConfirmDialog(this);
+            var result = await dialog.ShowAsync();
+            if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                return await ApiClient.Client.ReportGalleryItemAsync(this.Id, dialog.SelectedReason);
+            }
+            return true;
+        }
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
         {
             var request = args.Request;
@@ -87,13 +115,16 @@ namespace DL444.ImgurUwp.App.ViewModels
             request.Data.Properties.Title = $"Image from Imgur";
         }
 
-        public ImageViewModel() { }
-        public ImageViewModel(Image image)
+        public ImageViewModel()
         {
-            Image = image;
             CopyUrlCommand = new Command(CopyUrl);
             ShareCommand = new Command(Share);
             DownloadCommand = new AsyncCommand<object>(Download);
+            ReportCommand = new AsyncCommand<bool>(Report);
+        }
+        public ImageViewModel(Image image) : this()
+        {
+            Image = image;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
