@@ -19,7 +19,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             set
             {
                 _comment = value;
-                RichContentBox = TextContentParser.GetRichContentBox(Content);
+                RichContentBox = RichTextParser.GetRichContentBox(Content);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }

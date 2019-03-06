@@ -33,6 +33,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                             Thumbnail = $"{_image.Link.Replace(_image.Id, $"{_image.Id}_d")}?maxwidth=520&shape=thumb&fidelity=mid";
                         }
                     }
+                    RichDescriptionBox = RichTextParser.GetRichContentBox(Description);
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
@@ -64,6 +65,8 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public string Thumbnail { get; private set; }
         public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
+        public Windows.UI.Xaml.FrameworkElement RichDescriptionBox { get; private set; }
+
 
         public Command CopyUrlCommand { get; private set; }
         public Command ShareCommand { get; private set; }

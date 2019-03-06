@@ -10,10 +10,11 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    static class TextContentParser
+    static class RichTextParser
     {
         public static IEnumerable<RichTextComponent> ParseComment(string comment)
         {
+            if(comment == null) { return null; }
             List<RichTextComponent> result = new List<RichTextComponent>();
             StringBuilder strBuilder = new StringBuilder();
             string[] words = comment.Split(' ');
@@ -128,6 +129,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         public static FrameworkElement GetRichContentBox(string comment)
         {
+            if(comment == null) { return null; }
             return GetRichContentBox(ParseComment(comment));
         }
 

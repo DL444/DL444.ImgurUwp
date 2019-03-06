@@ -34,7 +34,8 @@
                 <Viewbox>
                     <Image Source="{x:Bind Link}" Height="{x:Bind Height}" Width="{x:Bind Width}"/>
                 </Viewbox>
-                <TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>
+                <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
+                <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="VideoTemplate" x:DataType="vm:ImageViewModel">
@@ -59,7 +60,8 @@
                 <Viewbox>
                     <MediaElement Source="{x:Bind Link}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
                 </Viewbox>
-                <TextBlock Grid.Row="1" Margin="12" Text="{x:Bind Description}" TextWrapping="Wrap"/>
+                <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
+                <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="CommentTemplate" x:DataType="vm:CommentViewModel">
@@ -91,7 +93,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
                 <ContentControl Content="{x:Bind RichContentBox}" Grid.Row="1" Grid.ColumnSpan="3"/>
                 <TextBlock Text="{x:Bind DateTime}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
