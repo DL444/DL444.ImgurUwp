@@ -19,7 +19,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             set
             {
                 _comment = value;
-                RichContentBox = RichTextParser.GetRichContentBox(Content);
+                //RichContentBox = RichTextParser.GetRichContentBox(Content);
                 foreach (var c in _comment.Children)
                 {
                     Children.Add(new CommentViewModel(c));
@@ -46,7 +46,8 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public int Level { get; private set; }
 
-        public FrameworkElement RichContentBox { get; private set; }
+        // Caching this will cause problem with virtualization of TreeView. 
+        public FrameworkElement RichContentBox => RichTextParser.GetRichContentBox(Content);
 
         public CommentViewModel() { }
         public CommentViewModel(Comment comment, int level = 0)
