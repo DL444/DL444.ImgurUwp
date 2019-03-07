@@ -77,7 +77,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 Mp4 = galleryImage.Mp4,
                 Mp4Size = galleryImage.Mp4Size,
                 Looping = galleryImage.Looping,
-                Favorite = galleryImage.Favorite,
+                Favorite = galleryImage.Favorite == true,
                 Nsfw = galleryImage.Nsfw,
                 Vote = galleryImage.Vote,
                 IsAlbum = galleryImage.IsAlbum

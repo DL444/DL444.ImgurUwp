@@ -36,7 +36,7 @@ namespace DL444.ImgurUwp.Models
         public bool IsAlbum { get; set; }
 
         public string Vote { get; set; }
-        public bool Favorite { get; set; }
+        public bool? Favorite { get; set; }
         public bool? Nsfw { get; set; }
         [JsonProperty(PropertyName = "comment_count")]
         public int CommentCount { get; set; }

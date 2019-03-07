@@ -57,7 +57,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                     }
                 }
 
-                _favorite = _item.Favorite;
+                _favorite = _item.Favorite == true;
                 _upvoted = _item.Vote == "up";
                 _downvoted = _item.Vote == "down";
                 NotifyPropertyChanged();

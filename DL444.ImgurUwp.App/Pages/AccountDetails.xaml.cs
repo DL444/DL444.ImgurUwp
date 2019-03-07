@@ -1,6 +1,7 @@
 ﻿using DL444.ImgurUwp.App.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace DL444.ImgurUwp.App.Pages
     public sealed partial class AccountDetails : Page, INotifyPropertyChanged
     {
         private AccountViewModel _viewModel;
-
+        
         AccountViewModel ViewModel
         {
             get => _viewModel;
@@ -36,17 +37,28 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
+        GalleryProfileViewModel Profile { get; set; }
+        ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
+
         public AccountDetails()
         {
             this.InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
                 ViewModel = vm;
+
+                var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(vm.Username);
+                Profile = new GalleryProfileViewModel(profile);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
+                foreach(var t in profile.Trophies)
+                {
+                    Trophies.Add(new TrophyViewModel(t));
+                }
             }
         }
 

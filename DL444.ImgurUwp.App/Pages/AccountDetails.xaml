@@ -78,11 +78,28 @@
                     </tkc:HeaderedContentControl>
                 </StackPanel>
             </Grid>
-            <GridView Grid.Row="2" VerticalAlignment="Top" Margin="8,0" HorizontalAlignment="Center" ScrollViewer.VerticalScrollMode="Disabled">
-                <GridView.Header>
+            <ListView Grid.Row="2" VerticalAlignment="Top" Margin="8,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies}">
+                <ListView.Header>
                     <TextBlock Text="Trophies" Style="{ThemeResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,16,0,8"/>
-                </GridView.Header>
-            </GridView>
+                </ListView.Header>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="vm:TrophyViewModel">
+                        <Grid ColumnSpacing="12" Margin="0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="{x:Bind Image}" MaxHeight="120"/>
+                            <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
+                                <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{x:Bind DateTime}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
     </ScrollViewer>
 </Page>

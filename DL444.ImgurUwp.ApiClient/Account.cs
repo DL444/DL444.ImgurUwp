@@ -190,7 +190,7 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<IEnumerable<IGalleryItem>> GetAccountLikes(string username)
+        public async Task<IEnumerable<IGalleryItem>> GetAccountLikesAsync(string username)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IGalleryItem> result = new List<IGalleryItem>();
@@ -218,7 +218,7 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<IEnumerable<IItem>> GetAccountFavorites(string username)
+        public async Task<IEnumerable<IItem>> GetAccountFavoritesAsync(string username)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IItem> result = new List<IItem>();
@@ -245,7 +245,7 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
-        public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavorites(string username)
+        public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IGalleryItem> result = new List<IGalleryItem>();
@@ -273,7 +273,7 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<GalleryProfile> GetAccountGalleryProfile(string username)
+        public async Task<GalleryProfile> GetAccountGalleryProfileAsync(string username)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             var response = await client.GetAsync($"/3/account/{username}/gallery_profile");
@@ -281,6 +281,34 @@ namespace DL444.ImgurUwp.ApiClient
             if (success)
             {
                 return JsonConvert.DeserializeObject<GalleryProfile>(dataJson);
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+
+        public async Task<IEnumerable<IGalleryItem>> GetAccountSubmissionsAsync(string username, int page = 0)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            List<IGalleryItem> result = new List<IGalleryItem>();
+            var response = await client.GetAsync($"/3/account/{username}/submissions/{page}");
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                var items = JArray.Parse(dataJson);
+                foreach (var i in items)
+                {
+                    if (i["is_album"].ToObject<bool>())
+                    {
+                        result.Add(i.ToObject<GalleryAlbum>());
+                    }
+                    else
+                    {
+                        result.Add(i.ToObject<GalleryImage>());
+                    }
+                }
+                return result;
             }
             else
             {
