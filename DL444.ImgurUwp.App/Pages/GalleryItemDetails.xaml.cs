@@ -29,6 +29,8 @@ namespace DL444.ImgurUwp.App.Pages
         GalleryItemViewModel ViewModel { get; set; }
         ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
+        ObservableCollection<TagViewModel> Tags { get; set; } = new ObservableCollection<TagViewModel>();
+        Visibility TagBarVisibility { get; set; } = Visibility.Collapsed;
         
         public GalleryItemDetails()
         {
@@ -64,6 +66,17 @@ namespace DL444.ImgurUwp.App.Pages
                     {
                         Images.Add(new ImageViewModel(fullAlbum.Images[i]));
                     }
+                }
+
+                foreach (var t in vm.Tags)
+                {
+                    Tags.Add(new TagViewModel(t));
+                }
+
+                if(Tags.Count > 0)
+                {
+                    TagBarVisibility = Visibility.Visible;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
                 }
 
                 var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);

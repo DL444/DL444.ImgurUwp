@@ -50,6 +50,6 @@ namespace DL444.ImgurUwp.Models
         public bool InMostViral { get; set; }
         [JsonProperty(PropertyName = "in_gallery")]
         public bool InGallery { get; set; }
-
+        public List<Tag> Tags { get; set; }
     }
 }

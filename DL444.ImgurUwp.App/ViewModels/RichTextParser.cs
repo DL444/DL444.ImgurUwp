@@ -171,12 +171,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 case "tif":
                 case "tiff":
                     Type = UriType.Image;
+                    Text = $"{Text}?maxwidth=400&fidelity=mid";
                     break;
                 // For some reason MediaElement acts weirdly. So use GIF instead. Maybe good for memory as well?
                 case "mp4":
                 case "gifv":
                     Type = UriType.Image;
-                    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif";
+                    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif?maxwidth=400&fidelity=mid";
                     break;
                 default:
                     Type = UriType.Normal;

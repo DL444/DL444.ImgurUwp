@@ -134,6 +134,10 @@
             </ListView.Header>
             <ListView.Footer>
                 <Grid MaxWidth="800" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" ColumnSpacing="16" Padding="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
@@ -142,20 +146,35 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+
+                    <ListView Grid.ColumnSpan="6" Margin="0,0,0,12" ItemsSource="{x:Bind Tags}" ItemContainerStyle="{ThemeResource PlainListViewItemStyle}" Visibility="{x:Bind TagBarVisibility, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TagViewModel">
+                                <Grid Background="{Binding Accent, TargetNullValue={ThemeResource SystemAccentColorBrush}, Mode=OneTime}" Padding="16,6">
+                                    <TextBlock Text="{x:Bind DisplayName}" RequestedTheme="Dark"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand}" IsChecked="{x:Bind ViewModel.Upvoted}" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand}" IsChecked="{x:Bind ViewModel.Downvoted}" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand}" IsChecked="{x:Bind ViewModel.Upvoted}" Grid.Row="1" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand}" IsChecked="{x:Bind ViewModel.Downvoted}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
                         <cc:SymbolTextToggleButton.Icon>
                             <FontIcon Glyph="&#xE1FD;"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
-                    <cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" Grid.Column="2">
+                    <cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" Grid.Row="1" Grid.Column="2">
                         <cc:SymbolTextToggleButton.Icon>
                             <FontIcon Glyph="&#xE006;"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
-                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Column="4"/>
-                    <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Column="5">
+                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Row="1" Grid.Column="4"/>
+                    <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Row="1" Grid.Column="5">
                         <cc:SymbolTextButton.Flyout>
                             <MenuFlyout Placement="TopEdgeAlignedRight">
                                 <MenuFlyoutItem Icon="Download" Text="Download all"/>
@@ -193,15 +212,6 @@
                                 </DataTemplate>
                             </ui:TreeView.ItemTemplate>
                         </ui:TreeView>
-                        <!--<ListView ItemsSource="{x:Bind Comments, Mode=OneWay}" Grid.ColumnSpan="2" SelectionMode="None" ItemTemplate="{ThemeResource CommentTemplate}">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="Margin" Value="0,4"/>
-                                    <Setter Property="Padding" Value="0,0,16,0"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>-->
                         <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
                         <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
                             <SymbolIcon Symbol="Send"/>

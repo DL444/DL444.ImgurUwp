@@ -148,6 +148,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public string Thumbnail => _thumbnail;
+        public List<Tag> Tags => _item.Tags;
 
         public Image DisplayImage
         {

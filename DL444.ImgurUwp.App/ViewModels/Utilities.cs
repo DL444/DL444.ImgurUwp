@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using DL444.ImgurUwp.Models;
+using Windows.UI;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -29,6 +30,26 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return $"{char.ToUpper(str[0])}{str.Substring(1)}";
             }
             else { return ""; }
+        }
+        public static Color ToColor(string hex)
+        {
+            hex = hex.Replace("#", string.Empty);
+            if(hex.Length == 8)
+            {
+                byte a = (byte)System.Convert.ToUInt32(hex.Substring(0, 2), 16);
+                byte r = (byte)System.Convert.ToUInt32(hex.Substring(2, 2), 16);
+                byte g = (byte)System.Convert.ToUInt32(hex.Substring(4, 2), 16);
+                byte b = (byte)System.Convert.ToUInt32(hex.Substring(6, 2), 16);
+                return Color.FromArgb(a, r, g, b);
+            }
+            else if(hex.Length == 6)
+            {
+                byte r = (byte)System.Convert.ToUInt32(hex.Substring(0, 2), 16);
+                byte g = (byte)System.Convert.ToUInt32(hex.Substring(2, 2), 16);
+                byte b = (byte)System.Convert.ToUInt32(hex.Substring(4, 2), 16);
+                return Color.FromArgb(255, r, g, b);
+            }
+            else { throw new ArgumentException($"Specified string \"{hex}\" is not a valid color representation."); }
         }
     }
 

@@ -37,5 +37,7 @@ namespace DL444.ImgurUwp.Models
         bool InGallery { get; set; }
 
         string Vote { get; set; }
+
+        List<Tag> Tags { get; set; }
     }
 }

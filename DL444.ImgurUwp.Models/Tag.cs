@@ -15,5 +15,8 @@ namespace DL444.ImgurUwp.Models
         [JsonProperty(PropertyName = "display_name")]
         public string DisplayName { get; set; }
         public string Accent { get; set; }
+        [JsonProperty(PropertyName = "background_hash")]
+        public string BackgroundImageHash { get; set; }
+        public string Description { get; set; }
     }
 }
