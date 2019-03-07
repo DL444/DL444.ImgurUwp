@@ -86,6 +86,11 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OpenCommentBtn_Click(object sender, RoutedEventArgs e)
+        {
+            RootSplitView.IsPaneOpen = true;
+        }
     }
 
     public class SubItemTemplateSelector : DataTemplateSelector

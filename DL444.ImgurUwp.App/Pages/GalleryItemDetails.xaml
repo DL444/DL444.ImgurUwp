@@ -69,11 +69,7 @@
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply">
-                                <AppBarButton.Icon>
-                                    <FontIcon Glyph="&#xE11F;"/>
-                                </AppBarButton.Icon>
-                            </AppBarButton>
+                            <AppBarButton Icon="LeaveChat" Label="Reply" ToolTipService.ToolTip="Reply"/>
                             <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
@@ -108,11 +104,64 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="420"/>
-        </Grid.ColumnDefinitions>
+    <SplitView x:Name="RootSplitView" PanePlacement="Right" OpenPaneLength="420" IsPaneOpen="True" DisplayMode="Inline">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="False"/>
+                        <Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
+                        <Setter Target="OpenCommentBtnFooter.Visibility" Value="Visible"/>
+                        <Setter Target="OpenCommentBtnHeader.Visibility" Value="Visible"/>
+                        <Setter Target="GalleryPivot.Visibility" Value="Collapsed"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="820"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="RootSplitView.IsPaneOpen" Value="True"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <SplitView.Pane>
+            <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+                <Pivot>
+                    <PivotItem Header="Comments" Padding="0,8,0,16">
+                        <Grid ColumnSpacing="8" RowSpacing="16">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ui:TreeView ItemsSource="{x:Bind Comments, Mode=OneWay}" CanReorderItems="False" CanDragItems="False" Grid.ColumnSpan="2" SelectionMode="None">
+                                <ui:TreeView.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:CommentViewModel">
+                                        <cc:CommentTreeViewItem ContentTemplate="{ThemeResource CommentTemplate}" HorizontalContentAlignment="Stretch" ItemsSource="{x:Bind Children}" Content="{x:Bind}"/>
+                                    </DataTemplate>
+                                </ui:TreeView.ItemTemplate>
+                            </ui:TreeView>
+                            <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
+                            <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                                <SymbolIcon Symbol="Send"/>
+                            </Button>
+                        </Grid>
+                    </PivotItem>
+                    <PivotItem x:Name="GalleryPivot" Header="Gallery">
+
+                    </PivotItem>
+                </Pivot>
+            </Grid>
+        </SplitView.Pane>
 
         <ListView Margin="16,0" Padding="0,12" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
                   SelectionMode="None" IsItemClickEnabled="False">
@@ -125,11 +174,13 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind ViewModel.Title}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     <cc:SymbolTextButton Icon="Contact" Content="{x:Bind ViewModel.AccountUrl}" Grid.Row="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
-                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                     <!-- Implement friendly DateTime converter -->
+                    <cc:SymbolTextButton x:Name="OpenCommentBtnHeader" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Column="2" Margin="0,0,16,0" ToolTipService.ToolTip="Comments"/>
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
@@ -145,9 +196,12 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <ListView Grid.ColumnSpan="6" Margin="0,0,0,12" ItemsSource="{x:Bind Tags}" ItemContainerStyle="{ThemeResource PlainListViewItemStyle}" Visibility="{x:Bind TagBarVisibility, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True">
+                    <ListView Grid.ColumnSpan="7" Margin="0,0,0,12" ItemsSource="{x:Bind Tags}" ItemContainerStyle="{ThemeResource PlainListViewItemStyle}" 
+                              Visibility="{x:Bind TagBarVisibility, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" 
+                              ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel Orientation="Horizontal"/>
@@ -173,8 +227,9 @@
                             <FontIcon Glyph="&#xE006;"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
-                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Row="1" Grid.Column="4"/>
-                    <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Row="1" Grid.Column="5">
+                    <cc:SymbolTextButton x:Name="OpenCommentBtnFooter" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Row="1" ToolTipService.ToolTip="Comments" Grid.Column="4"/>
+                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Row="1" Grid.Column="5"/>
+                    <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Row="1" Grid.Column="6">
                         <cc:SymbolTextButton.Flyout>
                             <MenuFlyout Placement="TopEdgeAlignedRight">
                                 <MenuFlyoutItem Icon="Download" Text="Download all"/>
@@ -193,35 +248,5 @@
             </ListView.ItemContainerStyle>
         </ListView>
 
-        <Grid Grid.Column="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <Pivot>
-                <PivotItem Header="Comments" Padding="0,8,0,16">
-                    <Grid ColumnSpacing="8" RowSpacing="16">
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <ui:TreeView ItemsSource="{x:Bind Comments, Mode=OneWay}" CanReorderItems="False" CanDragItems="False" Grid.ColumnSpan="2" SelectionMode="None">
-                            <ui:TreeView.ItemTemplate>
-                                <DataTemplate x:DataType="vm:CommentViewModel">
-                                    <cc:CommentTreeViewItem ContentTemplate="{ThemeResource CommentTemplate}" HorizontalContentAlignment="Stretch" ItemsSource="{x:Bind Children}" Content="{x:Bind}"/>
-                                </DataTemplate>
-                            </ui:TreeView.ItemTemplate>
-                        </ui:TreeView>
-                        <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
-                        <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
-                            <SymbolIcon Symbol="Send"/>
-                        </Button>
-                    </Grid>
-                </PivotItem>
-                <PivotItem Header="Gallery">
-                    
-                </PivotItem>
-            </Pivot>
-        </Grid>
-    </Grid>
+    </SplitView>
 </Page>
