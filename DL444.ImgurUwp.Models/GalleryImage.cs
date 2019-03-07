@@ -33,7 +33,7 @@ namespace DL444.ImgurUwp.Models
         public int CommentCount { get; set; }
         public string Topic { get; set; }
         [JsonProperty(PropertyName = "topic_id")]
-        public int TopicId { get; set; }
+        public int? TopicId { get; set; }
         [JsonProperty(PropertyName = "account_url")]
         public string AccountUrl { get; set; }
         [JsonProperty(PropertyName = "account_id")]
@@ -41,7 +41,7 @@ namespace DL444.ImgurUwp.Models
         public int Ups { get; set; }
         public int Downs { get; set; }
         public int Points { get; set; }
-        public int Score { get; set; }
+        public int? Score { get; set; }
         [JsonProperty(PropertyName = "is_album")]
         public bool IsAlbum { get; set; }
         [JsonProperty(PropertyName = "in_most_viral")]

@@ -17,7 +17,7 @@ namespace DL444.ImgurUwp.Models
         string AccountId { get; set; }
 
         string Topic { get; set; }
-        int TopicId { get; set; }
+        int? TopicId { get; set; }
 
         bool? Nsfw { get; set; }
 
@@ -26,7 +26,7 @@ namespace DL444.ImgurUwp.Models
         int Ups { get; set; }
         int Downs { get; set; }
         int Points { get; set; }
-        int Score { get; set; }
+        int? Score { get; set; }
         int Views { get; set; }
 
         bool IsAlbum { get; set; }

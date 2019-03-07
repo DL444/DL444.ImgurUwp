@@ -73,7 +73,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string AccountUrl => _item.AccountUrl;
         public string AccountId => _item.AccountId;
         public string Topic => _item.Topic;
-        public int TopicId => _item.TopicId;
+        public int TopicId => _item.TopicId.GetValueOrDefault();
         public bool Nsfw => _item.Nsfw == true;
         public int CommentCount => _item.CommentCount;
         public int Ups
@@ -123,7 +123,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public int Points => _item.Points;
-        public int Score => _item.Score;
+        public int Score => _item.Score.GetValueOrDefault();
         public int Views => _item.Views;
         public bool InMostViral => _item.InMostViral;
         public bool Favorite

@@ -12,9 +12,8 @@ namespace DL444.ImgurUwp.ApiClient
 {
     public partial class ApiClient
     {
-        public async Task<Comment> GetCommentAsync(string id, bool includeReplies = false)
+        public async Task<Comment> GetCommentAsync(int id, bool includeReplies = false)
         {
-            if (id == null) { throw new ArgumentNullException(nameof(id)); }
             var response = await client.GetAsync($"/3/comment/{id}{(includeReplies ? "/replies" : "")}");
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
