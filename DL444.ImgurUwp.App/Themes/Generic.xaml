@@ -422,11 +422,6 @@
     </Style>
 
     <Style TargetType="cc:HeaderCaptionControl">
-        <Setter Property="Background" Value="{ThemeResource MenuFlyoutItemRevealBackground}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource MenuFlyoutItemRevealBorderBrush}" />
-        <Setter Property="BorderThickness" Value="{ThemeResource MenuFlyoutItemRevealBorderThickness}" />
-        <Setter Property="Foreground" Value="{ThemeResource MenuFlyoutItemForeground}" />
-        <Setter Property="Padding" Value="{ThemeResource MenuFlyoutItemThemePadding}" />
         <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Center" />

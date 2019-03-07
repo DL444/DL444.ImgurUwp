@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace DL444.ImgurUwp.ApiClient
 {
@@ -314,6 +315,42 @@ namespace DL444.ImgurUwp.ApiClient
             {
                 throw new ApiRequestException(dataJson) { Status = status };
             }
+        }
+
+        public async Task<AccountSettings> GetAccountSettingsAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            var response = await client.GetAsync($"/3/account/{username}/settings");
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<AccountSettings>(dataJson);
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+
+        public async Task<bool> GetAccountEmailVerifyStatusAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            var response = await client.GetAsync($"/3/account/{username}/verifyemail");
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+        public async Task VerifyAccountEmailAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/verifyemail");
+            var response = await client.SendAsync(msg);
         }
     }
 }

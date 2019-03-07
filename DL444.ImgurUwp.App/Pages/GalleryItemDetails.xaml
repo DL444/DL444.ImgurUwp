@@ -70,7 +70,7 @@
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
                             <AppBarButton Icon="LeaveChat" Label="Reply" ToolTipService.ToolTip="Reply"/>
-                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share"/>
+                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
                             <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}"/>
@@ -116,7 +116,6 @@
                         <Setter Target="RootSplitView.DisplayMode" Value="Overlay"/>
                         <Setter Target="OpenCommentBtnFooter.Visibility" Value="Visible"/>
                         <Setter Target="OpenCommentBtnHeader.Visibility" Value="Visible"/>
-                        <Setter Target="GalleryPivot.Visibility" Value="Collapsed"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Normal">
@@ -156,7 +155,7 @@
                             </Button>
                         </Grid>
                     </PivotItem>
-                    <PivotItem x:Name="GalleryPivot" Header="Gallery">
+                    <PivotItem Header="Gallery">
 
                     </PivotItem>
                 </Pivot>

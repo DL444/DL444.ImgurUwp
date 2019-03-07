@@ -49,15 +49,25 @@ namespace DL444.ImgurUwp.App.ViewModels
         // Caching this will cause problem with virtualization of TreeView. 
         public FrameworkElement RichContentBox => RichTextParser.GetRichContentBox(Content);
 
-        public CommentViewModel() { }
-        public CommentViewModel(Comment comment, int level = 0)
+        public CommentViewModel()
+        {
+            ShareCommand = new Command(Share);
+            ReportCommand = new AsyncCommand<bool>(Report);
+        }
+        public CommentViewModel(Comment comment, int level = 0) : this()
         {
             Comment = comment;
             Level = level;
-            ReportCommand = new AsyncCommand<bool>(Report);
         }
 
+        public Command ShareCommand { get; private set; }
         public AsyncCommand<bool> ReportCommand { get; private set; }
+        void Share()
+        {
+            var transferMgr = Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView();
+            transferMgr.DataRequested += TransferMgr_DataRequested;
+            Windows.ApplicationModel.DataTransfer.DataTransferManager.ShowShareUI();
+        }
         async Task<bool> Report()
         {
             Controls.ReportConfirmDialog dialog = new Controls.ReportConfirmDialog(this);
@@ -67,6 +77,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return await ApiClient.Client.ReportCommentAsync(this.Id, dialog.SelectedReason);
             }
             return true;
+        }
+
+        private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
+        {
+            var request = args.Request;
+            request.Data.SetWebLink(new Uri($"https://imgur.com/gallery/{ImageId}/comment/{Id}"));
+            request.Data.Properties.Title = $"Comment from Imgur";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

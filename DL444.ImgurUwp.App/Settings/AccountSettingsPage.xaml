@@ -1,0 +1,98 @@
+﻿<Page
+    x:Class="DL444.ImgurUwp.App.Settings.AccountSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DL444.ImgurUwp.App.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <SolidColorBrush x:Key="AlertForegroundBrush" Color="Red"/>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel Margin="16,0" Padding="0,16" Spacing="32">
+            <StackPanel>
+                <!-- Terms section. -->
+                <TextBlock Text="Terms of Services" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                <TextBlock Text="You haven't accepted Imgur's Terms of Services." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
+
+                <TextBlock Text="Please read and accept the terms to avoid problems with your account."/>
+                <HyperlinkButton Content="Imgur Terms of Services" NavigateUri="https://imgur.com/tos"/>
+
+                <CheckBox x:Name="AgreeCheckBox" Content="I agree to Imgur's Terms of Services and other applicable rules." Margin="0,8,0,4"/>
+                <Button Content="Accept terms"/>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Verify email" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                <TextBlock Text="Your email wasn't verified." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
+
+                <TextBlock Text="Please verify your email to avoid problems with your account."/>
+                <Button Content="Send verification email" Margin="0,20,0,0"/>
+            </StackPanel>
+
+            <!-- Move this to general page -->
+            <!--<StackPanel>
+                <TextBlock Text="Avatar + Cover" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+                <TextBlock Text="Make Imgur your home with an avatar and cover you like."/>
+            </StackPanel>-->
+            
+            <!--<StackPanel>
+                <TextBlock Text="Username" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                <TextBlock Text="Make Imgur your home with an avatar and cover you like."/>
+            </StackPanel>-->
+            <StackPanel>
+                <TextBlock Text="Privacy" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+                <ToggleSwitch>
+                    <ToggleSwitch.Header>
+                        <StackPanel>
+                            <TextBlock Text="Public uploads" Margin="0,0,0,4"/>
+                            <TextBlock Text="Make my uploads publicly available by default" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </ToggleSwitch.Header>
+                </ToggleSwitch>
+                <TextBlock Text="Default album privacy level" Margin="0,8,0,0"/>
+                <TextBlock Text="When I upload an album, set its privacy level to" Margin="0,4,0,8" 
+                       Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Style="{ThemeResource CaptionTextBlockStyle}" />
+                <ComboBox MinWidth="200">
+                    <ComboBoxItem Content="Hidden" Tag="1"/>
+                    <ComboBoxItem Content="Secret" Tag="2"/>
+                    <ComboBoxItem Content="Public" Tag="0"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Notification" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                <ToggleSwitch>
+                    <ToggleSwitch.Header>
+                        <StackPanel>
+                            <TextBlock Text="Messaging" Margin="0,0,0,4"/>
+                            <TextBlock Text="Allow other users to send me messages" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </ToggleSwitch.Header>
+                </ToggleSwitch>
+                <ToggleSwitch Margin="0,8,0,0">
+                    <ToggleSwitch.Header>
+                        <StackPanel>
+                            <TextBlock Text="Reply notification" Margin="0,0,0,4"/>
+                            <TextBlock Text="Notify me when others metion me in comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </ToggleSwitch.Header>
+                </ToggleSwitch>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Content" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                <ToggleSwitch>
+                    <ToggleSwitch.Header>
+                        <StackPanel>
+                            <TextBlock Text="Mature content" Margin="0,0,0,4"/>
+                            <TextBlock Text="Show mature posts and comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        </StackPanel>
+                    </ToggleSwitch.Header>
+                </ToggleSwitch>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
