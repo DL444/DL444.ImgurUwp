@@ -12,6 +12,8 @@ namespace DL444.ImgurUwp.App.ViewModels
     public class CommentViewModel : INotifyPropertyChanged, IReportable
     {
         Comment _comment;
+        string _reply = "";
+        Visibility _replyFieldVisibility = Visibility.Collapsed;
 
         public Comment Comment
         {
@@ -46,13 +48,35 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public int Level { get; private set; }
 
+        public string Reply {
+            get => _reply;
+            set
+            {
+                _reply = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Reply)));
+                SendReplyCommand.RaiseCanExecuteChanged();
+            }
+        }
+        public Visibility ReplyFieldVisibilty
+        {
+            get => _replyFieldVisibility;
+            set
+            {
+                _replyFieldVisibility = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ReplyFieldVisibilty)));
+            }
+        }
+
+
         // Caching this will cause problem with virtualization of TreeView. 
         public FrameworkElement RichContentBox => RichTextParser.GetRichContentBox(Content);
 
         public CommentViewModel()
         {
+            ShowReplyFieldCommand = new Command(ShowReplyField);
             ShareCommand = new Command(Share);
             ReportCommand = new AsyncCommand<bool>(Report);
+            SendReplyCommand = new AsyncCommand<int>(SendReply, () => !string.IsNullOrWhiteSpace(Reply));
         }
         public CommentViewModel(Comment comment, int level = 0) : this()
         {
@@ -60,8 +84,22 @@ namespace DL444.ImgurUwp.App.ViewModels
             Level = level;
         }
 
+        public Command ShowReplyFieldCommand { get; private set; }
         public Command ShareCommand { get; private set; }
         public AsyncCommand<bool> ReportCommand { get; private set; }
+        public AsyncCommand<int> SendReplyCommand { get; private set; }
+
+        void ShowReplyField()
+        {
+            if(ReplyFieldVisibilty == Visibility.Collapsed)
+            {
+                ReplyFieldVisibilty = Visibility.Visible;
+            }
+            else
+            {
+                ReplyFieldVisibilty = Visibility.Collapsed;
+            }
+        }
         void Share()
         {
             var transferMgr = Windows.ApplicationModel.DataTransfer.DataTransferManager.GetForCurrentView();
@@ -77,6 +115,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return await ApiClient.Client.ReportCommentAsync(this.Id, dialog.SelectedReason);
             }
             return true;
+        }
+        async Task<int> SendReply()
+        {
+            ReplyFieldVisibilty = Visibility.Collapsed;
+            int newId = await ApiClient.Client.PostCommentAsync(ImageId, Reply, Id.ToString());
+            Reply = "";
+            return newId;
         }
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)

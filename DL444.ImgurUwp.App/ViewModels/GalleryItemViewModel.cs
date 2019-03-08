@@ -16,6 +16,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         private bool _upvoted;
         private bool _downvoted;
         private bool _favorite;
+        string _comment = "";
 
         public IGalleryItem Item
         {
@@ -33,6 +34,11 @@ namespace DL444.ImgurUwp.App.ViewModels
                             DisplayImage = i;
                             break;
                         }
+                        // It is possible that cover image is not in the first three. Take first then.
+                    }
+                    if(DisplayImage == null)
+                    {
+                        DisplayImage = album.Images.FirstOrDefault();
                     }
                 }
                 else
@@ -160,6 +166,17 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comment)));
+                PostCommentCommand.RaiseCanExecuteChanged();
+            }
+        }
+
         public GalleryItemViewModel() : this(Defaults.DefaultImage) { }
         public GalleryItemViewModel(IGalleryItem item)
         {
@@ -171,6 +188,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             OpenBrowserCommand = new AsyncCommand<object>(OpenBrowser);
             DownloadCommand = new AsyncCommand<object>(Download);
             ReportCommand = new AsyncCommand<bool>(Report);
+            PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
         }
 
         protected void NotifyPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -184,6 +202,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AsyncCommand<object> OpenBrowserCommand { get; private set; }
         public AsyncCommand<object> DownloadCommand { get; private set; }
         public AsyncCommand<bool> ReportCommand { get; private set; }
+        public AsyncCommand<int> PostCommentCommand { get; private set; }
 
         public async Task<bool> Vote(ImgurUwp.ApiClient.Vote vote)
         {
@@ -240,6 +259,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return await ApiClient.Client.ReportGalleryItemAsync(this.Id, dialog.SelectedReason);
             }
             return true;
+        }
+
+        async Task<int> PostComment()
+        {
+            int commentId = await ApiClient.Client.PostCommentAsync(Id, Comment);
+            Comment = "";
+            return commentId;
         }
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)

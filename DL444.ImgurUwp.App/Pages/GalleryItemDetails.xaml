@@ -69,7 +69,7 @@
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Icon="LeaveChat" Label="Reply" ToolTipService.ToolTip="Reply"/>
+                            <AppBarButton Icon="LeaveChat" Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}"/>
                             <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
@@ -82,9 +82,11 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -94,12 +96,27 @@
                 <ContentControl Content="{x:Bind RichContentBox}" Grid.Row="1" Grid.ColumnSpan="3"/>
                 <TextBlock Text="{x:Bind DateTime}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
 
-                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
+                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
                     <cc:SymbolTextToggleButton.Icon>
                         <FontIcon Glyph="&#xE1FD;"/>
                     </cc:SymbolTextToggleButton.Icon>
                 </cc:SymbolTextToggleButton>
+
+                <Grid Grid.Row="3" Grid.ColumnSpan="4" Margin="0,8,0,0" Visibility="{x:Bind ReplyFieldVisibilty, Mode=OneWay}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox PlaceholderText="Reply..." Text="{x:Bind Reply, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="140"/>
+                    <Button Command="{x:Bind SendReplyCommand}" Grid.Column="1" Margin="4,0" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                        <SymbolIcon Symbol="Send"/>
+                    </Button>
+                </Grid>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -149,8 +166,8 @@
                                     </DataTemplate>
                                 </ui:TreeView.ItemTemplate>
                             </ui:TreeView>
-                            <TextBox Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
-                            <Button Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                            <TextBox Text="{x:Bind ViewModel.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
+                            <Button Command="{x:Bind ViewModel.PostCommentCommand}" Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
                                 <SymbolIcon Symbol="Send"/>
                             </Button>
                         </Grid>

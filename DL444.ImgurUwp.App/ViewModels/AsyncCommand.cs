@@ -68,7 +68,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             await ExecuteAsync(parameter);
         }
-        protected void RaiseCanExecuteChanged()
+        public void RaiseCanExecuteChanged()
         {
             CanExecuteChanged?.Invoke(this, null);
         }
