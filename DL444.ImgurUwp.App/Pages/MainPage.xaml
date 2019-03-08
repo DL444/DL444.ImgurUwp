@@ -35,7 +35,7 @@
                         <FontIcon Glyph="&#xE82E;"/>
                     </Button>
                     <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}">
-                        <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
+                        <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl, TargetNullValue={x:Null}}"/>
                         <Button.Flyout>
                             <MenuFlyout Placement="BottomEdgeAlignedRight">
                                 <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
@@ -53,10 +53,10 @@
                                                     <RowDefinition/>
                                                 </Grid.RowDefinitions>
 
-                                                <TextBlock Text="{x:Bind CurrentAccount.Username}"  Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                <TextBlock Text="{x:Bind CurrentAccount.Username, TargetNullValue={x:Null}}"  Style="{ThemeResource BaseTextBlockStyle}"/>
                                                 <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                                    <TextBlock Text="{x:Bind CurrentAccount.Reputation}" Style="{ThemeResource CaptionTextBlockStyle}"/>
-                                                    <TextBlock Text="{x:Bind CurrentAccount.ReputationName}" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                    <TextBlock Text="{x:Bind CurrentAccount.Reputation, TargetNullValue={x:Null}}" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                                    <TextBlock Text="{x:Bind CurrentAccount.ReputationName, TargetNullValue={x:Null}}" Margin="8,0,0,0" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 </StackPanel>
                                             </Grid>
                                         </Grid>

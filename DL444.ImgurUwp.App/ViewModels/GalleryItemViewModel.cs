@@ -177,10 +177,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
-        public GalleryItemViewModel() : this(Defaults.DefaultImage) { }
-        public GalleryItemViewModel(IGalleryItem item)
+        public GalleryItemViewModel()
         {
-            Item = item;
             UpvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Up));
             DownvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Down));
             CopyUrlCommand = new Command(CopyUrl);
@@ -189,6 +187,10 @@ namespace DL444.ImgurUwp.App.ViewModels
             DownloadCommand = new AsyncCommand<object>(Download);
             ReportCommand = new AsyncCommand<bool>(Report);
             PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
+        }
+        public GalleryItemViewModel(IGalleryItem item) : this()
+        {
+            Item = item;
         }
 
         protected void NotifyPropertyChanged(string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

@@ -13,8 +13,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UI = Microsoft.UI.Xaml.Controls;
-
-using DL444.ImgurUwp.Models;
 using Windows.UI.ViewManagement;
 using DL444.ImgurUwp.App.ViewModels;
 using System.ComponentModel;
@@ -30,7 +28,7 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
-        private AccountViewModel _currentAccount = new AccountViewModel();
+        private AccountViewModel _currentAccount;
 
         AccountViewModel CurrentAccount
         {

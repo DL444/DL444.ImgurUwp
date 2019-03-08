@@ -34,8 +34,8 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string CoverName => _account.CoverName;
         public bool IsFollowing => _account.UserFollow;
 
-        public AccountViewModel() : this(Defaults.DefaultAccount) { }
-        public AccountViewModel(Account account)
+        public AccountViewModel() { }
+        public AccountViewModel(Account account) : this()
         {
             Account = account;
         }

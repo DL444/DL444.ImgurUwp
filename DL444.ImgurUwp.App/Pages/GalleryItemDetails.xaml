@@ -98,9 +98,9 @@
 
                 <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
                                      HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
+                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
                                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
+                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
                                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
                     <cc:SymbolTextToggleButton.Icon>
                         <FontIcon Glyph="&#xE1FD;"/>
