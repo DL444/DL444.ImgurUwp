@@ -54,4 +54,48 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "parent_id")]
         public string ParentId { get; set; }
     }
+
+    class ImageUploadParams
+    {
+        public ImageUploadParams(string image, string album, string name, string title, string description)
+        {
+            Image = image ?? throw new ArgumentNullException(nameof(image));
+            Album = album;
+            Name = name;
+            Title = title;
+            Description = description;
+        }
+
+        [JsonProperty(PropertyName = "image")]
+        public string Image { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "album")]
+        public string Album { get; set; }
+        [JsonProperty(PropertyName = "type")]
+        public string Type { get; set; } = "base64";
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "name")]
+        public string Name { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "title")]
+        public string Title { get; set; }
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "description")]
+        public string Description { get; set; }
+    }
+
+    class ImageUpdateParams
+    {
+        public ImageUpdateParams(string id, string title, string description)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Title = title;
+            Description = description;
+        }
+
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
+        [JsonProperty(PropertyName = "title", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Title { get; set; }
+        [JsonProperty(PropertyName = "description", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Description { get; set; }
+    }
 }
