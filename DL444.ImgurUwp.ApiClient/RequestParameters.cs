@@ -42,6 +42,10 @@ namespace DL444.ImgurUwp.ApiClient
     {
         Public, Hidden, Secret
     }
+    public enum AlbumEditMode
+    {
+        Add, Replace, Remove
+    }
 
     class PostCommentParams
     {
