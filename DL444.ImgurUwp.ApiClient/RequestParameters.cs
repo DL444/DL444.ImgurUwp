@@ -110,12 +110,12 @@ namespace DL444.ImgurUwp.ApiClient
 
     class AlbumCreateParams
     {
-        public AlbumCreateParams(string title, string description, AlbumPrivacy privacy, 
+        public AlbumCreateParams(string title, string description, AlbumPrivacy? privacy, 
             IEnumerable<string> imageIds, IEnumerable<string> deleteHashes, string coverId)
         {
             Title = title;
             Description = description;
-            Privacy = privacy.ToString();
+            Privacy = privacy;
             ImageIds = imageIds;
             DeleteHashes = deleteHashes;
             CoverId = coverId;
@@ -126,12 +126,56 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(PropertyName = "description", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Description { get; set; }
         [JsonProperty(PropertyName = "privacy", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public string Privacy { get; set; }
+        public AlbumPrivacy? Privacy { get; set; }
         [JsonProperty(PropertyName = "ids", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public IEnumerable<string> ImageIds { get; set; }
         [JsonProperty(PropertyName = "deletehashes", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public IEnumerable<string> DeleteHashes { get; set; }
         [JsonProperty(PropertyName = "cover", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string CoverId { get; set; }
+    }
+
+    class AccountSettingsParams
+    {
+        public AccountSettingsParams(bool? publicImagesByDefault, bool? messagingEnabled, AlbumPrivacy? albumDefaultPrivacy, 
+            string username, bool? showMature, bool? newsletterSubscribe)
+        {
+            PublicImagesByDefault = publicImagesByDefault;
+            MessagingEnabled = messagingEnabled;
+            AlbumDefaultPrivacy = albumDefaultPrivacy;
+            Username = username;
+            ShowMature = showMature;
+            NewsletterSubscribe = newsletterSubscribe;
+        }
+
+        public AccountSettingsParams(Models.AccountSettings settings)
+            : this(settings.PublicImagesByDefault, settings.MessagingEnabled, null, settings.Username, settings.ShowMature, settings.NewsletterSubscribed)
+        {
+            switch(settings.AlbumPrivacy)
+            {
+                case Models.AlbumPrivacyOptions.Public:
+                    AlbumDefaultPrivacy = AlbumPrivacy.Public;
+                    break;
+                case Models.AlbumPrivacyOptions.Hidden:
+                    AlbumDefaultPrivacy = AlbumPrivacy.Hidden;
+                    break;
+                case Models.AlbumPrivacyOptions.Secret:
+                    AlbumDefaultPrivacy = AlbumPrivacy.Secret;
+                    break;
+            }
+        }
+
+        [JsonProperty(PropertyName = "public_images", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? PublicImagesByDefault { get; set; }
+        [JsonProperty(PropertyName = "messaging_enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? MessagingEnabled { get; set; }
+        [JsonProperty(PropertyName = "album_privacy", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public AlbumPrivacy? AlbumDefaultPrivacy { get; set; }
+        [JsonProperty(PropertyName = "username", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Username { get; set; }
+        [JsonProperty(PropertyName = "show_mature", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? ShowMature { get; set; }
+        [JsonProperty(PropertyName = "newsletter_subscribed", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public bool? NewsletterSubscribe { get; set; }
     }
 }

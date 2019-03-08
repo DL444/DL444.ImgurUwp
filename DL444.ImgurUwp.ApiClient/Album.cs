@@ -14,7 +14,7 @@ namespace DL444.ImgurUwp.ApiClient
     public partial class ApiClient
     {
         public async Task<(string id, string deleteHash)> CreateAlbumAsync(IEnumerable<string> imageIds = null, string title = null, string description = null,
-            AlbumPrivacy privacy = AlbumPrivacy.Hidden, string coverId = null, IEnumerable<string> deleteHashes = null)
+            AlbumPrivacy? privacy = null, string coverId = null, IEnumerable<string> deleteHashes = null)
         {
             if(coverId != null)
             {
@@ -69,7 +69,7 @@ namespace DL444.ImgurUwp.ApiClient
         }
 
         public async Task<bool> UpdateAlbumInfoAsync(string id, IEnumerable<string> imageIds = null, string title = null, string description = null,
-            AlbumPrivacy privacy = AlbumPrivacy.Hidden, string coverId = null, IEnumerable<string> deleteHashes = null)
+            AlbumPrivacy? privacy = null, string coverId = null, IEnumerable<string> deleteHashes = null)
         {
             if(id == null) { throw new ArgumentNullException(nameof(id)); }
             if (coverId != null)

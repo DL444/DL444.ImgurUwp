@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace DL444.ImgurUwp.ApiClient
 {
@@ -325,6 +326,75 @@ namespace DL444.ImgurUwp.ApiClient
             if (success)
             {
                 return JsonConvert.DeserializeObject<AccountSettings>(dataJson);
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+        public async Task<bool> SetAccountSettingsAsync(string username, bool? publicImagesByDefault = null, bool? messagingEnabled = null, 
+            AlbumPrivacy? albumDefaultPrivacy = null, string newUsername = null, bool? showMature = null, bool? newsletterSubscribe = null)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/settings");
+            msg.Content = new StringContent(JsonConvert.SerializeObject(new AccountSettingsParams(
+                publicImagesByDefault, messagingEnabled, albumDefaultPrivacy, newUsername, showMature, newsletterSubscribe)));
+            msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+            var response = await client.SendAsync(msg);
+
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+        public async Task<bool> SetAccountBioAsync(string username, string bio)
+        {
+            if(username == null) { throw new ArgumentNullException(nameof(username)); }
+
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/settings");
+            string contentStr;
+            if(bio == null)
+            {
+                contentStr = $"{{\"bio\":null}}";
+            }
+            else
+            {
+                contentStr = $"{{\"bio\":\"{bio}\"}}";
+            }
+            msg.Content = new StringContent(contentStr);
+            msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+            var response = await client.SendAsync(msg);
+
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+        public async Task<bool> AcceptGalleryTermsAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/settings");
+            string contentStr = $"{{\"accepted_gallery_terms\":true}}";
+            msg.Content = new StringContent(contentStr);
+            msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            var response = await client.SendAsync(msg);
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
             }
             else
             {
