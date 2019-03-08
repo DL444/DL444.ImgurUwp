@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace DL444.ImgurUwp.ApiClient
@@ -36,6 +37,10 @@ namespace DL444.ImgurUwp.ApiClient
     public enum ReportReason
     {
         Unspecified = 0, DoesNotBelong = 1, Spam = 2, Abusive = 3, UnmarkedMature = 4, Porn = 5
+    }
+    public enum AlbumPrivacy
+    {
+        Public, Hidden, Secret
     }
 
     class PostCommentParams
@@ -97,5 +102,32 @@ namespace DL444.ImgurUwp.ApiClient
         public string Title { get; set; }
         [JsonProperty(PropertyName = "description", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Description { get; set; }
+    }
+
+    class AlbumCreateParams
+    {
+        public AlbumCreateParams(string title, string description, AlbumPrivacy privacy, 
+            IEnumerable<string> imageIds, IEnumerable<string> deleteHashes, string coverId)
+        {
+            Title = title;
+            Description = description;
+            Privacy = privacy.ToString();
+            ImageIds = imageIds;
+            DeleteHashes = deleteHashes;
+            CoverId = coverId;
+        }
+
+        [JsonProperty(PropertyName = "title", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Title { get; set; }
+        [JsonProperty(PropertyName = "description", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Description { get; set; }
+        [JsonProperty(PropertyName = "privacy", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Privacy { get; set; }
+        [JsonProperty(PropertyName = "ids", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public IEnumerable<string> ImageIds { get; set; }
+        [JsonProperty(PropertyName = "deletehashes", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public IEnumerable<string> DeleteHashes { get; set; }
+        [JsonProperty(PropertyName = "cover", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string CoverId { get; set; }
     }
 }
