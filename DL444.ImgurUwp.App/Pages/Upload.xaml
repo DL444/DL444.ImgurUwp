@@ -22,13 +22,14 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="Transparent" AllowDrop="True" DragOver="ImageList_DragOver" Drop="ImageList_Drop">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplate="{ThemeResource UploaderImageDataTemplate}" SelectionMode="None" IsItemClickEnabled="False" CanReorderItems="True">
+        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplate="{ThemeResource UploaderImageDataTemplate}" 
+                  SelectionMode="None" IsItemClickEnabled="False" CanReorderItems="True">
             <ListView.Header>
                 <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}">
                     <TextBox PlaceholderText="Give your post a title..." Text="{x:Bind ViewModel.Title, Mode=TwoWay}" Margin="-8,0" Style="{ThemeResource ClickEditTextBoxStyle}" FontSize="20" TextWrapping="Wrap"/>

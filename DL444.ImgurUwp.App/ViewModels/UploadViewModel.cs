@@ -43,14 +43,8 @@ namespace DL444.ImgurUwp.App.ViewModels
                     allSuccess = false;
                     continue;
                 }
-                UploadImageViewModel imageVm = new UploadImageViewModel();
 
-                Stream stream = await f.OpenStreamForReadAsync();
-                imageVm.ImageStream = stream;
-
-                var image = new BitmapImage();
-                await image.SetSourceAsync(stream.AsRandomAccessStream());
-                imageVm.Image = image;
+                UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync(await f.OpenStreamForReadAsync());
                 Images.Add(imageVm);
             }
             PickImageCommand.RaiseCanExecuteChanged();
@@ -114,6 +108,18 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private UploadImageViewModel() { }
+
+        public static async Task<UploadImageViewModel> CreateFromStreamAsync(Stream imageStream)
+        {
+            UploadImageViewModel imageVm = new UploadImageViewModel();
+            imageVm.ImageStream = imageStream;
+            var image = new BitmapImage();
+            await image.SetSourceAsync(imageStream.AsRandomAccessStream());
+            imageVm.Image = image;
+            return imageVm;
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
