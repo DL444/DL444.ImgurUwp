@@ -26,63 +26,11 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class GalleryItemDetails : Page, INotifyPropertyChanged
     {
-
-        private GalleryItemViewModel _viewModel;
-        GalleryItemViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                _viewModel = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
-            }
-        }
-
-        private ObservableCollection<ImageViewModel> _images = new ObservableCollection<ImageViewModel>();
-        ObservableCollection<ImageViewModel> Images
-        {
-            get => _images;
-            set
-            {
-                _images = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Images)));
-            }
-        }
-
-        private ObservableCollection<CommentViewModel> _comments = new ObservableCollection<CommentViewModel>();
-        ObservableCollection<CommentViewModel> Comments
-        {
-            get => _comments;
-            set
-            {
-                _comments = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
-            }
-        }
-
-        private ObservableCollection<TagViewModel> _tags = new ObservableCollection<TagViewModel>();
-        ObservableCollection<TagViewModel> Tags
-        {
-            get => _tags;
-            set
-            {
-                _tags = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tags)));
-            }
-        }
-
-        private Visibility _tagBarVisibility = Visibility.Collapsed;
-        Visibility TagBarVisibility
-        {
-            get => _tagBarVisibility;
-            set
-            {
-                _tagBarVisibility = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
-            }
-        }
-
-        GalleryCollectionViewModel GalleryVm { get; set; }
+        GalleryItemViewModel ViewModel { get; set; }
+        ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
+        ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
+        ObservableCollection<TagViewModel> Tags { get; set; } = new ObservableCollection<TagViewModel>();
+        Visibility TagBarVisibility { get; set; } = Visibility.Collapsed;
         
         public GalleryItemDetails()
         {
@@ -95,58 +43,47 @@ namespace DL444.ImgurUwp.App.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is Tuple<GalleryItemViewModel, GalleryCollectionViewModel> vms)
+            if(e.Parameter is GalleryItemViewModel vm)
             {
-                var vm = vms.Item1;
-                GalleryVm = vms.Item2;
-
                 ViewModel = vm;
-                await PopulateViewModels();
-            }
-        }
-
-        private async System.Threading.Tasks.Task PopulateViewModels()
-        {
-            Images = new ObservableCollection<ImageViewModel>();
-            Comments = new ObservableCollection<CommentViewModel>();
-            Tags = new ObservableCollection<TagViewModel>();
-            TagBarVisibility = Visibility.Collapsed;
-
-            if (ViewModel.IsAlbum)
-            {
-                var album = ViewModel.Item as GalleryAlbum;
-                foreach (var i in album.Images)
+                if(vm.IsAlbum)
                 {
-                    Images.Add(new ImageViewModel(i));
+                    var album = vm.Item as GalleryAlbum;
+                    foreach(var i in album.Images)
+                    {
+                        Images.Add(new ImageViewModel(i));
+                    }
                 }
-            }
-            else
-            {
-                Images.Add(new ImageViewModel(ViewModel.DisplayImage));
-            }
-
-            // The front page model only contains the first 3 images. If there's more, we would need to request them.
-            if (ViewModel.IsAlbum && ViewModel.ImageCount > 3)
-            {
-                var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(ViewModel.Id);
-                for (int i = 3; i < fullAlbum.ImageCount; i++)
+                else
                 {
-                    Images.Add(new ImageViewModel(fullAlbum.Images[i]));
+                    Images.Add(new ImageViewModel(vm.DisplayImage));
                 }
-            }
 
-            foreach (var t in ViewModel.Tags)
-            {
-                Tags.Add(new TagViewModel(t));
-            }
+                // The front page model only contains the first 3 images. If there's more, we would need to request them.
+                if (vm.IsAlbum && vm.ImageCount > 3)
+                {
+                    var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(vm.Id);
+                    for (int i = 3; i < fullAlbum.ImageCount; i++)
+                    {
+                        Images.Add(new ImageViewModel(fullAlbum.Images[i]));
+                    }
+                }
 
-            if (Tags.Count > 0)
-            {
-                TagBarVisibility = Visibility.Visible;
-            }
+                foreach (var t in vm.Tags)
+                {
+                    Tags.Add(new TagViewModel(t));
+                }
 
-            var comments = await ApiClient.Client.GetGalleryCommentsAsync(ViewModel.Id);
-            Comments = new ObservableCollection<CommentViewModel>(CommentViewModelFactory.BuildCommentViewModels(comments));
+                if(Tags.Count > 0)
+                {
+                    TagBarVisibility = Visibility.Visible;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
+                }
+
+                var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
+                Comments = new ObservableCollection<CommentViewModel>(CommentViewModelFactory.BuildCommentViewModels(comments));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -154,14 +91,6 @@ namespace DL444.ImgurUwp.App.Pages
         private void OpenCommentBtn_Click(object sender, RoutedEventArgs e)
         {
             RootSplitView.IsPaneOpen = true;
-        }
-
-        private async void GalleryList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if(object.ReferenceEquals(e.ClickedItem, ViewModel)) { return; }
-            ViewModel = e.ClickedItem as GalleryItemViewModel;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
-            await PopulateViewModels();
         }
     }
 
