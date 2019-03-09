@@ -79,14 +79,17 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void AccountDetails_Click(object sender, RoutedEventArgs e)
         {
-            RootNavView.SelectedItem = null;
             ContentFrame.Navigate(typeof(AccountDetails), CurrentAccount);
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            RootNavView.SelectedItem = null;
             ContentFrame.Navigate(typeof(Settings.SettingsFrame));
+        }
+
+        private void Upload_Click(object sender, RoutedEventArgs e)
+        {
+            ContentFrame.Navigate(typeof(Upload));
         }
 
         private void RootNavView_BackRequested(UI.NavigationView sender, UI.NavigationViewBackRequestedEventArgs args)

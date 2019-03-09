@@ -182,7 +182,7 @@
         <ListView Margin="16,0" Padding="0,12" HorizontalAlignment="Stretch" ItemsSource="{x:Bind Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
                   SelectionMode="None" IsItemClickEnabled="False">
             <ListView.Header>
-                <Grid MaxWidth="800" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
+                <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -200,7 +200,7 @@
                 </Grid>
             </ListView.Header>
             <ListView.Footer>
-                <Grid MaxWidth="800" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" ColumnSpacing="16" Padding="12">
+                <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" ColumnSpacing="16" Padding="12">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -259,7 +259,7 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="Margin" Value="0,8"/>
-                    <Setter Property="MaxWidth" Value="800"/>
+                    <Setter Property="MaxWidth" Value="{ThemeResource ImageListViewMaxWidth}" />
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

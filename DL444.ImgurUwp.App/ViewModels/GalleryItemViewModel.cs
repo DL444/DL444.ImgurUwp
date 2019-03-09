@@ -243,7 +243,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             using (var imageStream = System.IO.WindowsRuntimeStreamExtensions.AsInputStream(await ApiClient.Client.DownloadMediaAsync(DisplayImage.Link)))
             {
                 string filename = DisplayImage.Link.Substring(DisplayImage.Link.LastIndexOf('/') + 1);
-                var file = await defaultFolder.CreateFileAsync(filename);
+                var file = await defaultFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.GenerateUniqueName);
                 using (var fileStream = (await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite)))
                 {
                     await Windows.Storage.Streams.RandomAccessStream.CopyAndCloseAsync(imageStream, fileStream);
