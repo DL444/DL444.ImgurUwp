@@ -101,28 +101,7 @@
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="CommonStates">
                                         <VisualState x:Name="Normal" />
-
-                                        <VisualState x:Name="Disabled">
-
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="HeaderContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlHeaderForegroundDisabled}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBackgroundDisabled}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="BorderElement" Storyboard.TargetProperty="BorderBrush">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlBorderBrushDisabled}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextControlForegroundDisabled}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderTextContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding PlaceholderForeground, RelativeSource={RelativeSource TemplatedParent}, TargetNullValue={ThemeResource TextControlPlaceholderForegroundDisabled}}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-
+                                        <VisualState x:Name="Disabled"/>
                                         <VisualState x:Name="PointerOver">
                                             <VisualState.Setters>
                                                 <Setter Target="EditHint.Visibility" Value="Visible"/>
@@ -536,9 +515,35 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="HeaderedTextBlockTextStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+                <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+                <Setter Property="TextWrapping" Value="Wrap" />
+                <Setter Property="TextLineBounds" Value="TrimToBaseline" />
+                <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="FontWeight" Value="Light" />
+                <Setter Property="LineHeight" Value="28" />
+            </Style>
+
             <cc:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
 
             <x:Double x:Key="ImageListViewMaxWidth">800</x:Double>
+
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorDark1}"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorLight1}"/>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAltHighColor}"/>
+                    <!-- Not sure the value is correct. -->
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
 
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>

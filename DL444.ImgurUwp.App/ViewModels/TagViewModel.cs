@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
 using Windows.UI;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace DL444.ImgurUwp.App.ViewModels
@@ -34,7 +35,18 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string BackgroundImage => $"https://i.imgur.com/{Tag.BackgroundImageHash}.png";
         public string Description => Tag.Description;
 
-        public TagViewModel() { }
+        public Visibility DescriptionVisibility => string.IsNullOrEmpty(Description) ? Visibility.Collapsed : Visibility.Visible;
+
+        public Command ShowDetailsCommand { get; private set; }
+        void ShowDetails()
+        {
+            Navigation.ContentFrame.Navigate(typeof(Pages.Tag), this);
+        }
+
+        public TagViewModel()
+        {
+            ShowDetailsCommand = new Command(ShowDetails);
+        }
         public TagViewModel(Tag tag) : this()
         {
             Tag = tag;

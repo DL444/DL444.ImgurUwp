@@ -16,31 +16,6 @@
             <vm:DateStringConverter x:Key="DateStringConverter"/>
             <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{StaticResource SystemChromeAltHighColor}" BackgroundSource="Backdrop"
                       TintOpacity="0.3" FallbackColor="Transparent"/>
-            <Style x:Key="HeaderedTextBlockTextStyle" TargetType="TextBlock">
-                <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
-                <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
-                <Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}" />
-                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
-                <Setter Property="TextWrapping" Value="Wrap" />
-                <Setter Property="TextLineBounds" Value="TrimToBaseline" />
-                <Setter Property="OpticalMarginAlignment" Value="TrimSideBearings" />
-                <Setter Property="FontSize" Value="18" />
-                <Setter Property="FontWeight" Value="Light" />
-                <Setter Property="LineHeight" Value="28" />
-            </Style>
-
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorDark1}"/>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorLight1}"/>
-                </ResourceDictionary>
-                <ResourceDictionary x:Key="HighContrast">
-                    <SolidColorBrush x:Key="ImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAltHighColor}"/>
-                    <!-- Not sure the value is correct. -->
-                </ResourceDictionary>
-            </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -52,7 +27,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.RowSpan="2" Background="{ThemeResource ImagePlaceholderAccentColorBrush}">
+            <Grid Grid.RowSpan="2" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
                 <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" VerticalAlignment="Center"/>
             </Grid>
 
@@ -90,11 +65,11 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Source="{x:Bind Image}" MaxHeight="120"/>
+                            <Image Source="{x:Bind Image}" Height="120" MinWidth="120"/>
                             <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
                                 <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
                                 <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
-                                <TextBlock Text="{x:Bind DateTime}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

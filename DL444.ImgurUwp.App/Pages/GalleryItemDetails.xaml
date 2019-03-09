@@ -225,9 +225,11 @@
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="vm:TagViewModel">
-                                <Grid Background="{Binding Accent, TargetNullValue={ThemeResource SystemAccentColorBrush}, Mode=OneTime}" Padding="16,6">
-                                    <TextBlock Text="{x:Bind DisplayName}" RequestedTheme="Dark"/>
-                                </Grid>
+                                <Button Style="{ThemeResource FrontpageItemButtonStyle}" Command="{x:Bind ShowDetailsCommand}">
+                                    <Grid Background="{Binding Accent, TargetNullValue={ThemeResource SystemAccentColorBrush}, Mode=OneTime}" Padding="16,6">
+                                        <TextBlock Text="{x:Bind DisplayName}" RequestedTheme="Dark"/>
+                                    </Grid>
+                                </Button>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

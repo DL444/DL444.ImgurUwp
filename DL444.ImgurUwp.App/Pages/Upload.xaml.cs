@@ -36,6 +36,8 @@ namespace DL444.ImgurUwp.App.Pages
             if(ViewModel.Images.Count < 50 && e.DataView.Contains(StandardDataFormats.StorageItems) || e.DataView.Contains(StandardDataFormats.Bitmap))
             {
                 e.AcceptedOperation = DataPackageOperation.Copy;
+                e.DragUIOverride.Caption = "Add";
+                e.DragUIOverride.IsGlyphVisible = false;
             }
         }
 

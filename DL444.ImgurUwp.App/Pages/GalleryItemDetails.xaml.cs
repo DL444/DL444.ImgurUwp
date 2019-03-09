@@ -37,6 +37,7 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             SubItemTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
             SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

@@ -74,6 +74,7 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             // Universal Windows Platform does not allow custom RoutedEvent. So have to use code-behind.
             FrontpageLayout.ItemClicked += FrontpageLayout_ItemClicked;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void FrontpageLayout_ItemClicked(object sender, RoutedEventArgs e)
@@ -86,7 +87,7 @@ namespace DL444.ImgurUwp.App.Pages
         {
             base.OnNavigatedTo(e);
 
-            if (e.Parameter is DisplayParams.Section sect)
+            if (e.Parameter is DisplayParams.Section sect && ViewModel == null)
             {
                 var galleryItems = await ApiClient.Client.GetGalleryItemsAsync(DisplayParams.Sort.Viral, 0, sect);
                 ViewModel = new GalleryCollectionViewModel(galleryItems);

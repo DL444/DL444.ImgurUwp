@@ -219,49 +219,6 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<Tag> GetTagAsync(string name, Sort sort = Sort.Viral, Window window = Window.Week, int page = 0)
-        {
-            if (name == null) { throw new ArgumentNullException(nameof(name)); }
-            var response = await client.GetAsync($"/3/gallery/t/{name}/{$"{sort}/{window}/{page}".ToLower()}");
-            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
-            if (success)
-            {
-                return ParseTagJson(dataJson);
-            }
-            else
-            {
-                throw new ApiRequestException(dataJson) { Status = status };
-            }
-        }
-        public async Task<IEnumerable<Tag>> GetGalleryItemTagsAsync(string id)
-        {
-            if (id == null) { throw new ArgumentNullException(nameof(id)); }
-            var response = await client.GetAsync($"/3/gallery/{id}/tags");
-            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
-            if (success)
-            {
-                return JsonConvert.DeserializeObject<List<Tag>>(dataJson);
-            }
-            else
-            {
-                throw new ApiRequestException(dataJson) { Status = status };
-            }
-        }
-        //public async Task<IEnumerable<Tag>> GetDefaultTagsAsync()
-        //{
-        //    var response = await client.GetAsync("/3/tags");
-        //    (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
-        //    if (success)
-        //    {
-        //        JObject obj = JObject.Parse(dataJson);
-        //        return JsonConvert.DeserializeObject<List<Tag>>(obj["tags"].ToString());
-        //    }
-        //    else
-        //    {
-        //        throw new ApiRequestException(dataJson) { Status = status };
-        //    }
-        //}
-
         public async Task<IEnumerable<IGalleryItem>> GetRandomGalleryItemsAsync(int page = 0)
         {
             List<IGalleryItem> result = new List<IGalleryItem>();
@@ -337,32 +294,6 @@ namespace DL444.ImgurUwp.ApiClient
             {
                 throw new ApiRequestException(dataJson) { Status = status };
             }
-        }
-
-        static Tag ParseTagJson(string dataJson)
-        {
-            JObject obj = JObject.Parse(dataJson);
-            Tag result = new Tag();
-            result.Followers = obj["followers"].ToObject<int>();
-            result.Following = obj["following"].ToObject<bool>();
-            result.Name = obj["name"].ToObject<string>();
-            result.TotalItems = obj["total_items"].ToObject<int>();
-            result.DisplayName = obj["display_name"].ToObject<string>();
-            result.Accent = obj["accent"].ToObject<string>();
-            result.Items = new List<IGalleryItem>();
-            JArray items = JArray.Parse(obj["items"].ToString());
-            foreach (var i in items)
-            {
-                if (i["is_album"].ToObject<bool>())
-                {
-                    result.Items.Add(i.ToObject<GalleryAlbum>());
-                }
-                else
-                {
-                    result.Items.Add(i.ToObject<GalleryImage>());
-                }
-            }
-            return result;
         }
     }
 }
