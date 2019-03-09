@@ -26,7 +26,6 @@ namespace DL444.ImgurUwp.App.Pages
         public Tag()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         TagViewModel ViewModel { get; set; }

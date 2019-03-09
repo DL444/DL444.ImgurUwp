@@ -119,6 +119,19 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="GalleryItemTemplate" x:DataType="vm:GalleryItemViewModel">
+            <Grid Padding="8" ColumnSpacing="12" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Image Source="{x:Bind Thumbnail}" Height="80" Width="80" Stretch="UniformToFill"/>
+                <StackPanel Grid.Column="1" Spacing="4">
+                    <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" MaxLines="3"/>
+                    <TextBlock Text="{x:Bind AccountUrl}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
     </Page.Resources>
 
     <SplitView x:Name="RootSplitView" PanePlacement="Right" OpenPaneLength="420" IsPaneOpen="True" DisplayMode="Inline">
@@ -148,7 +161,7 @@
 
         <SplitView.Pane>
             <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-                <Pivot>
+                <Pivot x:Name="PanePivot">
                     <PivotItem Header="Comments" Padding="0,8,0,16">
                         <Grid ColumnSpacing="8" RowSpacing="16">
                             <Grid.RowDefinitions>
@@ -173,7 +186,16 @@
                         </Grid>
                     </PivotItem>
                     <PivotItem Header="Gallery">
-
+                        <ListView x:Name="GalleryList" ItemsSource="{x:Bind GalleryVm.GalleryItems, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemTemplate}" 
+                                  SelectionMode="None" IsItemClickEnabled="True" ItemClick="GalleryList_ItemClick">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0,4"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
                     </PivotItem>
                 </Pivot>
             </Grid>

@@ -31,20 +31,30 @@ namespace DL444.ImgurUwp.App.Pages
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
         ObservableCollection<TagViewModel> Tags { get; set; } = new ObservableCollection<TagViewModel>();
         Visibility TagBarVisibility { get; set; } = Visibility.Collapsed;
+        GalleryCollectionViewModel GalleryVm { get; set; }
         
         public GalleryItemDetails()
         {
             this.InitializeComponent();
             SubItemTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
             SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
-            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is GalleryItemViewModel vm)
+            if(e.Parameter is ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel, bool> vms)
             {
+                var vm = vms.Item1;
+                GalleryVm = vms.Item2;
+                bool fastNav = vms.Item3;
+
+                if(fastNav)
+                {
+                    Navigation.ContentFrame.BackStack.Remove(Navigation.ContentFrame.BackStack.Last());
+                    PanePivot.SelectedIndex = 1;
+                }
+
                 ViewModel = vm;
                 if(vm.IsAlbum)
                 {
@@ -91,6 +101,13 @@ namespace DL444.ImgurUwp.App.Pages
         private void OpenCommentBtn_Click(object sender, RoutedEventArgs e)
         {
             RootSplitView.IsPaneOpen = true;
+        }
+
+        private void GalleryList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (object.ReferenceEquals(e.ClickedItem, ViewModel)) { return; }
+            var item = e.ClickedItem as GalleryItemViewModel;
+            var a = Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel, bool>(item, GalleryVm, true));
         }
     }
 
