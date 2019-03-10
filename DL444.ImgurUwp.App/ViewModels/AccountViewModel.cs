@@ -23,7 +23,15 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         public int Id => _account.Id;
         public string Username => _account.Url;
-        public string Biography => _account.Bio;
+        public string Biography
+        {
+            get => _account.Bio;
+            set
+            {
+                _account.Bio = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Biography)));
+            }
+        }
         public string Reputation => $"{_account.Reputation} pts";
         public DateTime CreatedTime => Convert.ToDateTime(_account.CreatedTime);
         public string ReputationName => _account.ReputationName.Capitalize();

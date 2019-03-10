@@ -26,6 +26,7 @@ namespace DL444.ImgurUwp.App.Pages
     public sealed partial class AccountDetails : Page, INotifyPropertyChanged
     {
         private AccountViewModel _viewModel;
+        private string originalBio;
         
         AccountViewModel ViewModel
         {
@@ -33,6 +34,7 @@ namespace DL444.ImgurUwp.App.Pages
             set
             {
                 _viewModel = value;
+                originalBio = value.Biography;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
             }
         }
@@ -63,5 +65,27 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void BioTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            BioAcceptBtn.Visibility = Visibility.Visible;
+        }
+
+        private async void BioTextBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            BioAcceptBtn.Visibility = Visibility.Collapsed;
+            if(originalBio != ViewModel.Biography)
+            {
+                bool result = await ApiClient.Client.SetAccountBioAsync(ViewModel.Username, ViewModel.Biography);
+                if(result == true)
+                {
+                    originalBio = ViewModel.Biography;
+                }
+                else
+                {
+                    ViewModel.Biography = originalBio;
+                }
+            }
+        }
     }
 }

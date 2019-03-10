@@ -35,8 +35,11 @@
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16">
                     <PersonPicture HorizontalAlignment="Center" Height="96" ProfilePicture="{x:Bind ViewModel.AvatarUrl}"/>
                     <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0"/>
-                    <TextBox Text="{x:Bind ViewModel.Biography}" PlaceholderText="Tell Imgur a little about yourself..." Style="{ThemeResource ClickEditTextBoxStyle}"
-                                         HorizontalAlignment="Center" Margin="0,8,0,0" MaxWidth="800" IsSpellCheckEnabled="False"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
+                        <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Tell Imgur a little about yourself..." Style="{ThemeResource ClickEditTextBoxStyle}"
+                                 MaxWidth="800" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"/>
+                        <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
 
