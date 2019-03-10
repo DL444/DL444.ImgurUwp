@@ -85,10 +85,11 @@ namespace DL444.ImgurUwp.App.Pages
             }
 
             // The front page model only contains the first 3 images. If there's more, we would need to request them.
-            if (vm.IsAlbum && vm.ImageCount > 3)
+            // Turns out not always.
+            if (vm.IsAlbum && vm.ImageCount > Images.Count)
             {
                 var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(vm.Id);
-                for (int i = 3; i < fullAlbum.ImageCount; i++)
+                for (int i = Images.Count; i < fullAlbum.ImageCount; i++)
                 {
                     Images.Add(new ImageViewModel(fullAlbum.Images[i]));
                 }
