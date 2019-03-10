@@ -34,7 +34,7 @@
                     <Grid.ContextFlyout>
                         <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                             <ui:CommandBarFlyout.PrimaryCommands>
-                                <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}">
+                                <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}" Command="{x:Bind FavoriteCommand}">
                                     <AppBarToggleButton.Icon>
                                         <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
                                     </AppBarToggleButton.Icon>

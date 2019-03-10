@@ -1,10 +1,9 @@
-﻿using System;
+﻿using DL444.ImgurUwp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -187,6 +186,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             DownloadCommand = new AsyncCommand<object>(Download);
             ReportCommand = new AsyncCommand<bool>(Report);
             PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
+            FavoriteCommand = new AsyncCommand<bool>(FavoriteItem);
         }
         public GalleryItemViewModel(IGalleryItem item) : this()
         {
@@ -205,6 +205,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AsyncCommand<object> DownloadCommand { get; private set; }
         public AsyncCommand<bool> ReportCommand { get; private set; }
         public AsyncCommand<int> PostCommentCommand { get; private set; }
+        public AsyncCommand<bool> FavoriteCommand { get; private set; }
 
         public async Task<bool> Vote(ImgurUwp.ApiClient.Vote vote)
         {
@@ -212,6 +213,20 @@ namespace DL444.ImgurUwp.App.ViewModels
             Votes votes = await ApiClient.Client.GetGalleryVotesAsync(Id);
             Ups = votes.Ups;
             Downs = votes.Downs;
+            return result;
+        }
+        public async Task<bool> FavoriteItem()
+        {
+            bool result;
+            if(this.IsAlbum)
+            {
+                result = await ApiClient.Client.FavoriteAlbumAsync(Id);
+            }
+            else
+            {
+                result = await ApiClient.Client.FavoriteImageAsync(Id);
+            }
+            this.Favorite = result;
             return result;
         }
 

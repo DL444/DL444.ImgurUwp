@@ -132,6 +132,7 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
+        <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
     </Page.Resources>
 
     <SplitView x:Name="RootSplitView" PanePlacement="Right" OpenPaneLength="420" IsPaneOpen="True" DisplayMode="Inline">
@@ -262,9 +263,9 @@
                             <FontIcon Glyph="&#xE1FD;"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
-                    <cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" Grid.Row="1" Grid.Column="2">
+                    <cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" Grid.Row="1" Grid.Column="2" IsChecked="{x:Bind ViewModel.Favorite, Mode=OneWay}" Command="{x:Bind ViewModel.FavoriteCommand, Mode=OneWay}" CheckedForeground="{ThemeResource SystemAccentColorBrush}">
                         <cc:SymbolTextToggleButton.Icon>
-                            <FontIcon Glyph="&#xE006;"/>
+                            <FontIcon Glyph="{x:Bind ViewModel.Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
                     <cc:SymbolTextButton x:Name="OpenCommentBtnFooter" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Row="1" ToolTipService.ToolTip="Comments" Grid.Column="4"/>
