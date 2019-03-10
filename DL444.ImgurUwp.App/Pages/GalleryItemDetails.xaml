@@ -180,7 +180,7 @@
                                 </ui:TreeView.ItemTemplate>
                             </ui:TreeView>
                             <TextBox Text="{x:Bind ViewModel.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" PlaceholderText="Any comment?" MaxLength="140"/>
-                            <Button Command="{x:Bind ViewModel.PostCommentCommand}" Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                            <Button Command="{x:Bind ViewModel.PostCommentCommand, Mode=OneWay}" Margin="0,0,16,0" Grid.Row="1" Grid.Column="1" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
                                 <SymbolIcon Symbol="Send"/>
                             </Button>
                         </Grid>
@@ -214,9 +214,9 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="{x:Bind ViewModel.Title}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                    <cc:SymbolTextButton Icon="Contact" Content="{x:Bind ViewModel.AccountUrl}" Grid.Row="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
-                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                    <cc:SymbolTextButton Icon="Contact" Content="{x:Bind ViewModel.AccountUrl, Mode=OneWay}" Grid.Row="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
+                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                     <!-- Implement friendly DateTime converter -->
                     <cc:SymbolTextButton x:Name="OpenCommentBtnHeader" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Column="2" Margin="0,0,16,0" ToolTipService.ToolTip="Comments"/>
                 </Grid>
@@ -256,8 +256,8 @@
                         </ListView.ItemTemplate>
                     </ListView>
                     
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand}" IsChecked="{x:Bind ViewModel.Upvoted}" Grid.Row="1" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand}" IsChecked="{x:Bind ViewModel.Downvoted}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Upvoted, Mode=OneWay}" Grid.Row="1" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Downvoted, Mode=OneWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
                         <cc:SymbolTextToggleButton.Icon>
                             <FontIcon Glyph="&#xE1FD;"/>
                         </cc:SymbolTextToggleButton.Icon>
@@ -268,12 +268,12 @@
                         </cc:SymbolTextToggleButton.Icon>
                     </cc:SymbolTextToggleButton>
                     <cc:SymbolTextButton x:Name="OpenCommentBtnFooter" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Row="1" ToolTipService.ToolTip="Comments" Grid.Column="4"/>
-                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand}" ToolTipService.ToolTip="Share" Grid.Row="1" Grid.Column="5"/>
+                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.ShareCommand, Mode=OneWay}" ToolTipService.ToolTip="Share" Grid.Row="1" Grid.Column="5"/>
                     <cc:SymbolTextButton Icon="More" ToolTipService.ToolTip="More" Grid.Row="1" Grid.Column="6">
                         <cc:SymbolTextButton.Flyout>
                             <MenuFlyout Placement="TopEdgeAlignedRight">
                                 <MenuFlyoutItem Icon="Download" Text="Download all"/>
-                                <MenuFlyoutItem Icon="Flag" Text="Report" Command="{x:Bind ViewModel.ReportCommand}"/>
+                                <MenuFlyoutItem Icon="Flag" Text="Report" Command="{x:Bind ViewModel.ReportCommand, Mode=OneWay}"/>
                             </MenuFlyout>
                         </cc:SymbolTextButton.Flyout>
                     </cc:SymbolTextButton>

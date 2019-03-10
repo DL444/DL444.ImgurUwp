@@ -43,57 +43,60 @@ namespace DL444.ImgurUwp.App.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel, bool> vms)
+            if(e.Parameter is ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel> vms)
             {
-                var vm = vms.Item1;
                 GalleryVm = vms.Item2;
-                bool fastNav = vms.Item3;
-
-                if(fastNav)
-                {
-                    Navigation.ContentFrame.BackStack.Remove(Navigation.ContentFrame.BackStack.Last());
-                    PanePivot.SelectedIndex = 1;
-                }
-
-                ViewModel = vm;
-                if(vm.IsAlbum)
-                {
-                    var album = vm.Item as GalleryAlbum;
-                    foreach(var i in album.Images)
-                    {
-                        Images.Add(new ImageViewModel(i));
-                    }
-                }
-                else
-                {
-                    Images.Add(new ImageViewModel(vm.DisplayImage));
-                }
-
-                // The front page model only contains the first 3 images. If there's more, we would need to request them.
-                if (vm.IsAlbum && vm.ImageCount > 3)
-                {
-                    var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(vm.Id);
-                    for (int i = 3; i < fullAlbum.ImageCount; i++)
-                    {
-                        Images.Add(new ImageViewModel(fullAlbum.Images[i]));
-                    }
-                }
-
-                foreach (var t in vm.Tags)
-                {
-                    Tags.Add(new TagViewModel(t));
-                }
-
-                if(Tags.Count > 0)
-                {
-                    TagBarVisibility = Visibility.Visible;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
-                }
-
-                var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
-                Comments = new ObservableCollection<CommentViewModel>(CommentViewModelFactory.BuildCommentViewModels(comments));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
+                await PrepareViewModels(vms.Item1);
             }
+        }
+
+        async System.Threading.Tasks.Task PrepareViewModels(GalleryItemViewModel vm)
+        {
+            ViewModel = vm;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
+            Images.Clear();
+            Comments.Clear();
+            Tags.Clear();
+            TagBarVisibility = Visibility.Collapsed;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
+
+            if (vm.IsAlbum)
+            {
+                var album = vm.Item as GalleryAlbum;
+                foreach (var i in album.Images)
+                {
+                    Images.Add(new ImageViewModel(i));
+                }
+            }
+            else
+            {
+                Images.Add(new ImageViewModel(vm.DisplayImage));
+            }
+
+            foreach (var t in vm.Tags)
+            {
+                Tags.Add(new TagViewModel(t));
+            }
+
+            if (Tags.Count > 0)
+            {
+                TagBarVisibility = Visibility.Visible;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TagBarVisibility)));
+            }
+
+            // The front page model only contains the first 3 images. If there's more, we would need to request them.
+            if (vm.IsAlbum && vm.ImageCount > 3)
+            {
+                var fullAlbum = await ApiClient.Client.GetGalleryAlbumAsync(vm.Id);
+                for (int i = 3; i < fullAlbum.ImageCount; i++)
+                {
+                    Images.Add(new ImageViewModel(fullAlbum.Images[i]));
+                }
+            }
+
+            var comments = await ApiClient.Client.GetGalleryCommentsAsync(vm.Id);
+            Comments = new ObservableCollection<CommentViewModel>(CommentViewModelFactory.BuildCommentViewModels(comments));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -103,11 +106,23 @@ namespace DL444.ImgurUwp.App.Pages
             RootSplitView.IsPaneOpen = true;
         }
 
-        private void GalleryList_ItemClick(object sender, ItemClickEventArgs e)
+        private async void GalleryList_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (object.ReferenceEquals(e.ClickedItem, ViewModel)) { return; }
             var item = e.ClickedItem as GalleryItemViewModel;
-            var a = Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel, bool>(item, GalleryVm, true));
+
+            await PrepareViewModels(item);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if(e.NavigationMode == NavigationMode.New)
+            {
+                PageStackEntry backStackEntry = new PageStackEntry(typeof(GalleryItemDetails), (ViewModel, GalleryVm), new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
+                Navigation.ContentFrame.BackStack.RemoveAt(Navigation.ContentFrame.BackStack.Count - 1);
+                Navigation.ContentFrame.BackStack.Add(backStackEntry);
+            }
         }
     }
 
