@@ -187,6 +187,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             ReportCommand = new AsyncCommand<bool>(Report);
             PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
             FavoriteCommand = new AsyncCommand<bool>(FavoriteItem);
+            GoToAuthorCommand = new Command(GoToAuthor);
         }
         public GalleryItemViewModel(IGalleryItem item) : this()
         {
@@ -201,6 +202,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public Command CopyUrlCommand { get; private set; }
         public Command ShareCommand { get; private set; }
+        public Command GoToAuthorCommand { get; private set; }
         public AsyncCommand<object> OpenBrowserCommand { get; private set; }
         public AsyncCommand<object> DownloadCommand { get; private set; }
         public AsyncCommand<bool> ReportCommand { get; private set; }
@@ -228,6 +230,11 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
             this.Favorite = result;
             return result;
+        }
+
+        void GoToAuthor()
+        {
+            Navigation.ContentFrame.Navigate(typeof(Pages.AccountDetails), AccountUrl);
         }
 
         void CopyUrl()

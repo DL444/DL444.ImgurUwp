@@ -29,11 +29,25 @@ namespace DL444.ImgurUwp.App
 
     static class ApiClient
     {
+        private static string _ownerAccount;
+
+        public static string OwnerAccount
+        {
+            get => _ownerAccount;
+            set
+            {
+                if(_ownerAccount == null)
+                {
+                    _ownerAccount = value;
+                }
+            }
+        }
         public static ImgurUwp.ApiClient.ApiClient Client { get; private set; }
         public static void InitializeApiClient(string accessToken)
         {
             Client = new ImgurUwp.ApiClient.ApiClient(ApiKey.Host,
                 ApiKey.ClientId, ApiKey.ClientSecret, accessToken, ApiKey.MashapeKey);
+            _ownerAccount = null;
         }
     }
 

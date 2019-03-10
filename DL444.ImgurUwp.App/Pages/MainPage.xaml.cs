@@ -56,6 +56,7 @@ namespace DL444.ImgurUwp.App.Pages
             ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
 
             var meAccount = await ApiClient.Client.GetAccountAsync("me");
+            ApiClient.OwnerAccount = meAccount.Url;
             CurrentAccount = new AccountViewModel(meAccount);
             Bindings.Update();
         }

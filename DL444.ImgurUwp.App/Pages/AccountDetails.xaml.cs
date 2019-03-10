@@ -42,6 +42,10 @@ namespace DL444.ImgurUwp.App.Pages
         GalleryProfileViewModel Profile { get; set; }
         ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
 
+        string BioPlaceholderText { get; set; }
+
+        public bool IsOwner => ViewModel == null ? false : ViewModel.Username == ApiClient.OwnerAccount;
+
         public AccountDetails()
         {
             this.InitializeComponent();
@@ -52,15 +56,28 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                ViewModel = vm;
+                await PrepareViewModels(vm);
+            }
+            else if(e.Parameter is string username)
+            {
+                var account = await ApiClient.Client.GetAccountAsync(username);
+                await PrepareViewModels(new AccountViewModel(account));
+            }
+        }
 
-                var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(vm.Username);
-                Profile = new GalleryProfileViewModel(profile);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
-                foreach(var t in profile.Trophies)
-                {
-                    Trophies.Add(new TrophyViewModel(t));
-                }
+        async System.Threading.Tasks.Task PrepareViewModels(AccountViewModel vm)
+        {
+            ViewModel = vm;
+            if(IsOwner) { BioPlaceholderText = "Tell Imgur a little about yourself..."; }
+            else { BioPlaceholderText = ""; }
+            Bindings.Update();
+
+            var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(vm.Username);
+            Profile = new GalleryProfileViewModel(profile);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
+            foreach (var t in profile.Trophies)
+            {
+                Trophies.Add(new TrophyViewModel(t));
             }
         }
 
