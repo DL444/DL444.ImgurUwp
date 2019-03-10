@@ -106,14 +106,6 @@ namespace DL444.ImgurUwp.App.Pages
             RootSplitView.IsPaneOpen = true;
         }
 
-        private async void GalleryList_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            if (object.ReferenceEquals(e.ClickedItem, ViewModel)) { return; }
-            var item = e.ClickedItem as GalleryItemViewModel;
-
-            await PrepareViewModels(item);
-        }
-
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
@@ -123,6 +115,13 @@ namespace DL444.ImgurUwp.App.Pages
                 Navigation.ContentFrame.BackStack.RemoveAt(Navigation.ContentFrame.BackStack.Count - 1);
                 Navigation.ContentFrame.BackStack.Add(backStackEntry);
             }
+        }
+
+        private async void GalleryList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = e.AddedItems[0] as GalleryItemViewModel;
+
+            await PrepareViewModels(item);
         }
     }
 

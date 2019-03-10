@@ -187,7 +187,7 @@
                     </PivotItem>
                     <PivotItem Header="Gallery">
                         <ListView x:Name="GalleryList" ItemsSource="{x:Bind GalleryVm.GalleryItems, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemTemplate}" 
-                                  SelectionMode="None" IsItemClickEnabled="True" ItemClick="GalleryList_ItemClick">
+                                  SelectionMode="Single" SelectedItem="{x:Bind ViewModel, Mode=OneWay}" IsItemClickEnabled="True" SelectionChanged="GalleryList_SelectionChanged">
                             <ListView.ItemContainerStyle>
                                 <Style TargetType="ListViewItem">
                                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
