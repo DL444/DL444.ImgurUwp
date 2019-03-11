@@ -113,6 +113,10 @@ namespace DL444.ImgurUwp.App.Pages
 
         private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            while(ViewModel == null)
+            {
+                await System.Threading.Tasks.Task.Delay(200);
+            }
             switch ((e.AddedItems[0] as PivotItem).Tag as string)
             {
                 case "Trophies":

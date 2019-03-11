@@ -14,12 +14,15 @@ namespace DL444.ImgurUwp.App.ViewModels
     static class Convert
     {
         static DateTime baseTime = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        public static DateTime ToDateTime(int epoch)
+        public static DateTime ToDateTime(int epoch, bool utc = false)
         {
-            return baseTime.AddSeconds(epoch);
+            var time = baseTime.AddSeconds(epoch);
+            if (!utc) { time = time.ToLocalTime(); }
+            return time;
         }
         public static int ToEpoch(DateTime dateTime)
         {
+            dateTime = dateTime.ToUniversalTime();
             return (int)(dateTime - baseTime).TotalSeconds;
         }
         public static string Capitalize(this string str)
@@ -143,6 +146,79 @@ namespace DL444.ImgurUwp.App.ViewModels
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotSupportedException();
+        }
+    }
+
+    public class FriendlyTimeStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            var time = ((DateTime)value).ToLocalTime();
+            var currTime = DateTime.Now;
+            return GetFriendlyTimeString(time, currTime);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotSupportedException();
+        }
+
+        public static string GetFriendlyTimeString(DateTime time, DateTime currTime)
+        {
+            TimeSpan diff = currTime - time;
+
+            var yesterday = DateTime.Today.AddDays(-1);
+
+            double hourDiff = diff.TotalHours;
+            double minDiff = diff.TotalMinutes;
+
+            if (diff.TotalHours > 6.0)
+            {
+                // Today: More than 6 hours before
+                if (time.Date == currTime.Date)
+                {
+                    return time.ToShortTimeString();
+                }
+                // Yesterday
+                else if (time.Date == yesterday.Date)
+                {
+                    return $"{time.ToShortTimeString()} yesterday";
+                }
+                // Earlier
+                else
+                {
+                    return time.ToString("g");
+                }
+            }
+            else if (diff.TotalHours >= 1.0)
+            {
+                // Today: 1 - 6 hours before
+                double hours = (int)(diff.TotalHours / 0.5) * 0.5;
+                return $"{hours:0.#} hr";
+            }
+            else if (minDiff > 1.0)
+            {
+                // Today: Within an hour
+                return $"{diff.Minutes} min";
+            }
+            else if (minDiff > -2.0)
+            {
+                // Today: Within a minute, tolerate to 2 minutes of inaccuracy.
+                return "Moments ago";
+            }
+            else
+            {
+                if (hourDiff > -1.0)
+                {
+                    return "Minutes in the future";
+                }
+                else
+                {
+                    return "From the future";
+                }
+            }
+
+            // TODO: Localize.
         }
     }
 

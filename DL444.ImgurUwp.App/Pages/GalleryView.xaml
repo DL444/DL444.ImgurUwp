@@ -13,7 +13,6 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
         <DataTemplate x:Key="GalleryViewItemTemplate" x:DataType="vm:GalleryItemViewModel">
             <cc:FrontpageItemButton Margin="4" Tag="{x:Bind}">
                 <Grid>

@@ -28,17 +28,17 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.RowSpan="2" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
-                <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" VerticalAlignment="Center"/>
+                <Image Margin="0,-100,0,0" Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" VerticalAlignment="Center"/>
             </Grid>
 
-            <Grid Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
+            <Grid Margin="0,-100,0,0" Padding="0,100,0,0" Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16">
                     <PersonPicture HorizontalAlignment="Center" Height="96" ProfilePicture="{x:Bind ViewModel.AvatarUrl}"/>
                     <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
                         <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
                                  MaxWidth="800" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
-                                 TextWrapping="Wrap"/>
+                                 TextWrapping="NoWrap"/>
                         <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
                     </StackPanel>
                 </StackPanel>
@@ -94,9 +94,10 @@
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" Stretch="UniformToFill"/>
+                                    <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" VerticalAlignment="Top" Stretch="UniformToFill"/>
                                     <StackPanel Grid.Column="1" Spacing="8">
                                         <ContentControl Content="{x:Bind RichContentBox}" VerticalAlignment="Top"/>
+                                        <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,4" Spacing="12">
                                             <cc:SymbolTextLabel Icon="Up" Content="{x:Bind Ups}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
                                             <cc:SymbolTextLabel Content="{x:Bind Downs}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}">

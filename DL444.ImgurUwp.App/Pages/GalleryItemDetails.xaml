@@ -94,7 +94,7 @@
                 <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
                 <ContentControl Content="{x:Bind RichContentBox}" Grid.Row="1" Grid.ColumnSpan="3"/>
-                <TextBlock Text="{x:Bind DateTime}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
 
                 <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
                                      HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}"/>
@@ -132,7 +132,6 @@
                 </StackPanel>
             </Grid>
         </DataTemplate>
-        <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
     </Page.Resources>
 
     <SplitView x:Name="RootSplitView" PanePlacement="Right" OpenPaneLength="420" IsPaneOpen="True" DisplayMode="Inline">
@@ -217,8 +216,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind ViewModel.Title, Mode=OneWay}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                     <cc:SymbolTextButton Icon="Contact" Content="{x:Bind ViewModel.AccountUrl, Mode=OneWay}" Command="{x:Bind ViewModel.GoToAuthorCommand, Mode=OneWay}" Grid.Row="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"/>
-                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                    <!-- Implement friendly DateTime converter -->
+                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.DateTime, Converter={StaticResource FriendlyTimeStringConverter}, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                     <cc:SymbolTextButton x:Name="OpenCommentBtnHeader" Visibility="Collapsed" Icon="Message" Click="OpenCommentBtn_Click" Grid.Column="2" Margin="0,0,16,0" ToolTipService.ToolTip="Comments"/>
                 </Grid>
             </ListView.Header>
