@@ -37,6 +37,20 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public int Id => Comment.Id;
         public string ImageId => Comment.ImageId;
+        public string ImageUrl
+        {
+            get
+            {
+                if(AlbumCover == null)
+                {
+                    return $"https://imgur.com/{ImageId}l.jpg";
+                }
+                else
+                {
+                    return $"https://imgur.com/{AlbumCover}l.jpg";
+                }
+            }
+        }
         public string Content => Comment.Content;
         public string Author => Comment.Author;
         public bool OnAlbum => Comment.OnAlbum;

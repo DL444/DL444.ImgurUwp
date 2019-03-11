@@ -186,7 +186,7 @@
                             </Button>
                         </Grid>
                     </PivotItem>
-                    <PivotItem Header="Gallery">
+                    <PivotItem Header="Gallery" Padding="0,8,0,16">
                         <ListView x:Name="GalleryList" ItemsSource="{x:Bind GalleryVm.GalleryItems, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemTemplate}" 
                                   SelectionMode="Single" SelectedItem="{x:Bind ViewModel, Mode=OneWay}" IsItemClickEnabled="True" SelectionChanged="GalleryList_SelectionChanged">
                             <ListView.ItemContainerStyle>

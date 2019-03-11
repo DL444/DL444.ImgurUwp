@@ -41,6 +41,9 @@ namespace DL444.ImgurUwp.App.Pages
 
         GalleryProfileViewModel Profile { get; set; }
         ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
+        ObservableCollection<GalleryItemViewModel> Posts { get; set; } = new ObservableCollection<GalleryItemViewModel>();
+
+        ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
 
         string BioPlaceholderText { get; set; }
 
@@ -56,29 +59,32 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                await PrepareViewModels(vm);
+                PrepareViewModels(vm);
             }
             else if(e.Parameter is string username)
             {
                 var account = await ApiClient.Client.GetAccountAsync(username);
-                await PrepareViewModels(new AccountViewModel(account));
+                PrepareViewModels(new AccountViewModel(account));
+            }
+            else if(e.Parameter is ValueTuple<AccountViewModel, int> vmParam)
+            {
+                PrepareViewModels(vmParam.Item1);
+                AccountPivot.SelectedIndex = vmParam.Item2;
+            }
+            else if(e.Parameter is ValueTuple<string, int> userParam)
+            {
+                var account = await ApiClient.Client.GetAccountAsync(userParam.Item1);
+                PrepareViewModels(new AccountViewModel(account));
+                AccountPivot.SelectedIndex = userParam.Item2;
             }
         }
 
-        async System.Threading.Tasks.Task PrepareViewModels(AccountViewModel vm)
+        void PrepareViewModels(AccountViewModel vm)
         {
             ViewModel = vm;
             if(IsOwner) { BioPlaceholderText = "Tell Imgur a little about yourself..."; }
             else { BioPlaceholderText = ""; }
             Bindings.Update();
-
-            var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(vm.Username);
-            Profile = new GalleryProfileViewModel(profile);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
-            foreach (var t in profile.Trophies)
-            {
-                Trophies.Add(new TrophyViewModel(t));
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -102,6 +108,53 @@ namespace DL444.ImgurUwp.App.Pages
                 {
                     ViewModel.Biography = originalBio;
                 }
+            }
+        }
+
+        private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch ((e.AddedItems[0] as PivotItem).Tag as string)
+            {
+                case "Trophies":
+                    if(Profile != null) { break; }
+                    var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(ViewModel.Username);
+                    Profile = new GalleryProfileViewModel(profile);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
+                    foreach (var t in profile.Trophies)
+                    {
+                        Trophies.Add(new TrophyViewModel(t));
+                    }
+                    break;
+                case "Posts":
+                    if (Posts.Count != 0) { break; }
+                    // TODO: Implement incremental loading.
+                    var posts = await ApiClient.Client.GetAccountSubmissionsAsync(ViewModel.Username);
+                    foreach(var p in posts)
+                    {
+                        Posts.Add(new GalleryItemViewModel(p));
+                    }
+                    break;
+                case "Favorites":
+                    //if (IsOwner)
+                    //{
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                    break;
+                case "Comments":
+                    if (Comments.Count != 0) { break; }
+                    var comments = await ApiClient.Client.GetAccountCommentsAsync(ViewModel.Username);
+                    foreach(var c in comments)
+                    {
+                        if (c.Deleted) { continue; }
+                        Comments.Add(new CommentViewModel(c));
+                    }
+                    break;
+                case "Images":
+                    break;
             }
         }
     }

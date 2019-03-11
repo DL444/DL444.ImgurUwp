@@ -14,7 +14,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <vm:DateStringConverter x:Key="DateStringConverter"/>
-            <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{StaticResource SystemChromeAltHighColor}" BackgroundSource="Backdrop"
+            <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{ThemeResource SystemAltHighColor}" BackgroundSource="Backdrop"
                       TintOpacity="0.3" FallbackColor="Transparent"/>
         </ResourceDictionary>
     </Page.Resources>
@@ -22,7 +22,7 @@
     <ScrollViewer x:Name="RootScrollView">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="220"/>
+                <RowDefinition Height="240"/>
                 <RowDefinition Height="64"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
@@ -37,7 +37,8 @@
                     <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
                         <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
-                                 MaxWidth="800" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"/>
+                                 MaxWidth="800" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
+                                 TextWrapping="Wrap"/>
                         <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
                     </StackPanel>
                 </StackPanel>
@@ -56,28 +57,71 @@
                     </tkc:HeaderedContentControl>
                 </StackPanel>
             </Grid>
-            <ListView Grid.Row="2" VerticalAlignment="Top" Margin="8,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies}">
-                <ListView.Header>
-                    <TextBlock Text="Trophies" Style="{ThemeResource SubtitleTextBlockStyle}" HorizontalAlignment="Center" Margin="0,16,0,8"/>
-                </ListView.Header>
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:TrophyViewModel">
-                        <Grid ColumnSpacing="12" Margin="0,8">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
+            <Pivot x:Name="AccountPivot" Style="{ThemeResource CenteredHeaderPivotStyle}" Grid.Row="2" SelectionChanged="Pivot_SelectionChanged">
+                <PivotItem Header="Trophies" Tag="Trophies">
+                    <ListView VerticalAlignment="Top" Margin="16,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:TrophyViewModel">
+                                <Grid ColumnSpacing="12" Margin="0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
 
-                            <Image Source="{x:Bind Image}" Height="120" MinWidth="120"/>
-                            <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
-                                <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
-                                <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
-                                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                            </StackPanel>
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                                    <Image Source="{x:Bind Image}" Height="120" MinWidth="120"/>
+                                    <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
+                                        <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                        <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </PivotItem>
+                <PivotItem Header="Posts" Tag="Posts">
+                    
+                </PivotItem>
+                <PivotItem Header="Favorites" Tag="Favorites">
+                    
+                </PivotItem>
+                <PivotItem Header="Comments" Tag="Comments">
+                    <ListView VerticalAlignment="Top" Margin="16,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="True" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Comments}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:CommentViewModel">
+                                <Grid Padding="12,8" ColumnSpacing="24">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" Stretch="UniformToFill"/>
+                                    <StackPanel Grid.Column="1" Spacing="8">
+                                        <ContentControl Content="{x:Bind RichContentBox}" VerticalAlignment="Top"/>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,4" Spacing="12">
+                                            <cc:SymbolTextLabel Icon="Up" Content="{x:Bind Ups}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                            <cc:SymbolTextLabel Content="{x:Bind Downs}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}">
+                                                <cc:SymbolTextLabel.Icon>
+                                                    <FontIcon Glyph="&#xE1FD;"/>
+                                                </cc:SymbolTextLabel.Icon>
+                                            </cc:SymbolTextLabel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,8"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </PivotItem>
+                <PivotItem Header="Images" Tag="Images">
+                    
+                </PivotItem>
+            </Pivot>
         </Grid>
     </ScrollViewer>
 </Page>
