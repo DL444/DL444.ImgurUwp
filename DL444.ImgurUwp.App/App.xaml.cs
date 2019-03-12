@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Navigation;
 using Windows.ApplicationModel.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace DL444.ImgurUwp.App
 {
@@ -117,6 +118,30 @@ namespace DL444.ImgurUwp.App
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args)
+        {
+            var rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            Window.Current.Content = rootFrame;
+            Window.Current.Activate();
+
+            var op = args.ShareOperation;
+
+            var credentialVault = new Windows.Security.Credentials.PasswordVault();
+            var credentialList = credentialVault.RetrieveAll();
+            if (credentialList.Count > 0)
+            {
+                var credential = credentialVault.Retrieve("Imgur", "AccessToken");
+                credential.RetrievePassword();
+                ApiClient.InitializeApiClient(credential.Password);
+                rootFrame.Navigate(typeof(Pages.Upload), op);
+            }
+            else
+            {
+                op.ReportError("Please sign in to Imgur first and try again.");
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,6 +29,8 @@ namespace DL444.ImgurUwp.App.Pages
         {
             this.InitializeComponent();
         }
+
+        ShareOperation shareOp = null;
 
         UploadViewModel ViewModel { get; set; } = new UploadViewModel();
 
@@ -77,6 +80,45 @@ namespace DL444.ImgurUwp.App.Pages
                     UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync((await item.OpenReadAsync()).AsStreamForRead());
                     ViewModel.Images.Add(imageVm);
                 }
+            }
+        }
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if(e.Parameter is ShareOperation op)
+            {
+                shareOp = op;
+                if(op.Data.Contains(StandardDataFormats.Bitmap))
+                {
+                    var item = await op.Data.GetBitmapAsync();
+                    if (item != null)
+                    {
+                        UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync((await item.OpenReadAsync()).AsStreamForRead());
+                        ViewModel.Images.Add(imageVm);
+                    }
+                }
+                else if(op.Data.Contains(StandardDataFormats.StorageItems))
+                {
+                    var items = await op.Data.GetStorageItemsAsync();
+                    foreach (var i in items)
+                    {
+                        if (i is Windows.Storage.StorageFile f)
+                        {
+                            UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync(await f.OpenStreamForReadAsync());
+                            ViewModel.Images.Add(imageVm);
+                        }
+                    }
+                }
+                else
+                {
+                    shareOp = null;
+                    op.ReportError("You can only share images to Imgur.");
+                    // TODO: Localize
+                }
+                op.ReportDataRetrieved();
+                // After uploading, you will have to call methods to notify completion.
+                // See https://docs.microsoft.com/en-us/windows/uwp/app-to-app/receive-data
             }
         }
     }
