@@ -5,14 +5,21 @@
     xmlns:local="using:DL444.ImgurUwp.App.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    xmlns:ui="using:Microsoft.UI.Xaml.Controls"
     xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
+    <Page.Resources>
+        <cc:ImageCountVisibilityConverter x:Key="ImageCountVisibilityConverter"/>
+    </Page.Resources>
+
     <Grid>
-        <GridView x:Name="TagList">
+        <GridView x:Name="TagList" ItemsSource="{x:Bind Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="TagList_ItemClick">
             <GridView.Header>
-                <Grid Background="{x:Bind ViewModel.Accent}">
+                <Grid Background="{x:Bind ViewModel.Accent}" Margin="0,-100,0,0" Padding="0,100,0,0">
                     <ParallaxView Source="{x:Bind TagList}" Margin="0,-100,0,0" Height="420" Grid.Row="0" VerticalAlignment="Top" VerticalShift="480">
                         <Image Source="{x:Bind ViewModel.BackgroundImage}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
                     </ParallaxView>
@@ -26,14 +33,84 @@
                             <TextBlock Text="{x:Bind ViewModel.Description}" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="{x:Bind ViewModel.DescriptionVisibility}"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="12" Margin="0,8,0,0">
                                 <TextBlock Text="Posts" Style="{ThemeResource BaseTextBlockStyle}" Margin="16,0,0,0"/>
-                                <TextBlock Text="{x:Bind ViewModel.TotalItems}" Margin="0,0,16,0"/>
+                                <TextBlock Text="{x:Bind ViewModel.TotalItems, Converter={StaticResource NumberStringConverter}}" Margin="0,0,16,0"/>
                                 <TextBlock Text="Followers" Style="{ThemeResource BaseTextBlockStyle}" Margin="16,0,0,0"/>
-                                <TextBlock Text="{x:Bind ViewModel.Followers}" Margin="0,0,16,0"/>
+                                <TextBlock Text="{x:Bind ViewModel.Followers, Converter={StaticResource NumberStringConverter}}" Margin="0,0,16,0"/>
                             </StackPanel>
+                            <cc:SymbolTextToggleButton x:Name="FollowBtn" IsEnabled="False" Style="{ThemeResource BorderedSymbolTextToggleButtonStyle}" CheckedForeground="{x:Bind ViewModel.Accent}"
+                                                       Content="Follow" Icon="Add" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Following, Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
             </GridView.Header>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,16,0,0"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="vm:GalleryItemViewModel">
+                    <Grid Height="300" Width="260" Margin="4" RowSpacing="16" Padding="8"
+                          Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                        <Grid.ContextFlyout>
+                            <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                                <ui:CommandBarFlyout.PrimaryCommands>
+                                    <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite, Mode=TwoWay}" Command="{x:Bind FavoriteCommand}">
+                                        <AppBarToggleButton.Icon>
+                                            <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
+                                        </AppBarToggleButton.Icon>
+                                    </AppBarToggleButton>
+                                    <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                                    <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
+                                    <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
+                                </ui:CommandBarFlyout.PrimaryCommands>
+                                <ui:CommandBarFlyout.SecondaryCommands>
+                                    <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
+                                    <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
+                                </ui:CommandBarFlyout.SecondaryCommands>
+                            </ui:CommandBarFlyout>
+                        </Grid.ContextFlyout>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Image Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill" Margin="-8"/>
+                        <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="0,4,4,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                            <Grid x:Name="AnimationIndicator" Visibility="{x:Bind DisplayImage.Animated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
+                                <TextBlock Text="GIF"/>
+                            </Grid>
+
+                            <Grid x:Name="AlbumIndicator" Visibility="{x:Bind ImageCount, Converter={StaticResource ImageCountVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,4,0,0">
+                                <TextBlock Text="{x:Bind ImageCount}"/>
+                            </Grid>
+                        </StackPanel>
+                        <Grid Grid.Row="1" RowSpacing="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" Grid.ColumnSpan="4" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+                            <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
+                            <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
+                                <cc:SymbolTextToggleButton.Icon>
+                                    <FontIcon Glyph="&#xE1FD;"/>
+                                </cc:SymbolTextToggleButton.Icon>
+                            </cc:SymbolTextToggleButton>
+                            <cc:SymbolTextLabel Content="{x:Bind CommentCount, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Comment" Grid.Row="1" Grid.Column="2"/>
+                            <cc:SymbolTextLabel Content="{x:Bind Views, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="View" Grid.Row="1" Grid.Column="3"/>
+                        </Grid>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
         </GridView>
     </Grid>
 </Page>

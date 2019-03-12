@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using Windows.UI.Xaml.Controls;
-using UI = Microsoft.UI.Xaml.Controls;
 
 namespace DL444.ImgurUwp.App
 {
@@ -55,7 +54,7 @@ namespace DL444.ImgurUwp.App
     {
         public static Frame ContentFrame { get; private set; }
 
-        public static void Navigate(Type pageType, object parameter/*, bool clearNavView = true*/)
+        public static void Navigate(Type pageType, object parameter)
         {
             ContentFrame.Navigate(pageType, parameter);
         }

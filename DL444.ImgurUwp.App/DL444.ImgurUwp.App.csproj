@@ -175,6 +175,7 @@
     <Compile Include="ViewModels\GalleryItemViewModel.cs" />
     <Compile Include="ViewModels\GalleryProfileViewModel.cs" />
     <Compile Include="ViewModels\ImageViewModel.cs" />
+    <Compile Include="ViewModels\IncrementalItemsSource.cs" />
     <Compile Include="ViewModels\RichTextParser.cs" />
     <Compile Include="ViewModels\TagViewModel.cs" />
     <Compile Include="ViewModels\TrophyViewModel.cs" />

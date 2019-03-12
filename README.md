@@ -29,7 +29,7 @@ __Private Beta 0.1.0__
 - [x] Commenting  
 - [ ] Upload (in work)  
 - [ ] Share Target (in work)  
-- [ ] Tags (in work)  
+- [x] Tags  
 - [ ] My Posts  
 - [ ] User Account (in work)  
 - [ ] Settings  

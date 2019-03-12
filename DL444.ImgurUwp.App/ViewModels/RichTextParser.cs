@@ -17,7 +17,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             if(comment == null) { return null; }
             List<RichTextComponent> result = new List<RichTextComponent>();
             StringBuilder strBuilder = new StringBuilder();
-            string[] words = comment.Split(' ');
+            string[] words = comment.SplitWithDelimiter("\t\n ".ToCharArray()).ToArray();
             foreach (var w in words)
             {
                 if (IsUri(w))
@@ -31,7 +31,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
                 else
                 {
-                    strBuilder.Append($"{w} ");
+                    strBuilder.Append($"{w}");
                 }
             }
             result.Add(new TextComponent(strBuilder.ToString()));
@@ -131,6 +131,29 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             if(comment == null) { return null; }
             return GetRichContentBox(ParseComment(comment));
+        }
+
+        static IEnumerable<string> SplitWithDelimiter(this string str, params char[] delimiter)
+        {
+            if (delimiter.Contains('\0')) { throw new ArgumentException("Argument cannot contain '\0'."); }
+            List<string> result = new List<string>();
+            StringBuilder builder = new StringBuilder();
+            for(int i = 0; i < str.Length; i++)
+            {
+                if(delimiter.FirstOrDefault(x => x == str[i]) == '\0')
+                {
+                    builder.Append(str[i]);
+                }
+                else
+                {
+                    result.Add(builder.ToString());
+                    result.Add(str[i].ToString());
+                    builder.Clear();
+                }
+            }
+            result.Add(builder.ToString());
+            result.RemoveAll(x => x == string.Empty);
+            return result;
         }
 
         static bool IsUri(string str)

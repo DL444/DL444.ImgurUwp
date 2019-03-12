@@ -43,8 +43,26 @@ namespace DL444.ImgurUwp.App.ViewModels
             Navigation.ContentFrame.Navigate(typeof(Pages.Tag), this);
         }
 
+        public AsyncCommand<bool> FollowCommand { get; private set; }
+        async Task<bool> Follow()
+        {
+            bool result;
+            if(!Following)
+            {
+                result = await ApiClient.Client.FollowTagAsync(Name);
+                if(result == true) { Tag.Following = true; }
+            }
+            else
+            {
+                result = await ApiClient.Client.UnfollowTagAsync(Name);
+                if (result == true) { Tag.Following = false; }
+            }
+            return result;
+        }
+
         public TagViewModel()
         {
+            FollowCommand = new AsyncCommand<bool>(Follow);
             ShowDetailsCommand = new Command(ShowDetails);
         }
         public TagViewModel(Tag tag) : this()

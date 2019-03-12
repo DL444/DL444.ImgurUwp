@@ -33,7 +33,13 @@ namespace DL444.ImgurUwp.ApiClient
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
-                return JsonConvert.DeserializeObject<List<Tag>>(dataJson);
+                JArray tags = JArray.Parse(dataJson);
+                List<Tag> result = new List<Tag>();
+                foreach(var t in tags)
+                {
+                    result.Add(ParseTagJson(t.ToString()));
+                }
+                return result;
             }
             else
             {
@@ -64,7 +70,8 @@ namespace DL444.ImgurUwp.ApiClient
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
-                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+                JObject obj = JObject.Parse(dataJson.ToLower());
+                return obj["status"].ToObject<bool>();
             }
             else
             {
@@ -80,7 +87,8 @@ namespace DL444.ImgurUwp.ApiClient
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
-                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+                JObject obj = JObject.Parse(dataJson.ToLower());
+                return obj["status"].ToObject<bool>();
             }
             else
             {

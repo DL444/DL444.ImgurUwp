@@ -89,16 +89,16 @@
                     <ListView VerticalAlignment="Top" Margin="16,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="True" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Comments}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="vm:CommentViewModel">
-                                <Grid Padding="12,8" ColumnSpacing="24">
+                                <Grid Padding="12,8" ColumnSpacing="12">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto"/>
                                         <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
                                     <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" VerticalAlignment="Top" Stretch="UniformToFill"/>
-                                    <StackPanel Grid.Column="1" Spacing="8">
+                                    <StackPanel Grid.Column="1" Spacing="4">
                                         <ContentControl Content="{x:Bind RichContentBox}" VerticalAlignment="Top"/>
                                         <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,0,0,4" Spacing="12">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,4,0,4" Spacing="12">
                                             <cc:SymbolTextLabel Icon="Up" Content="{x:Bind Ups}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
                                             <cc:SymbolTextLabel Content="{x:Bind Downs}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}">
                                                 <cc:SymbolTextLabel.Icon>
