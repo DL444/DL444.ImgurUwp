@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -15,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,7 +44,8 @@ namespace DL444.ImgurUwp.App.Pages
 
         GalleryProfileViewModel Profile { get; set; }
         ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
-        ObservableCollection<GalleryItemViewModel> Posts { get; set; } = new ObservableCollection<GalleryItemViewModel>();
+        IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel> Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>();
+        //ObservableCollection<GalleryItemViewModel> Posts { get; set; } = new ObservableCollection<GalleryItemViewModel>();
 
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
 
@@ -131,12 +135,15 @@ namespace DL444.ImgurUwp.App.Pages
                     break;
                 case "Posts":
                     if (Posts.Count != 0) { break; }
+                    AccountPostSource source = new AccountPostSource(ViewModel.Username);
+                    Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Posts)));
                     // TODO: Implement incremental loading.
-                    var posts = await ApiClient.Client.GetAccountSubmissionsAsync(ViewModel.Username);
-                    foreach(var p in posts)
-                    {
-                        Posts.Add(new GalleryItemViewModel(p));
-                    }
+                    //var posts = await ApiClient.Client.GetAccountSubmissionsAsync(ViewModel.Username);
+                    //foreach(var p in posts)
+                    //{
+                    //    Posts.Add(new GalleryItemViewModel(p));
+                    //}
                     break;
                 case "Favorites":
                     //if (IsOwner)
@@ -160,6 +167,35 @@ namespace DL444.ImgurUwp.App.Pages
                 case "Images":
                     break;
             }
+        }
+    }
+
+    public class AccountPostSource : IncrementalItemsSource<GalleryItemViewModel>
+    {
+        public string Account { get; private set; }
+        public int Page { get; private set; }
+
+        public AccountPostSource() : this("") { }
+        public AccountPostSource(string account)
+        {
+            Account = account ?? throw new ArgumentNullException(nameof(account));
+        }
+
+        protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            if(string.IsNullOrEmpty(Account))
+            {
+                return null;
+            }
+
+            var posts = await ApiClient.Client.GetAccountSubmissionsAsync(Account, Page);
+            List<GalleryItemViewModel> items = new List<GalleryItemViewModel>();
+            foreach(var p in posts)
+            {
+                items.Add(new GalleryItemViewModel(p));
+            }
+            Page++;
+            return items;
         }
     }
 }

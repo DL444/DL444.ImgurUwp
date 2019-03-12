@@ -11,6 +11,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     public abstract class IncrementalItemsSource<T> : IIncrementalSource<T>
     {
         protected List<T> items = new List<T>();
+        bool hasMoreItems = true;
 
         public IncrementalItemsSource() { }
         public IncrementalItemsSource(IEnumerable<T> items) : this()
@@ -24,12 +25,20 @@ namespace DL444.ImgurUwp.App.ViewModels
             int lowerBound = pageIndex * pageSize; // Including
             int higherBound = lowerBound + pageSize; // Excluding
 
-            while (items.Count < higherBound)
+            while (items.Count < higherBound && hasMoreItems)
             {
                 var newItems = await GetItemsFromSourceAsync(cancellationToken);
-                foreach (var i in newItems)
+                if(newItems == null || !newItems.Any())
                 {
-                    items.Add(i);
+                    hasMoreItems = false;
+                    return null;
+                }
+                else
+                {
+                    foreach (var i in newItems)
+                    {
+                        items.Add(i);
+                    }
                 }
             }
 

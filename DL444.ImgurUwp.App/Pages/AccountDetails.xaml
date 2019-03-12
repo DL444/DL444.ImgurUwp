@@ -16,6 +16,9 @@
             <vm:DateStringConverter x:Key="DateStringConverter"/>
             <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{ThemeResource SystemAltHighColor}" BackgroundSource="Backdrop"
                       TintOpacity="0.3" FallbackColor="Transparent"/>
+            <ResourceDictionary.MergedDictionaries>
+                <local:Templates/>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -80,7 +83,14 @@
                     </ListView>
                 </PivotItem>
                 <PivotItem Header="Posts" Tag="Posts">
-                    
+                    <GridView x:Name="PostList" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" VerticalAlignment="Top" Margin="16,0"
+                              ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Posts, Mode=OneWay}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
                 </PivotItem>
                 <PivotItem Header="Favorites" Tag="Favorites">
                     

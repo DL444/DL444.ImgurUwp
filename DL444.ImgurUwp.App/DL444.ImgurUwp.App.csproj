@@ -166,6 +166,7 @@
     </Compile>
     <Compile Include="Settings\SettingsPageModel.cs" />
     <Compile Include="StaticData.cs" />
+    <Compile Include="Themes\Templates.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
     <Compile Include="ViewModels\AsyncCommand.cs" />
     <Compile Include="ViewModels\AsyncProperty.cs" />
@@ -251,6 +252,10 @@
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Templates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
