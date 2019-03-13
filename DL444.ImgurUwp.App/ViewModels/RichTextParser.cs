@@ -28,6 +28,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                         strBuilder.Clear();
                     }
                     result.Add(new UriComponent(w));
+                    result.Add(new TextComponent(" "));
                 }
                 else
                 {
@@ -53,7 +54,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                     if (u.Type == UriType.Normal)
                     {
                         var link = new Hyperlink() { NavigateUri = new Uri(u.Text) };
-                        link.Inlines.Add(new Run() { Text = u.Text });
+                        link.Inlines.Add(new Run() { Text = $"{u.Text} " });
                         inlines.Add(link);
                     }
                     else

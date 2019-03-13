@@ -28,9 +28,9 @@ __Private Beta 0.1.0__
 - [x] Gallery Item View  
 - [x] Commenting  
 - [ ] Upload (in work)  
-- [ ] Share Target (in work)  
+- [x] Share Target  
 - [x] Tags  
-- [ ] My Posts  
+- [x] My Posts  
 - [ ] User Account (in work)  
 - [ ] Settings  
 - [ ] Adaptive Design  

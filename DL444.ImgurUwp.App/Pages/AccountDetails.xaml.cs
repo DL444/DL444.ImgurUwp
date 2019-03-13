@@ -30,7 +30,8 @@ namespace DL444.ImgurUwp.App.Pages
     {
         private AccountViewModel _viewModel;
         private string originalBio;
-        
+        private int _hiddenTrophiesCount;
+
         AccountViewModel ViewModel
         {
             get => _viewModel;
@@ -44,8 +45,21 @@ namespace DL444.ImgurUwp.App.Pages
 
         GalleryProfileViewModel Profile { get; set; }
         ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
+        ObservableCollection<TrophyViewModel> DisplayedTrophies { get; set; } = new ObservableCollection<TrophyViewModel>();
+        int HiddenTrophiesCount
+        {
+            get => _hiddenTrophiesCount;
+            set
+            {
+                _hiddenTrophiesCount = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HiddenTrophiesCount)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MoreTrophiesButtonVisibility)));
+            }
+        }
+        Visibility MoreTrophiesButtonVisibility => HiddenTrophiesCount == 0 ? Visibility.Collapsed : Visibility.Visible;
+
+
         IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel> Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>();
-        //ObservableCollection<GalleryItemViewModel> Posts { get; set; } = new ObservableCollection<GalleryItemViewModel>();
 
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
 
@@ -60,35 +74,56 @@ namespace DL444.ImgurUwp.App.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            // TODO: After implementing account subpage, clean up this.
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                PrepareViewModels(vm);
+                await PrepareViewModels(vm);
             }
             else if(e.Parameter is string username)
             {
                 var account = await ApiClient.Client.GetAccountAsync(username);
-                PrepareViewModels(new AccountViewModel(account));
+                await PrepareViewModels(new AccountViewModel(account));
             }
             else if(e.Parameter is ValueTuple<AccountViewModel, int> vmParam)
             {
-                PrepareViewModels(vmParam.Item1);
-                AccountPivot.SelectedIndex = vmParam.Item2;
+                await PrepareViewModels(vmParam.Item1);
+                //AccountPivot.SelectedIndex = vmParam.Item2;
             }
             else if(e.Parameter is ValueTuple<string, int> userParam)
             {
                 var account = await ApiClient.Client.GetAccountAsync(userParam.Item1);
-                PrepareViewModels(new AccountViewModel(account));
-                AccountPivot.SelectedIndex = userParam.Item2;
+                await PrepareViewModels(new AccountViewModel(account));
+                //AccountPivot.SelectedIndex = userParam.Item2;
             }
         }
 
-        void PrepareViewModels(AccountViewModel vm)
+        async Task PrepareViewModels(AccountViewModel vm)
         {
             ViewModel = vm;
             if(IsOwner) { BioPlaceholderText = "Tell Imgur a little about yourself..."; }
             else { BioPlaceholderText = ""; }
             Bindings.Update();
+
+            var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(ViewModel.Username);
+            Profile = new GalleryProfileViewModel(profile);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
+
+            foreach (var t in profile.Trophies)
+            {
+                var trophyVm = new TrophyViewModel(t);
+                Trophies.Add(trophyVm);
+                if (DisplayedTrophies.Count < 7 && !DisplayedTrophies.Any(x => x.Name == trophyVm.Name))
+                {
+                    DisplayedTrophies.Add(trophyVm);
+                }
+            }
+            HiddenTrophiesCount = Trophies.Count - DisplayedTrophies.Count;
+
+            AccountPostSource source = new AccountPostSource(ViewModel.Username);
+            Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Posts)));
+
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -117,9 +152,10 @@ namespace DL444.ImgurUwp.App.Pages
 
         private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // TODO: Remove this after redesign.
             while(ViewModel == null)
             {
-                await System.Threading.Tasks.Task.Delay(200);
+                await Task.Delay(200);
             }
             switch ((e.AddedItems[0] as PivotItem).Tag as string)
             {
@@ -138,12 +174,6 @@ namespace DL444.ImgurUwp.App.Pages
                     AccountPostSource source = new AccountPostSource(ViewModel.Username);
                     Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Posts)));
-                    // TODO: Implement incremental loading.
-                    //var posts = await ApiClient.Client.GetAccountSubmissionsAsync(ViewModel.Username);
-                    //foreach(var p in posts)
-                    //{
-                    //    Posts.Add(new GalleryItemViewModel(p));
-                    //}
                     break;
                 case "Favorites":
                     //if (IsOwner)
@@ -167,6 +197,13 @@ namespace DL444.ImgurUwp.App.Pages
                 case "Images":
                     break;
             }
+        }
+
+        private void PostList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as GalleryItemViewModel;
+            var gallery = new GalleryCollectionViewModel(Posts);
+            Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), (item, gallery));
         }
     }
 

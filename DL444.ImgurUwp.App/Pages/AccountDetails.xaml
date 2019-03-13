@@ -22,117 +22,109 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <ScrollViewer x:Name="RootScrollView">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="240"/>
-                <RowDefinition Height="64"/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
+    <GridView x:Name="RootListView" ItemsSource="{x:Bind Posts, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemGridTemplate}"
+              SelectionMode="None" IsItemClickEnabled="True" ItemClick="PostList_ItemClick">
+        <GridView.Header>
+            <Grid Margin="0,-100,0,0" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
+                <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="480" VerticalAlignment="Top" VerticalShift="480">
+                    <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
+                </ParallaxView>
 
-            <Grid Grid.RowSpan="2" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
-                <Image Margin="0,-100,0,0" Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" VerticalAlignment="Center"/>
-            </Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <Grid Margin="0,-100,0,0" Padding="0,100,0,0" Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
-                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16">
-                    <PersonPicture HorizontalAlignment="Center" Height="96" ProfilePicture="{x:Bind ViewModel.AvatarUrl}"/>
-                    <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,8,0,0"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
-                        <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
+                    <PersonPicture HorizontalAlignment="Center" VerticalAlignment="Center" ProfilePicture="{x:Bind ViewModel.AvatarUrl}" Height="96"/>
+                    <Grid Grid.Row="1" Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}" Margin="0,16,0,0"/>
+                            
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
+                                <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
                                  MaxWidth="800" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
                                  TextWrapping="NoWrap"/>
-                        <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
-                    </StackPanel>
-                </StackPanel>
-            </Grid>
+                                <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
+                            </StackPanel>
 
-            <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <tkc:HeaderedContentControl Header="Joined" Margin="24,8">
-                        <TextBlock Text="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
-                    </tkc:HeaderedContentControl>
-                    <tkc:HeaderedContentControl Header="Points" Margin="24,8">
-                        <TextBlock Text="{x:Bind ViewModel.Reputation}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
-                    </tkc:HeaderedContentControl>
-                    <tkc:HeaderedContentControl Header="Notoriety" Margin="24,8">
-                        <TextBlock Text="{x:Bind ViewModel.ReputationName}" Style="{ThemeResource HeaderedTextBlockTextStyle}"/>
-                    </tkc:HeaderedContentControl>
-                </StackPanel>
-            </Grid>
-            <Pivot x:Name="AccountPivot" Style="{ThemeResource CenteredHeaderPivotStyle}" Grid.Row="2" SelectionChanged="Pivot_SelectionChanged">
-                <PivotItem Header="Trophies" Tag="Trophies">
-                    <ListView VerticalAlignment="Top" Margin="16,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:TrophyViewModel">
-                                <Grid ColumnSpacing="12" Margin="0,8">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="32" Margin="0,8,0,0">
+                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}">
+                                    <cc:HeaderedContentControl.Header>
+                                        <TextBlock Text="Joined" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                    </cc:HeaderedContentControl.Header>
+                                </cc:HeaderedContentControl>
+                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Reputation}">
+                                    <cc:HeaderedContentControl.Header>
+                                        <TextBlock Text="Points" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                    </cc:HeaderedContentControl.Header>
+                                </cc:HeaderedContentControl>
+                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.ReputationName}">
+                                    <cc:HeaderedContentControl.Header>
+                                        <TextBlock Text="Notoriety" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                    </cc:HeaderedContentControl.Header>
+                                </cc:HeaderedContentControl>
+                            </StackPanel>
 
-                                    <Image Source="{x:Bind Image}" Height="120" MinWidth="120"/>
-                                    <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
-                                        <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
-                                        <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
-                                        <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </PivotItem>
-                <PivotItem Header="Posts" Tag="Posts">
-                    <GridView x:Name="PostList" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" VerticalAlignment="Top" Margin="16,0"
-                              ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Posts, Mode=OneWay}">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
-                </PivotItem>
-                <PivotItem Header="Favorites" Tag="Favorites">
-                    
-                </PivotItem>
-                <PivotItem Header="Comments" Tag="Comments">
-                    <ListView VerticalAlignment="Top" Margin="16,0" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="True" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Comments}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate x:DataType="vm:CommentViewModel">
-                                <Grid Padding="12,8" ColumnSpacing="12">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" VerticalAlignment="Top" Stretch="UniformToFill"/>
-                                    <StackPanel Grid.Column="1" Spacing="4">
-                                        <ContentControl Content="{x:Bind RichContentBox}" VerticalAlignment="Top"/>
-                                        <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,4,0,4" Spacing="12">
-                                            <cc:SymbolTextLabel Icon="Up" Content="{x:Bind Ups}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
-                                            <cc:SymbolTextLabel Content="{x:Bind Downs}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}">
-                                                <cc:SymbolTextLabel.Icon>
-                                                    <FontIcon Glyph="&#xE1FD;"/>
-                                                </cc:SymbolTextLabel.Icon>
-                                            </cc:SymbolTextLabel>
+                            <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,16" Padding="16,0"
+                                      ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:TrophyViewModel">
+                                        <Image Source="{x:Bind Image}" Width="48" Height="48"/>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Padding" Value="4,0"/>
+                                        <Setter Property="MinWidth" Value="0"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.Footer>
+                                    <Button VerticalAlignment="Stretch" Padding="8,0" Visibility="{x:Bind MoreTrophiesButtonVisibility, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent">
+                                        <Button.Flyout>
+                                            <Flyout Placement="Full">
+                                                <ListView VerticalAlignment="Top" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies, Mode=OneWay}">
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate x:DataType="vm:TrophyViewModel">
+                                                            <Grid ColumnSpacing="12" Margin="0,8" MaxWidth="400">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition/>
+                                                                </Grid.ColumnDefinitions>
+
+                                                                <Image Source="{x:Bind Image}" Height="96" MinWidth="96"/>
+                                                                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
+                                                                    <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                                    <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
+                                                                    <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                            </Flyout>
+                                        </Button.Flyout>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="{x:Bind HiddenTrophiesCount, Mode=OneWay}"/>
+                                            <TextBlock Text="+"/>
                                         </StackPanel>
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="Padding" Value="0"/>
-                                <Setter Property="Margin" Value="0,8"/>
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-                    </ListView>
-                </PivotItem>
-                <PivotItem Header="Images" Tag="Images">
-                    
-                </PivotItem>
-            </Pivot>
-        </Grid>
-    </ScrollViewer>
+                                    </Button>
+                                </ListView.Footer>
+                            </ListView>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </GridView.Header>
+        <GridView.ItemsPanel>
+            <ItemsPanelTemplate>
+                <ItemsWrapGrid HorizontalAlignment="Center" Margin="0,16,0,0" Orientation="Horizontal"/>
+            </ItemsPanelTemplate>
+        </GridView.ItemsPanel>
+    </GridView>
 </Page>
