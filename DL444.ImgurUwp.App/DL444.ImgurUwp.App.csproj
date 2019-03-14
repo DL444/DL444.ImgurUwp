@@ -121,6 +121,9 @@
     <Compile Include="Controls\ReportConfirmDialog.xaml.cs">
       <DependentUpon>ReportConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\AccountContent.xaml.cs">
+      <DependentUpon>AccountContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AccountDetails.xaml.cs">
       <DependentUpon>AccountDetails.xaml</DependentUpon>
     </Compile>
@@ -207,6 +210,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\ReportConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AccountContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

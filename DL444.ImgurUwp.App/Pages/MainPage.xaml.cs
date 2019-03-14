@@ -81,8 +81,13 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void AccountDetails_Click(object sender, RoutedEventArgs e)
         {
+            ContentFrame.Navigate(typeof(AccountDetails), CurrentAccount);
+        }
+
+        private void AccountContent_Click(object sender, RoutedEventArgs e)
+        {
             int index = int.Parse(((sender as MenuFlyoutItem).Tag as string));
-            ContentFrame.Navigate(typeof(AccountDetails), (CurrentAccount, index));
+            ContentFrame.Navigate(typeof(AccountContent), (CurrentAccount, index));
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)

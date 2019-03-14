@@ -27,10 +27,19 @@ namespace DL444.ImgurUwp.App.ViewModels
                         if (_image.Animated)
                         {
                             Thumbnail = $"{_image.Link.Remove(_image.Link.LastIndexOf('/'))}/{_image.Id}_d.jpg?maxwidth=520&shape=thumb&fidelity=mid";
+                            HugeThumbnail = _image.Link;
                         }
                         else
                         {
                             Thumbnail = $"{_image.Link.Replace(_image.Id, $"{_image.Id}_d")}?maxwidth=520&shape=thumb&fidelity=mid";
+                            if(_image.Size > 512000)
+                            {
+                                HugeThumbnail = _image.Link.Replace(_image.Id, $"{_image.Id}h");
+                            }
+                            else
+                            {
+                                HugeThumbnail = _image.Link;
+                            }
                         }
                     }
                     RichDescriptionBox = RichTextParser.GetRichContentBox(Description);
@@ -64,6 +73,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool InGallery => Image.InGallery;
 
         public string Thumbnail { get; private set; }
+        public string HugeThumbnail { get; private set; }
         public bool HasDescription => !string.IsNullOrWhiteSpace(Description);
         public Windows.UI.Xaml.FrameworkElement RichDescriptionBox { get; private set; }
 

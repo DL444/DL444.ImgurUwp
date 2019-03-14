@@ -1,0 +1,69 @@
+﻿<Page
+    x:Class="DL444.ImgurUwp.App.Pages.AccountContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DL444.ImgurUwp.App.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Padding="28,20" Background="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}">
+            <StackPanel Orientation="Horizontal" Spacing="24">
+                <PersonPicture Height="64" ProfilePicture="{x:Bind Account.AvatarUrl, Mode=OneWay, TargetNullValue={x:Null}}"/>
+                <TextBlock Text="{x:Bind Account.Username, Mode=OneWay, TargetNullValue={x:Null}}" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Account.Reputation, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind Account.ReputationName, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        
+        <Pivot x:Name="RootPivot" Grid.Row="1" Padding="20,0">
+            <PivotItem Header="Favorites">
+                
+            </PivotItem>
+            <PivotItem Header="Comments">
+                <ListView VerticalAlignment="Top" Padding="16,0" HorizontalAlignment="Stretch" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind Comments}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CommentViewModel">
+                            <Grid Padding="12,8" ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{x:Bind ImageUrl}" Height="120" Width="120" VerticalAlignment="Top" Stretch="UniformToFill"/>
+                                <StackPanel Grid.Column="1" Spacing="4">
+                                    <ContentControl Content="{x:Bind RichContentBox}" VerticalAlignment="Top"/>
+                                    <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="1" Margin="0,4,0,4" Spacing="12">
+                                        <cc:SymbolTextLabel Icon="Up" Content="{x:Bind Ups}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}"/>
+                                        <cc:SymbolTextLabel Content="{x:Bind Downs}" Foreground="{ThemeResource SystemControlBackgroundBaseMediumLowBrush}">
+                                            <cc:SymbolTextLabel.Icon>
+                                                <FontIcon Glyph="&#xE1FD;"/>
+                                            </cc:SymbolTextLabel.Icon>
+                                        </cc:SymbolTextLabel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,8"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="MaxWidth" Value="640"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </PivotItem>
+        </Pivot>
+    </Grid>
+</Page>

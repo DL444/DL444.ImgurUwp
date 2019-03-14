@@ -31,7 +31,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 if(newItems == null || !newItems.Any())
                 {
                     hasMoreItems = false;
-                    return null;
+                    return items.Skip(lowerBound).Take(pageSize);
                 }
                 else
                 {

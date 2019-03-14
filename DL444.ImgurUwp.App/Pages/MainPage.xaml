@@ -149,7 +149,7 @@
                         <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl, TargetNullValue={x:Null}}"/>
                         <Button.Flyout>
                             <MenuFlyout Placement="BottomEdgeAlignedRight">
-                                <cc:MenuFlyoutContentItem Click="AccountDetails_Click" Tag="0">
+                                <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
                                     <cc:MenuFlyoutContentItem.Content>
                                         <Grid>
                                             <Grid.ColumnDefinitions>
@@ -173,14 +173,14 @@
                                         </Grid>
                                     </cc:MenuFlyoutContentItem.Content>
                                 </cc:MenuFlyoutContentItem>
-                                <MenuFlyoutItem Icon="PreviewLink" Text="Posts" Click="AccountDetails_Click" Tag="1"/>
-                                <MenuFlyoutItem Text="Favorites" Tag="2" Click="AccountDetails_Click">
+                                <MenuFlyoutItem Icon="PreviewLink" Text="Posts" Click="AccountDetails_Click"/>
+                                <MenuFlyoutItem Text="Favorites" Tag="0" Click="AccountContent_Click">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE006;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
-                                <MenuFlyoutItem Icon="Message" Text="Comments" Tag="3" Click="AccountDetails_Click"/>
-                                <MenuFlyoutItem Icon="Pictures" Text="Images" Tag="4" Click="AccountDetails_Click"/>
+                                <MenuFlyoutItem Icon="Message" Text="Comments" Tag="1" Click="AccountContent_Click"/>
+                                <MenuFlyoutItem Icon="Pictures" Text="Images"/>
                                 <MenuFlyoutSeparator/>
                                 <MenuFlyoutItem Icon="Setting" Text="Settings" Click="Settings_Click"/>
                                 <MenuFlyoutItem Icon="Permissions" Text="Sign out" Click="Signout_Click"/>

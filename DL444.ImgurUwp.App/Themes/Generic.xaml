@@ -188,7 +188,7 @@
         <Setter Property="Background" Value="{ThemeResource ButtonBackground}" />
         <Setter Property="Foreground" Value="{ThemeResource ButtonForeground}" />
         <Setter Property="HoverForeground" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}"/>
-        <Setter Property="PressedForeground" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
+        <Setter Property="PressedForeground" Value="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
@@ -255,7 +255,7 @@
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 
                                           Grid.Column="1"
-                                          Margin="4,0,0,1"
+                                          Margin="8,0,0,1"
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}" 
@@ -297,7 +297,7 @@
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 
                                           Grid.Column="1"
-                                          Margin="4,0,0,1"
+                                          Margin="8,0,0,1"
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}" 
@@ -316,9 +316,9 @@
         <!--<Setter Property="BackgroundSizing" Value="OuterBorderEdge" />-->
         <Setter Property="Foreground" Value="{ThemeResource ToggleButtonForeground}" />
         <Setter Property="HoverForeground" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}"/>
-        <Setter Property="PressedForeground" Value="{ThemeResource ToggleButtonPressedForegroundThemeBrush}"/>
-        <Setter Property="CheckedForeground" Value="{ThemeResource ToggleButtonCheckedForegroundThemeBrush}"/>
-        <Setter Property="CheckedHoverForeground" Value="{ThemeResource ToggleButtonCheckedForegroundThemeBrush}"/>
+        <Setter Property="PressedForeground" Value="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"/>
+        <Setter Property="CheckedForeground" Value="{ThemeResource SystemAccentColorBrush}"/>
+        <Setter Property="CheckedHoverForeground" Value="{ThemeResource SystemAccentColorBrush}"/>
         <Setter Property="BorderBrush" Value="{ThemeResource ToggleButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="{ThemeResource ToggleButtonBorderThemeThickness}" />
         <Setter Property="Padding" Value="{StaticResource ButtonPadding}" />
@@ -407,7 +407,7 @@
                         </Viewbox>
                         <ContentPresenter x:Name="ContentPresenter" 
                                           Grid.Column="1"
-                                          Margin="4,0,0,1"
+                                          Margin="8,0,0,1"
                                           VerticalAlignment="Center"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}" 

@@ -26,7 +26,7 @@
               SelectionMode="None" IsItemClickEnabled="True" ItemClick="PostList_ItemClick">
         <GridView.Header>
             <Grid Margin="0,-100,0,0" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
-                <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="480" VerticalAlignment="Top" VerticalShift="480">
+                <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="520" VerticalAlignment="Top" VerticalShift="500">
                     <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
                 </ParallaxView>
 
@@ -43,8 +43,8 @@
                             
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
                                 <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
-                                 MaxWidth="800" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
-                                 TextWrapping="NoWrap"/>
+                                 MaxWidth="460" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
+                                 TextWrapping="Wrap" Visibility="{x:Bind BioVisilibity}"/>
                                 <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
                             </StackPanel>
 
@@ -66,11 +66,11 @@
                                 </cc:HeaderedContentControl>
                             </StackPanel>
 
-                            <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,16" Padding="16,0"
+                            <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,8" Padding="16,0"
                                       ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled">
                                 <ListView.ItemTemplate>
                                     <DataTemplate x:DataType="vm:TrophyViewModel">
-                                        <Image Source="{x:Bind Image}" Width="48" Height="48"/>
+                                        <Image Source="{x:Bind Image}" Width="48" Height="48" ToolTipService.ToolTip="{x:Bind DisplayName}"/>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                                 <ListView.ItemsPanel>
@@ -116,6 +116,8 @@
                                     </Button>
                                 </ListView.Footer>
                             </ListView>
+
+                            <cc:SymbolTextButton HorizontalAlignment="Center" Icon="Forward" Content="Favs + comments" Margin="0,4,0,12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Click="AccountContentButton_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

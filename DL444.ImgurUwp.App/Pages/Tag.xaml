@@ -49,7 +49,7 @@
                                 </cc:HeaderedContentControl>
                             </StackPanel>
                             <cc:SymbolTextToggleButton x:Name="FollowBtn" IsEnabled="False" Style="{ThemeResource BorderedSymbolTextToggleButtonStyle}" CheckedForeground="{x:Bind ViewModel.Accent}"
-                                                       Content="Follow" Icon="Add" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Following, Mode=OneWay}"/>
+                                                       Content="{x:Bind ViewModel.FollowText, Mode=OneWay}" Icon="{x:Bind ViewModel.FollowIcon, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Following, Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

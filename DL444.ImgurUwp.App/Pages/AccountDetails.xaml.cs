@@ -64,6 +64,7 @@ namespace DL444.ImgurUwp.App.Pages
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
 
         string BioPlaceholderText { get; set; }
+        Visibility BioVisilibity => this.IsOwner ? Visibility.Visible : (ViewModel == null || string.IsNullOrWhiteSpace(ViewModel.Biography) ? Visibility.Collapsed : Visibility.Visible);
 
         public bool IsOwner => ViewModel == null ? false : ViewModel.Username == ApiClient.OwnerAccount;
 
@@ -85,17 +86,7 @@ namespace DL444.ImgurUwp.App.Pages
                 var account = await ApiClient.Client.GetAccountAsync(username);
                 await PrepareViewModels(new AccountViewModel(account));
             }
-            else if(e.Parameter is ValueTuple<AccountViewModel, int> vmParam)
-            {
-                await PrepareViewModels(vmParam.Item1);
-                //AccountPivot.SelectedIndex = vmParam.Item2;
-            }
-            else if(e.Parameter is ValueTuple<string, int> userParam)
-            {
-                var account = await ApiClient.Client.GetAccountAsync(userParam.Item1);
-                await PrepareViewModels(new AccountViewModel(account));
-                //AccountPivot.SelectedIndex = userParam.Item2;
-            }
+
         }
 
         async Task PrepareViewModels(AccountViewModel vm)
@@ -150,60 +141,17 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // TODO: Remove this after redesign.
-            while(ViewModel == null)
-            {
-                await Task.Delay(200);
-            }
-            switch ((e.AddedItems[0] as PivotItem).Tag as string)
-            {
-                case "Trophies":
-                    if(Profile != null) { break; }
-                    var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(ViewModel.Username);
-                    Profile = new GalleryProfileViewModel(profile);
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
-                    foreach (var t in profile.Trophies)
-                    {
-                        Trophies.Add(new TrophyViewModel(t));
-                    }
-                    break;
-                case "Posts":
-                    if (Posts.Count != 0) { break; }
-                    AccountPostSource source = new AccountPostSource(ViewModel.Username);
-                    Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Posts)));
-                    break;
-                case "Favorites":
-                    //if (IsOwner)
-                    //{
-
-                    //}
-                    //else
-                    //{
-
-                    //}
-                    break;
-                case "Comments":
-                    if (Comments.Count != 0) { break; }
-                    var comments = await ApiClient.Client.GetAccountCommentsAsync(ViewModel.Username);
-                    foreach(var c in comments)
-                    {
-                        if (c.Deleted) { continue; }
-                        Comments.Add(new CommentViewModel(c));
-                    }
-                    break;
-                case "Images":
-                    break;
-            }
-        }
-
         private void PostList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
             var gallery = new GalleryCollectionViewModel(Posts);
             Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), (item, gallery));
+        }
+
+        private void AccountContentButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(ViewModel == null) { return; }
+            Navigation.ContentFrame.Navigate(typeof(AccountContent), ViewModel, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
     }
 

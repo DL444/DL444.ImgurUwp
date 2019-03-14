@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
+using Microsoft.UI.Xaml.Controls;
 using Windows.UI;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
 namespace DL444.ImgurUwp.App.ViewModels
@@ -35,6 +37,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string BackgroundImage => $"https://i.imgur.com/{Tag.BackgroundImageHash}.png";
         public string Description => Tag.Description;
 
+        public IconElement FollowIcon => (Tag != null && Tag.Following) ? new SymbolIcon(Symbol.Accept) : new SymbolIcon(Symbol.Add);
+        public string FollowText => (Tag != null && Tag.Following) ? "Following" : "Follow";
+
         public Visibility DescriptionVisibility => string.IsNullOrEmpty(Description) ? Visibility.Collapsed : Visibility.Visible;
 
         public Command ShowDetailsCommand { get; private set; }
@@ -57,6 +62,9 @@ namespace DL444.ImgurUwp.App.ViewModels
                 result = await ApiClient.Client.UnfollowTagAsync(Name);
                 if (result == true) { Tag.Following = false; }
             }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FollowIcon)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FollowText)));
             return result;
         }
 
