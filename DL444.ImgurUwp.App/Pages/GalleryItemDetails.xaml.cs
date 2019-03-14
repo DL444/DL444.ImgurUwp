@@ -136,7 +136,7 @@ namespace DL444.ImgurUwp.App.Pages
             // item: ViewModel, container: ListViewItem
             if (item is ImageViewModel i)
             {
-                if(i.IsAnimated && i.Type != "image/gif") { return VideoTemplate; }
+                if(i.IsAnimated) { return VideoTemplate; }
                 else { return ImageTemplate; }
             }
             else
