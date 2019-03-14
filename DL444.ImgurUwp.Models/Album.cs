@@ -28,7 +28,7 @@ namespace DL444.ImgurUwp.Models
         public int Order { get; set; }
         public string DeleteHash { get; set; }
         [JsonProperty(PropertyName = "images_count")]
-        public int ImagesCount { get; set; }
+        public int ImageCount { get; set; }
         public List<Image> Images { get; set; }
         [JsonProperty(PropertyName = "in_gallery")]
         public bool InGallery { get; set; }

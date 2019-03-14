@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -41,33 +42,69 @@ namespace DL444.ImgurUwp.App.Pages
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Account)));
             }
         }
+        bool IsOwner => Account == null ? false : Account.Username == ApiClient.OwnerAccount;
+        bool IsNotOwner => !IsOwner;
+
+        ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                await PrepareViewModels(vm);
+                Account = vm;
             }
             else if(e.Parameter is ValueTuple<AccountViewModel, int> vmIndex)
             {
+                Account = vmIndex.Item1;
                 RootPivot.SelectedIndex = vmIndex.Item2;
-                await PrepareViewModels(vmIndex.Item1);
             }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsOwner)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNotOwner)));
         }
 
-        async System.Threading.Tasks.Task PrepareViewModels(AccountViewModel vm)
+        private async void RootPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Account = vm;
-            var comments = await ApiClient.Client.GetAccountCommentsAsync(vm.Username);
-            foreach (var c in comments)
+            if(Account == null)
             {
-                if (c.Deleted) { continue; }
-                Comments.Add(new CommentViewModel(c));
+                await Task.Delay(200);
+            }
+
+            switch((e.AddedItems[0] as PivotItem).Tag as string)
+            {
+                case "Favorites":
+                    if(IsOwner)
+                    {
+
+                    }
+                    else
+                    {
+                        if(GalleryFavorites.Count != 0) { break; }
+                        var favorites = await ApiClient.Client.GetAccountGalleryFavoritesAsync(Account.Username);
+                        foreach(var f in favorites)
+                        {
+                            GalleryFavorites.Add(new GalleryItemViewModel(f));
+                        }
+                    }
+                    break;
+                case "Comments":
+                    if (Comments.Count != 0) { break; }
+                    var comments = await ApiClient.Client.GetAccountCommentsAsync(Account.Username);
+                    foreach (var c in comments)
+                    {
+                        if (c.Deleted) { continue; }
+                        Comments.Add(new CommentViewModel(c));
+                    }
+                    break;
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), (e.ClickedItem as GalleryItemViewModel, new GalleryCollectionViewModel(GalleryFavorites)));
+        }
     }
 }

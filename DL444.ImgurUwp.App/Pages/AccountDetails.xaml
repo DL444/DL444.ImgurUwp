@@ -44,7 +44,7 @@
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
                                 <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
                                  MaxWidth="460" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
-                                 TextWrapping="Wrap" Visibility="{x:Bind BioVisilibity}"/>
+                                 TextWrapping="NoWrap" Visibility="{x:Bind BioVisilibity}"/>
                                 <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
                             </StackPanel>
 
@@ -117,7 +117,7 @@
                                 </ListView.Footer>
                             </ListView>
 
-                            <cc:SymbolTextButton HorizontalAlignment="Center" Icon="Forward" Content="Favs + comments" Margin="0,4,0,12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Click="AccountContentButton_Click"/>
+                            <cc:SymbolTextButton HorizontalAlignment="Center" Icon="Forward" Content="Favs + comments" Margin="0,4,0,12" Click="AccountContentButton_Click"/>
                         </StackPanel>
                     </Grid>
                 </Grid>

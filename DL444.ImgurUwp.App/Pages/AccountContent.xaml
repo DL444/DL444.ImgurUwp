@@ -7,8 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    xmlns:app="using:DL444.ImgurUwp.App"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <app:Templates/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -25,12 +34,22 @@
             </StackPanel>
         </Grid>
         
-        <Pivot x:Name="RootPivot" Grid.Row="1" Padding="20,0">
-            <PivotItem Header="Favorites">
-                
+        <Pivot x:Name="RootPivot" Grid.Row="1" Padding="20,0" SelectionChanged="RootPivot_SelectionChanged">
+            <PivotItem Header="Favorites" Tag="Favorites" VerticalContentAlignment="Stretch">
+                <Grid>
+                    <GridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
+                    <GridView x:Name="FavGrid" x:Load="{x:Bind IsOwner, Mode=OneWay}" Grid.Row="1"/>
+                </Grid>
             </PivotItem>
-            <PivotItem Header="Comments">
-                <ListView VerticalAlignment="Top" Padding="16,0" HorizontalAlignment="Stretch" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind Comments}">
+            <PivotItem Header="Comments" Tag="Comments">
+                <ListView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind Comments}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="vm:CommentViewModel">
                             <Grid Padding="12,8" ColumnSpacing="12">

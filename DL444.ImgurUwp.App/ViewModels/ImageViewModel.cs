@@ -32,9 +32,10 @@ namespace DL444.ImgurUwp.App.ViewModels
                         else
                         {
                             Thumbnail = $"{_image.Link.Replace(_image.Id, $"{_image.Id}_d")}?maxwidth=520&shape=thumb&fidelity=mid";
-                            if(_image.Size > 512000)
+                            if (_image.Size > 512000)
                             {
-                                HugeThumbnail = _image.Link.Replace(_image.Id, $"{_image.Id}h");
+                                // This is how imgur.com is pulling this off. Just add 'r'.
+                                HugeThumbnail = _image.Link.Replace(_image.Id, $"{_image.Id}r");
                             }
                             else
                             {
