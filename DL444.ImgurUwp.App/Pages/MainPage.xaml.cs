@@ -55,10 +55,8 @@ namespace DL444.ImgurUwp.App.Pages
 
             ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
 
-            var meAccount = await ApiClient.Client.GetAccountAsync("me");
-            ApiClient.OwnerAccount = meAccount.Url;
-            CurrentAccount = new AccountViewModel(meAccount);
-            Bindings.Update();
+            await RefreshAccount();
+            ApiClient.OwnerAccount = CurrentAccount.Username;
         }
 
         void SetTitleBarButtonColor()
@@ -134,6 +132,13 @@ namespace DL444.ImgurUwp.App.Pages
             {
                 ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
             }
+        }
+
+        public async System.Threading.Tasks.Task RefreshAccount()
+        {
+            var meAccount = await ApiClient.Client.GetAccountAsync("me");
+            CurrentAccount = new AccountViewModel(meAccount);
+            Bindings.Update();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -129,7 +129,7 @@ namespace DL444.ImgurUwp.App.Pages
             BioAcceptBtn.Visibility = Visibility.Collapsed;
             if(originalBio != ViewModel.Biography)
             {
-                bool result = await ApiClient.Client.SetAccountBioAsync(ViewModel.Username, ViewModel.Biography);
+                bool result = await ApiClient.Client.SetAccountProfileAsync(ViewModel.Username, ViewModel.Biography);
                 if(result == true)
                 {
                     originalBio = ViewModel.Biography;

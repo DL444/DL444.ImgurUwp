@@ -15,7 +15,7 @@
         <ResourceDictionary>
             <vm:DateStringConverter x:Key="DateStringConverter"/>
             <AcrylicBrush x:Key="AccountPageHeaderAcrylicBrush" TintColor="{ThemeResource SystemAltHighColor}" BackgroundSource="Backdrop"
-                      TintOpacity="0.3" FallbackColor="Transparent"/>
+                      TintOpacity="0.3" FallbackColor="{ThemeResource SystemAltMediumLowColor}"/>
             <ResourceDictionary.MergedDictionaries>
                 <local:Templates/>
             </ResourceDictionary.MergedDictionaries>

@@ -178,4 +178,21 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(PropertyName = "newsletter_subscribed", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? NewsletterSubscribe { get; set; }
     }
+
+    class AccountProfileParams
+    {
+        public AccountProfileParams(string bio, string avatar, string cover)
+        {
+            Bio = bio;
+            Avatar = avatar;
+            Cover = cover;
+        }
+
+        [JsonProperty(PropertyName = "bio", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Bio { get; set; }
+        [JsonProperty(PropertyName = "avatar", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Avatar { get; set; }
+        [JsonProperty(PropertyName = "cover", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Cover { get; set; }
+    }
 }

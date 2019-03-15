@@ -30,8 +30,9 @@ namespace DL444.ImgurUwp.App.Settings
 
         List<SettingsPageModel> Pages { get; } = new List<SettingsPageModel>()
         {
+            new SettingsPageModel() { Title = "Personalize", Description = "Avatar, profile cover", ContentPageType = typeof(PersonalizeSettingsPage) },
             new SettingsPageModel() { Title = "General", Description = "Options, appearance", ContentPageType = typeof(GeneralSettingsPage) },
-            new SettingsPageModel() { Title = "Account", Description = "Avatar, privacy, notifications, content", ContentPageType = typeof(AccountSettingsPage) },
+            new SettingsPageModel() { Title = "Account", Description = "Privacy, notifications, content", ContentPageType = typeof(AccountSettingsPage) },
         };
 
         private void PageList_SelectionChanged(object sender, SelectionChangedEventArgs e)

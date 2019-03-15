@@ -25,6 +25,7 @@ namespace DL444.ImgurUwp.App.Settings
         public GeneralSettingsPage()
         {
             this.InitializeComponent();
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
     }
 }

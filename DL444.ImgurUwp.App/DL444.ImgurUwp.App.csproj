@@ -165,10 +165,14 @@
       <DependentUpon>GeneralSettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HeaderCaptionControl.cs" />
+    <Compile Include="Settings\PersonalizeSettingsPage.xaml.cs">
+      <DependentUpon>PersonalizeSettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings\SettingsFrame.xaml.cs">
       <DependentUpon>SettingsFrame.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\SettingsPageModel.cs" />
+    <Compile Include="Settings\ViewModels.cs" />
     <Compile Include="StaticData.cs" />
     <Compile Include="Themes\Templates.cs" />
     <Compile Include="ViewModels\AccountViewModel.cs" />
@@ -251,6 +255,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\GeneralSettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\PersonalizeSettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

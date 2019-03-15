@@ -27,12 +27,8 @@
                     </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
-            <!--<local:SettingsPageModel Title="General" Description="Options, appearance"/>
-            <local:SettingsPageModel Title="Account" Description="Privacy, content, communication"/>
-            <local:SettingsPageModel Title="About" Description="Information, feedback, contribution"/>-->
         </ListView>
 
-        <Frame x:Name="ContentFrame" Grid.Column="1"/>
+        <Frame x:Name="ContentFrame" Grid.Column="1" CacheSize="5"/>
     </Grid>
 </Page>

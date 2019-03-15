@@ -353,21 +353,13 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
-        public async Task<bool> SetAccountBioAsync(string username, string bio)
+        public async Task<bool> SetAccountProfileAsync(string username, string bio = null, string avatar = null, string cover = null)
         {
             if(username == null) { throw new ArgumentNullException(nameof(username)); }
+            string paramJson = JsonConvert.SerializeObject(new AccountProfileParams(bio, avatar, cover));
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/settings");
-            string contentStr;
-            if(bio == null)
-            {
-                contentStr = $"{{\"bio\":null}}";
-            }
-            else
-            {
-                contentStr = $"{{\"bio\":\"{bio}\"}}";
-            }
-            msg.Content = new StringContent(contentStr);
+            msg.Content = new StringContent(paramJson);
             msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
             var response = await client.SendAsync(msg);
@@ -421,6 +413,43 @@ namespace DL444.ImgurUwp.ApiClient
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/verifyemail");
             var response = await client.SendAsync(msg);
+        }
+
+        public async Task<IEnumerable<ProfileImage>> GetAccountAvailableAvatarsAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+
+            var response = await client.GetAsync($"/3/account/{username}/available_avatars");
+
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                JObject obj = JObject.Parse(dataJson);
+                return JsonConvert.DeserializeObject<IEnumerable<ProfileImage>>(obj["available_avatars"].ToString());
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+        public async Task<IEnumerable<ProfileImage>> GetAccountAvailableCoversAsync(string username)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+
+            var response = await client.GetAsync($"/3/account/{username}/available_covers");
+
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                JObject obj = JObject.Parse(dataJson);
+                var result = JsonConvert.DeserializeObject<IEnumerable<ProfileImage>>(obj["available_covers"].ToString());
+                foreach(var r in result) { r.Type = ProfileImageType.Cover; }
+                return result;
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
         }
     }
 }

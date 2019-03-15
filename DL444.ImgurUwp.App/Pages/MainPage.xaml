@@ -146,7 +146,7 @@
                         </cc:SymbolTextButton.Icon>
                     </cc:SymbolTextButton>
                     <Button Style="{ThemeResource NavigationViewPaneSearchButtonStyle}">
-                        <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl, TargetNullValue={x:Null}}"/>
+                        <ui:PersonPicture Margin="-12" ProfilePicture="{x:Bind CurrentAccount.AvatarImage, TargetNullValue={x:Null}}"/>
                         <Button.Flyout>
                             <MenuFlyout Placement="BottomEdgeAlignedRight">
                                 <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
@@ -157,7 +157,7 @@
                                                 <ColumnDefinition/>
                                             </Grid.ColumnDefinitions>
 
-                                            <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2" ProfilePicture="{x:Bind CurrentAccount.AvatarUrl}"/>
+                                            <ui:PersonPicture Height="48" VerticalAlignment="Center" Grid.RowSpan="2" ProfilePicture="{x:Bind CurrentAccount.AvatarImage}"/>
                                             <Grid Margin="12,0" VerticalAlignment="Center" Grid.Column="1">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition/>

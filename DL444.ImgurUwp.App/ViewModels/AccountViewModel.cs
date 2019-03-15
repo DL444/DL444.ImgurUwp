@@ -42,6 +42,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string CoverName => _account.CoverName;
         public bool IsFollowing => _account.UserFollow;
 
+        public Windows.UI.Xaml.Media.Imaging.BitmapImage AvatarImage => 
+            new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(_account.Avatar)) { CreateOptions = Windows.UI.Xaml.Media.Imaging.BitmapCreateOptions.IgnoreImageCache };
+
         public AccountViewModel() { }
         public AccountViewModel(Account account) : this()
         {
