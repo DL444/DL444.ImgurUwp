@@ -16,6 +16,8 @@ using DL444.ImgurUwp.App.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using System.Threading;
+using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -28,7 +30,7 @@ namespace DL444.ImgurUwp.App.Pages
     {
         public AccountContent()
         {
-            this.InitializeComponent();
+             this.InitializeComponent();
         }
 
         private AccountViewModel _account;
@@ -49,9 +51,13 @@ namespace DL444.ImgurUwp.App.Pages
         ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel> MyAlbums = null;
+        IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel> MyImages = null;
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            int index = 0;
             if(e.Parameter is AccountViewModel vm)
             {
                 Account = vm;
@@ -59,10 +65,18 @@ namespace DL444.ImgurUwp.App.Pages
             else if(e.Parameter is ValueTuple<AccountViewModel, int> vmIndex)
             {
                 Account = vmIndex.Item1;
-                RootPivot.SelectedIndex = vmIndex.Item2;
+                index = vmIndex.Item2;
             }
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsOwner)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsNotOwner)));
+            if(index > 1)
+            {
+                while(RootPivot.Items.Count < 3)
+                {
+                    await Task.Delay(100);
+                }
+            }
+            RootPivot.SelectedIndex = index;
         }
 
         private async void RootPivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -103,6 +117,23 @@ namespace DL444.ImgurUwp.App.Pages
                         Comments.Add(new CommentViewModel(c));
                     }
                     break;
+                case "Albums":
+                    break;
+                    if(IsOwner && MyAlbums == null)
+                    {
+                        var source = new MyItemIncrementalSource(MyItemIncrementalSource.ItemType.Album);
+                        MyAlbums = new IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel>(source);
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyAlbums)));
+                    }
+                    break;
+                case "Images":
+                    if(IsOwner && MyImages == null)
+                    {
+                        var source = new MyItemIncrementalSource(MyItemIncrementalSource.ItemType.Image);
+                        MyImages = new IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel>(source);
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyImages)));
+                    }
+                    break;
             }
         }
 
@@ -113,9 +144,55 @@ namespace DL444.ImgurUwp.App.Pages
             Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), (e.ClickedItem as GalleryItemViewModel, new GalleryCollectionViewModel(GalleryFavorites)));
         }
 
-        private void FavGrid_ItemClick(object sender, ItemClickEventArgs e)
+        private void ItemGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
 
+        }
+    }
+
+    public class MyItemIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    {
+        public int Page { get; private set; }
+        public ItemType Type { get; }
+        bool initialized;
+
+        public MyItemIncrementalSource() { }
+        public MyItemIncrementalSource(ItemType type)
+        {
+            Type = type;
+            initialized = true;
+        }
+
+        protected override async Task<IEnumerable<ItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            if (!initialized) { return null; }
+            var items = new List<ItemViewModel>();
+            if (Type == ItemType.Album)
+            {
+                var albums = await ApiClient.Client.GetAccountAlbumsAsync("me", Page);
+                foreach (var a in albums)
+                {
+                    // TODO: We need a better way to handle empty albums.
+                    // TODO: And also, they do not have Images, meaning that you cannot just create instance.
+                    if(a.ImageCount == 0) { continue; }
+                    items.Add(new ItemViewModel(a));
+                }
+            }
+            else
+            {
+                var images = await ApiClient.Client.GetAccountImagesAsync("me", Page);
+                foreach (var a in images)
+                {
+                    items.Add(new ItemViewModel(a));
+                }
+            }
+            Page++;
+            return items;
+        }
+
+        public enum ItemType
+        {
+            Album, Image
         }
     }
 }

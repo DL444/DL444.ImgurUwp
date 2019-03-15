@@ -46,7 +46,7 @@
                         </GridView.ItemsPanel>
                     </GridView>
                     <GridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
-                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="FavGrid_ItemClick">
+                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="ItemGrid_ItemClick">
                         <GridView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
@@ -89,6 +89,24 @@
                         </Style>
                     </ListView.ItemContainerStyle>
                 </ListView>
+            </PivotItem>
+            <PivotItem x:Name="AlbumPivot" Header="Albums" Tag="Albums" x:Load="{x:Bind IsOwner}">
+                <!--<GridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind MyAlbums, Mode=OneWay}" ItemClick="ItemGrid_ItemClick">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>-->
+            </PivotItem>
+            <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind IsOwner}">
+                <GridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick">
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
             </PivotItem>
         </Pivot>
     </Grid>

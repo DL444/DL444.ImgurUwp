@@ -86,7 +86,7 @@
                     <TextBlock Text="{x:Bind ImageCount}"/>
                 </Grid>
             </StackPanel>
-            <Grid Grid.Row="1" Padding="8">
+            <Grid Grid.Row="1" Padding="8" Visibility="{x:Bind HasTitle, Converter={StaticResource BoolVisibilityConverter}}">
                 <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </Grid>

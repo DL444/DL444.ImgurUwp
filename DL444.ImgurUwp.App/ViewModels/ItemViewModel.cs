@@ -108,6 +108,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+        public bool HasTitle => !string.IsNullOrEmpty(Title);
+
         public ItemViewModel() { }
         public ItemViewModel(IItem item) : this()
         {

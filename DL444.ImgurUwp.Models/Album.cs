@@ -11,9 +11,9 @@ namespace DL444.ImgurUwp.Models
         public int DateTime { get; set; }
         public string Cover { get; set; }
         [JsonProperty(PropertyName = "cover_width")]
-        public int CoverWidth { get; set; }
+        public int? CoverWidth { get; set; }
         [JsonProperty(PropertyName = "cover_height")]
-        public int CoverHeight { get; set; }
+        public int? CoverHeight { get; set; }
         [JsonProperty(PropertyName = "account_url")]
         public string AccountUrl { get; set; }
         [JsonProperty(PropertyName = "account_id")]
