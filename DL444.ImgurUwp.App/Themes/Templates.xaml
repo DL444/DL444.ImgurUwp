@@ -67,5 +67,28 @@
             </Grid>
         </Grid>
     </DataTemplate>
+    <DataTemplate x:Key="NonGalleryItemGridTemplate" x:DataType="vm:ItemViewModel">
+        <Grid Height="300" Width="260" Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Image Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill"/>
+            <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="0,4,4,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <Grid x:Name="AnimationIndicator" Visibility="{x:Bind DisplayImage.Animated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
+                    <TextBlock Text="GIF"/>
+                </Grid>
 
+                <Grid x:Name="AlbumIndicator" Visibility="{x:Bind ImageCount, Converter={StaticResource ImageCountVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,4,0,0">
+                    <TextBlock Text="{x:Bind ImageCount}"/>
+                </Grid>
+            </StackPanel>
+            <Grid Grid.Row="1" Padding="8">
+                <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

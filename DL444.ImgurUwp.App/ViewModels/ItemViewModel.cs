@@ -51,7 +51,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                     }
                 }
 
-                PropertyChanged(this, new PropertyChangedEventArgs(null));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
         }
         public bool IsAlbum => Item.IsAlbum == true;

@@ -181,6 +181,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     {
         public override string ToString() => $"{Type}: {Text}";
         public UriType Type { get; set; }
+        public string ImageThumbnail { get; set; }
         public UriComponent(string uri)
         {
             Text = uri;
@@ -190,18 +191,18 @@ namespace DL444.ImgurUwp.App.ViewModels
                 case "jpg":
                 case "jpeg":
                 case "png":
-                case "gif":
                 case "apng":
                 case "tif":
                 case "tiff":
                     Type = UriType.Image;
-                    Text = $"{Text}?maxwidth=400&fidelity=mid";
+                    Text = $"{Text.Remove(Text.LastIndexOf('.'))}r.{ext}";
                     break;
                 // For some reason MediaElement acts weirdly. So use GIF instead. Maybe good for memory as well?
                 case "mp4":
                 case "gifv":
+                case "gif":
                     Type = UriType.Image;
-                    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif?maxwidth=400&fidelity=mid";
+                    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif";
                     break;
                 default:
                     Type = UriType.Normal;

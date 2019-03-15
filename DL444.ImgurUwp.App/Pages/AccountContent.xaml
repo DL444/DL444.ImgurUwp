@@ -45,7 +45,14 @@
                             </ItemsPanelTemplate>
                         </GridView.ItemsPanel>
                     </GridView>
-                    <GridView x:Name="FavGrid" x:Load="{x:Bind IsOwner, Mode=OneWay}" Grid.Row="1"/>
+                    <GridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="FavGrid_ItemClick">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
                 </Grid>
             </PivotItem>
             <PivotItem Header="Comments" Tag="Comments">

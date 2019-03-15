@@ -45,6 +45,7 @@ namespace DL444.ImgurUwp.App.Pages
         bool IsOwner => Account == null ? false : Account.Username == ApiClient.OwnerAccount;
         bool IsNotOwner => !IsOwner;
 
+        ObservableCollection<ItemViewModel> NonGalleryFavorites { get; } = new ObservableCollection<ItemViewModel>();
         ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
 
@@ -76,7 +77,12 @@ namespace DL444.ImgurUwp.App.Pages
                 case "Favorites":
                     if(IsOwner)
                     {
-
+                        if(NonGalleryFavorites.Count != 0) { break; }
+                        var favorites = await ApiClient.Client.GetAccountFavoritesAsync("me");
+                        foreach(var f in favorites)
+                        {
+                            NonGalleryFavorites.Add(new ItemViewModel(f));
+                        }
                     }
                     else
                     {
@@ -105,6 +111,11 @@ namespace DL444.ImgurUwp.App.Pages
         private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
             Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), (e.ClickedItem as GalleryItemViewModel, new GalleryCollectionViewModel(GalleryFavorites)));
+        }
+
+        private void FavGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+
         }
     }
 }
