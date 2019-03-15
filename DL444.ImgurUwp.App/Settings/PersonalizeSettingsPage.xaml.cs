@@ -36,6 +36,7 @@ namespace DL444.ImgurUwp.App.Settings
         private ProfileImageViewModel _selectedCover;
         string originalAvatar;
         string originalCover;
+        bool loaded;
 
         ObservableCollection<ProfileImageViewModel> Avatars { get; } = new ObservableCollection<ProfileImageViewModel>();
         ObservableCollection<ProfileImageViewModel> Covers { get; } = new ObservableCollection<ProfileImageViewModel>();
@@ -63,6 +64,7 @@ namespace DL444.ImgurUwp.App.Settings
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (loaded) { return; }
             var avatars = await ApiClient.Client.GetAccountAvailableAvatarsAsync("me");
             var covers = await ApiClient.Client.GetAccountAvailableCoversAsync("me");
             var account = await ApiClient.Client.GetAccountAsync("me");
@@ -80,6 +82,7 @@ namespace DL444.ImgurUwp.App.Settings
             AvatarGridView.SelectedItem = SelectedAvatar;
             SelectedCover = Covers.FirstOrDefault(x => x.Name == originalCover);
             CoverGridView.SelectedItem = SelectedCover;
+            loaded = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

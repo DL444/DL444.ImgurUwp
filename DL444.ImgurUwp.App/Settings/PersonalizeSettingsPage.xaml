@@ -5,6 +5,7 @@
     xmlns:local="using:DL444.ImgurUwp.App.Settings"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -13,10 +14,32 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel>
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="Normal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1200"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="Compact">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="CoverColumn.Width" Value="0"/>
+                        <Setter Target="CoverRow.Height" Value="1*"/>
+                        <Setter Target="CoverSection.(Grid.Row)" Value="1"/>
+                        <Setter Target="CoverSection.(Grid.Column)" Value="0"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
+        <StackPanel Grid.ColumnSpan="2">
             <TextBlock Text="Preview" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-            <Grid HorizontalAlignment="Stretch" Height="280" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                <ParallaxView Source="{x:Bind RootScroll}" VerticalShift="40">
+            <Grid HorizontalAlignment="Stretch" Height="240" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <ParallaxView Source="{x:Bind RootScroll}" VerticalShift="200">
                     <Image Stretch="UniformToFill" Source="{x:Bind SelectedCover.Location, Mode=OneWay, TargetNullValue={x:Null}}"/>
                 </ParallaxView>
                 <PersonPicture HorizontalAlignment="Center" VerticalAlignment="Center" Height="96" ProfilePicture="{x:Bind SelectedAvatar.Location, Mode=OneWay, TargetNullValue={x:Null}}"/>
@@ -26,41 +49,41 @@
                 <ProgressRing x:Name="ApplyProgress" IsActive="False" VerticalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
+        
         <ScrollViewer x:Name="RootScroll" Grid.Row="1">
-            <StackPanel Spacing="12">
-                <StackPanel>
-                    <TextBlock Text="Avatars" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                    <GridView x:Name="AvatarGridView" ItemsSource="{x:Bind Avatars}" SelectionChanged="AvatarGridView_SelectionChanged" 
-                              ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                        <GridView.ItemTemplate>
+            <Grid ColumnSpacing="8" RowSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition x:Name="CoverColumn" Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition x:Name="CoverRow" Height="0"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0" RelativePanel.LeftOf="CoverSection">
+                    <TextBlock Text="Avatars" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+                    <tkc:AdaptiveGridView x:Name="AvatarGridView" ItemsSource="{x:Bind Avatars}" SelectionChanged="AvatarGridView_SelectionChanged" 
+                              ScrollViewer.VerticalScrollMode="Disabled" DesiredWidth="72">
+                        <tkc:AdaptiveGridView.ItemTemplate>
                             <DataTemplate x:DataType="local:ProfileImageViewModel">
-                                <Image Height="72" Width="72" Source="{x:Bind Location}"/>
+                                <Image Source="{x:Bind Location}"/>
                             </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="3"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
+                        </tkc:AdaptiveGridView.ItemTemplate>
+                    </tkc:AdaptiveGridView>
                 </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="Cover" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                    <GridView x:Name="CoverGridView" ItemsSource="{x:Bind Covers}" SelectionChanged="CoverGridView_SelectionChanged" 
-                              ScrollViewer.VerticalScrollMode="Disabled" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden">
-                        <GridView.ItemTemplate>
+                <StackPanel x:Name="CoverSection" Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="Cover" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+                    <tkc:AdaptiveGridView x:Name="CoverGridView" ItemsSource="{x:Bind Covers}" SelectionChanged="CoverGridView_SelectionChanged" 
+                              ScrollViewer.VerticalScrollMode="Disabled" DesiredWidth="240">
+                        <tkc:AdaptiveGridView.ItemTemplate>
                             <DataTemplate x:DataType="local:ProfileImageViewModel">
-                                <Image Height="200" Source="{x:Bind Location}"/>
+                                <Image Source="{x:Bind Location}"/>
                             </DataTemplate>
-                        </GridView.ItemTemplate>
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid Orientation="Vertical" MaximumRowsOrColumns="2"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
+                        </tkc:AdaptiveGridView.ItemTemplate>
+                    </tkc:AdaptiveGridView>
                 </StackPanel>
-            </StackPanel>
+            </Grid>
         </ScrollViewer>
     </Grid>
 </Page>
