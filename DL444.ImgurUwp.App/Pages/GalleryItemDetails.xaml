@@ -32,8 +32,9 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Viewbox>
-                    <Image Source="{x:Bind HugeThumbnail}" Height="{x:Bind Height}" Width="{x:Bind Width}"/>
+                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
                 </Viewbox>
+                <Image Source="{x:Bind HugeThumbnail}" Stretch="UniformToFill"/>
                 <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
                 <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
             </Grid>
@@ -283,6 +284,7 @@
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="Margin" Value="0,8"/>
                     <Setter Property="MaxWidth" Value="{ThemeResource ImageListViewMaxWidth}" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

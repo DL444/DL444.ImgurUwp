@@ -75,7 +75,7 @@
             </Grid.RowDefinitions>
             <Image Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill"/>
             <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
-                                    VerticalAlignment="Top" Margin="0,4,4,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                                    VerticalAlignment="Top" Margin="0,8,8,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
                 <Grid x:Name="AnimationIndicator" Visibility="{x:Bind DisplayImage.Animated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
                               HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
                     <TextBlock Text="GIF"/>
