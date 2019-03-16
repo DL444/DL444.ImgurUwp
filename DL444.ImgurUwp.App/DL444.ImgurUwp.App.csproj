@@ -117,7 +117,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controls\CommentTreeViewItem.cs" />
-    <Compile Include="Controls\HeaderedContentControl.cs" />
     <Compile Include="Controls\ReportConfirmDialog.xaml.cs">
       <DependentUpon>ReportConfirmDialog.xaml</DependentUpon>
     </Compile>
@@ -280,7 +279,7 @@
       <Version>6.2.8</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
-      <Version>5.1.0</Version>
+      <Version>5.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.1.181217001-prerelease</Version>

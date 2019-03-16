@@ -37,16 +37,16 @@
                             <TextBlock Text="{x:Bind ViewModel.DisplayName}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}"/>
                             <TextBlock Text="{x:Bind ViewModel.Description}" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="{x:Bind ViewModel.DescriptionVisibility}"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="32" Margin="0,8,0,0">
-                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.TotalItems, Converter={StaticResource NumberStringConverter}}">
-                                    <cc:HeaderedContentControl.Header>
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.TotalItems, Converter={StaticResource NumberStringConverter}}">
+                                    <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Posts" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </cc:HeaderedContentControl.Header>
-                                </cc:HeaderedContentControl>
-                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Followers, Converter={StaticResource NumberStringConverter}}">
-                                    <cc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl.Header>
+                                </tkc:HeaderedContentControl>
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Followers, Converter={StaticResource NumberStringConverter}}">
+                                    <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Followers" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </cc:HeaderedContentControl.Header>
-                                </cc:HeaderedContentControl>
+                                    </tkc:HeaderedContentControl.Header>
+                                </tkc:HeaderedContentControl>
                             </StackPanel>
                             <cc:SymbolTextToggleButton x:Name="FollowBtn" IsEnabled="False" Style="{ThemeResource BorderedSymbolTextToggleButtonStyle}" CheckedForeground="{x:Bind ViewModel.Accent}"
                                                        Content="{x:Bind ViewModel.FollowText, Mode=OneWay}" Icon="{x:Bind ViewModel.FollowIcon, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Following, Mode=OneWay}"/>

@@ -49,21 +49,21 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="32" Margin="0,8,0,0">
-                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}">
-                                    <cc:HeaderedContentControl.Header>
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}">
+                                    <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Joined" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </cc:HeaderedContentControl.Header>
-                                </cc:HeaderedContentControl>
-                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Reputation}">
-                                    <cc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl.Header>
+                                </tkc:HeaderedContentControl>
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Reputation}">
+                                    <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Points" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </cc:HeaderedContentControl.Header>
-                                </cc:HeaderedContentControl>
-                                <cc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.ReputationName}">
-                                    <cc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl.Header>
+                                </tkc:HeaderedContentControl>
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.ReputationName}">
+                                    <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Notoriety" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </cc:HeaderedContentControl.Header>
-                                </cc:HeaderedContentControl>
+                                    </tkc:HeaderedContentControl.Header>
+                                </tkc:HeaderedContentControl>
                             </StackPanel>
 
                             <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,8" Padding="16,0"
