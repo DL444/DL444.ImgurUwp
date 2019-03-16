@@ -8,7 +8,7 @@
 
     <cc:ImageCountVisibilityConverter x:Key="ImageCountVisibilityConverter"/>
     <DataTemplate x:Key="GalleryItemGridTemplate" x:DataType="vm:GalleryItemViewModel">
-        <Grid Height="300" Width="260" Margin="4" RowSpacing="16" Padding="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+        <Grid Margin="4" RowSpacing="16" Padding="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
             <Grid.ContextFlyout>
                 <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                     <ui:CommandBarFlyout.PrimaryCommands>

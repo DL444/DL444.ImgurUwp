@@ -17,7 +17,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public IncrementalItemsSource(IEnumerable<T> items) : this()
         {
             if(items == null) { throw new ArgumentNullException(nameof(items)); }
-            items = new List<T>(items);
+            this.items = new List<T>(items);
         }
 
         public async Task<IEnumerable<T>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))

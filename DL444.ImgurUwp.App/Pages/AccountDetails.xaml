@@ -22,10 +22,10 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <GridView x:Name="RootListView" ItemsSource="{x:Bind Posts, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemGridTemplate}"
-              SelectionMode="None" IsItemClickEnabled="True" ItemClick="PostList_ItemClick">
-        <GridView.Header>
-            <Grid Margin="0,-100,0,0" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
+    <tkc:AdaptiveGridView x:Name="RootListView" ItemsSource="{x:Bind Posts, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemGridTemplate}"
+              SelectionMode="None" IsItemClickEnabled="True" ItemClick="PostList_ItemClick" DesiredWidth="300" ItemHeight="300" StretchContentForSingleRow="False" Padding="16,0">
+        <tkc:AdaptiveGridView.Header>
+            <Grid Margin="-16,-100,-16,8" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
                 <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="520" VerticalAlignment="Top" VerticalShift="500">
                     <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
                 </ParallaxView>
@@ -122,11 +122,6 @@
                     </Grid>
                 </Grid>
             </Grid>
-        </GridView.Header>
-        <GridView.ItemsPanel>
-            <ItemsPanelTemplate>
-                <ItemsWrapGrid HorizontalAlignment="Center" Margin="0,16,0,0" Orientation="Horizontal"/>
-            </ItemsPanelTemplate>
-        </GridView.ItemsPanel>
-    </GridView>
+        </tkc:AdaptiveGridView.Header>
+    </tkc:AdaptiveGridView>
 </Page>

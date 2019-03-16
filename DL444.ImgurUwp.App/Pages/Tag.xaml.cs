@@ -90,7 +90,6 @@ namespace DL444.ImgurUwp.App.Pages
         public TagItemsSource(string name, IEnumerable<GalleryItemViewModel> items, int startPage) : base(items)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            if (items == null) { throw new ArgumentNullException(nameof(items)); }
             Page = startPage;
         }
 

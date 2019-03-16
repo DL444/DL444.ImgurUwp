@@ -22,9 +22,10 @@
     </Page.Resources>
 
     <Grid>
-        <GridView x:Name="TagList" ItemsSource="{x:Bind Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="TagList_ItemClick">
-            <GridView.Header>
-                <Grid Background="{x:Bind ViewModel.Accent}" Margin="0,-100,0,0" Padding="0,100,0,0">
+        <tkc:AdaptiveGridView x:Name="TagList" ItemsSource="{x:Bind Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="TagList_ItemClick"
+                              DesiredWidth="300" ItemHeight="300" StretchContentForSingleRow="False" Padding="16,0">
+            <tkc:AdaptiveGridView.Header>
+                <Grid Background="{x:Bind ViewModel.Accent}" Margin="-16,-100,-16,8" Padding="0,100,0,0">
                     <ParallaxView Source="{x:Bind TagList}" Margin="0,-100,0,0" Height="420" Grid.Row="0" VerticalAlignment="Top" VerticalShift="480">
                         <Image Source="{x:Bind ViewModel.BackgroundImage}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
                     </ParallaxView>
@@ -53,12 +54,7 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-            </GridView.Header>
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,16,0,0"/>
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-        </GridView>
+            </tkc:AdaptiveGridView.Header>
+        </tkc:AdaptiveGridView>
     </Grid>
 </Page>
