@@ -8,6 +8,7 @@
     xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
     xmlns:app="using:DL444.ImgurUwp.App"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -34,25 +35,13 @@
             </StackPanel>
         </Grid>
         
-        <Pivot x:Name="RootPivot" Grid.Row="1" Padding="20,0" SelectionChanged="RootPivot_SelectionChanged">
+        <Pivot x:Name="RootPivot" Grid.Row="1" Margin="20,0" SelectionChanged="RootPivot_SelectionChanged">
             <PivotItem Header="Favorites" Tag="Favorites" VerticalContentAlignment="Stretch">
                 <Grid>
-                    <GridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
-                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
-                    <GridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
-                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="ItemGrid_ItemClick">
-                        <GridView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </GridView.ItemsPanel>
-                    </GridView>
+                    <tkc:AdaptiveGridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                    <tkc:AdaptiveGridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
                 </Grid>
             </PivotItem>
             <PivotItem Header="Comments" Tag="Comments">
@@ -91,22 +80,12 @@
                 </ListView>
             </PivotItem>
             <PivotItem x:Name="AlbumPivot" Header="Albums" Tag="Albums" x:Load="{x:Bind IsOwner}">
-                <!--<GridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind MyAlbums, Mode=OneWay}" ItemClick="ItemGrid_ItemClick">
-                    <GridView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </GridView.ItemsPanel>
-                </GridView>-->
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind MyAlbums, Mode=OneWay}"
+                          ItemClick="ItemGrid_ItemClick" ItemTemplate="{ThemeResource AccountAlbumGridTemplate}" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
             <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind IsOwner}">
-                <GridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick">
-                    <GridView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <ItemsWrapGrid HorizontalAlignment="Center" Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </GridView.ItemsPanel>
-                </GridView>
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
+                                      ItemsSource="{x:Bind MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
         </Pivot>
     </Grid>

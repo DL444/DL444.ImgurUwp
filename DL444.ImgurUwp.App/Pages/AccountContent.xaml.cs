@@ -51,8 +51,8 @@ namespace DL444.ImgurUwp.App.Pages
         ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
 
-        IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel> MyAlbums = null;
-        IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel> MyImages = null;
+        IncrementalLoadingCollection<MyAlbumIncrementalSource, AccountAlbumViewModel> MyAlbums = null;
+        IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel> MyImages = null;
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -118,19 +118,16 @@ namespace DL444.ImgurUwp.App.Pages
                     }
                     break;
                 case "Albums":
-                    break;
                     if(IsOwner && MyAlbums == null)
                     {
-                        var source = new MyItemIncrementalSource(MyItemIncrementalSource.ItemType.Album);
-                        MyAlbums = new IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel>(source);
+                        MyAlbums = new IncrementalLoadingCollection<MyAlbumIncrementalSource, AccountAlbumViewModel>();
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyAlbums)));
                     }
                     break;
                 case "Images":
                     if(IsOwner && MyImages == null)
                     {
-                        var source = new MyItemIncrementalSource(MyItemIncrementalSource.ItemType.Image);
-                        MyImages = new IncrementalLoadingCollection<MyItemIncrementalSource, ItemViewModel>(source);
+                        MyImages = new IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>();
                         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyImages)));
                     }
                     break;
@@ -150,49 +147,36 @@ namespace DL444.ImgurUwp.App.Pages
         }
     }
 
-    public class MyItemIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    public class MyImageIncrementalSource : IncrementalItemsSource<ItemViewModel>
     {
         public int Page { get; private set; }
-        public ItemType Type { get; }
-        bool initialized;
-
-        public MyItemIncrementalSource() { }
-        public MyItemIncrementalSource(ItemType type)
-        {
-            Type = type;
-            initialized = true;
-        }
 
         protected override async Task<IEnumerable<ItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
         {
-            if (!initialized) { return null; }
             var items = new List<ItemViewModel>();
-            if (Type == ItemType.Album)
+            var images = await ApiClient.Client.GetAccountImagesAsync("me", Page);
+            foreach (var i in images)
             {
-                var albums = await ApiClient.Client.GetAccountAlbumsAsync("me", Page);
-                foreach (var a in albums)
-                {
-                    // TODO: We need a better way to handle empty albums.
-                    // TODO: And also, they do not have Images, meaning that you cannot just create instance.
-                    if(a.ImageCount == 0) { continue; }
-                    items.Add(new ItemViewModel(a));
-                }
-            }
-            else
-            {
-                var images = await ApiClient.Client.GetAccountImagesAsync("me", Page);
-                foreach (var a in images)
-                {
-                    items.Add(new ItemViewModel(a));
-                }
+                items.Add(new ItemViewModel(i));
             }
             Page++;
             return items;
         }
+    }
+    public class MyAlbumIncrementalSource : IncrementalItemsSource<AccountAlbumViewModel>
+    {
+        public int Page { get; private set; }
 
-        public enum ItemType
+        protected override async Task<IEnumerable<AccountAlbumViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
         {
-            Album, Image
+            var items = new List<AccountAlbumViewModel>();
+            var albums = await ApiClient.Client.GetAccountAlbumsAsync("me", Page);
+            foreach (var a in albums)
+            {
+                items.Add(new AccountAlbumViewModel(a));
+            }
+            Page++;
+            return items;
         }
     }
 }
