@@ -55,6 +55,11 @@
                     </Grid>
                 </Grid>
             </tkc:AdaptiveGridView.Header>
+            <tkc:AdaptiveGridView.Footer>
+                <Grid x:Name="LoadBar" x:Load="{x:Bind Items.IsLoading, Mode=OneWay}" Padding="16">
+                    <ProgressBar IsIndeterminate="True"/>
+                </Grid>
+            </tkc:AdaptiveGridView.Footer>
         </tkc:AdaptiveGridView>
     </Grid>
 </Page>
