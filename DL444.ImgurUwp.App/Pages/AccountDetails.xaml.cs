@@ -17,7 +17,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -144,8 +143,8 @@ namespace DL444.ImgurUwp.App.Pages
         private void PostList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
-            var gallery = new GalleryCollectionViewModel(Posts);
-            Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), (item, gallery));
+            var source = new AccountPostSource(ViewModel.Username, Posts, Posts.Source.Page);
+            Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), new GalleryItemDetailsNavigationParameter(item, source));
         }
 
         private void AccountContentButton_Click(object sender, RoutedEventArgs e)
@@ -164,6 +163,11 @@ namespace DL444.ImgurUwp.App.Pages
         public AccountPostSource(string account)
         {
             Account = account ?? throw new ArgumentNullException(nameof(account));
+        }
+        public AccountPostSource(string account, IEnumerable<GalleryItemViewModel> items, int startPage) : base(items)
+        {
+            Account = account ?? throw new ArgumentNullException(nameof(account));
+            Page = startPage;
         }
 
         protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)

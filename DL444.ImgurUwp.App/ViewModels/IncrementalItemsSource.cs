@@ -47,4 +47,14 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         protected abstract Task<IEnumerable<T>> GetItemsFromSourceAsync(CancellationToken cancellationToken);
     }
+
+    class IncrementalLoadingCollection<TSource, IType> : Microsoft.Toolkit.Uwp.IncrementalLoadingCollection<TSource, IType> where TSource : IIncrementalSource<IType>
+    {
+        public new TSource Source => base.Source;
+
+        public IncrementalLoadingCollection(int itemsPerPage = 20, Action onStartLoading = null, Action onEndLoading = null, Action<Exception> onError = null) 
+            : base(itemsPerPage, onStartLoading, onEndLoading, onError) { }
+        public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action onStartLoading = null, Action onEndLoading = null, Action<Exception> onError = null)
+            : base(source, itemsPerPage, onStartLoading, onEndLoading, onError) { }
+    }
 }

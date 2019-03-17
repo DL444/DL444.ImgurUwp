@@ -17,7 +17,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Threading;
-using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -138,7 +137,7 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), (e.ClickedItem as GalleryItemViewModel, new GalleryCollectionViewModel(GalleryFavorites)));
+            Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(e.ClickedItem as GalleryItemViewModel, new StaticIncrementalSource<GalleryItemViewModel>(GalleryFavorites)));
         }
 
         private void ItemGrid_ItemClick(object sender, ItemClickEventArgs e)
@@ -177,6 +176,15 @@ namespace DL444.ImgurUwp.App.Pages
             }
             Page++;
             return items;
+        }
+    }
+    public class StaticIncrementalSource<T> : IncrementalItemsSource<T>
+    {
+        public StaticIncrementalSource(IEnumerable<T> items) : base(items) { }
+
+        protected override async Task<IEnumerable<T>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            return null;
         }
     }
 }

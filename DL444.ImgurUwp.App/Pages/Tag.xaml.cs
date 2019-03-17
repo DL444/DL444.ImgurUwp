@@ -17,7 +17,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -34,8 +33,6 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         TagViewModel ViewModel { get; set; }
-
-        //ObservableCollection<GalleryItemViewModel> Items { get; } = new ObservableCollection<GalleryItemViewModel>();
 
         private IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel> _items;
         IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel> Items
@@ -74,8 +71,8 @@ namespace DL444.ImgurUwp.App.Pages
         private void TagList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
-            GalleryCollectionViewModel collection = new GalleryCollectionViewModel(Items);
-            Navigation.Navigate(typeof(GalleryItemDetails), (item, collection));
+            var source = new TagItemsSource(ViewModel.Name, Items, Items.Source.Page);
+            Navigation.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(item, source));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -31,7 +31,8 @@ __Private Beta 0.1.0__
 - [x] Share Target  
 - [x] Tags  
 - [x] My Posts  
-- [ ] User Account (in work)  
+- [ ] My Private Uploads (in work)  
+- [x] User Account  
 - [ ] Settings  
 - [ ] Adaptive Design  
 - [ ] Live Tiles  
@@ -39,6 +40,7 @@ __Private Beta 0.1.0__
 - [ ] Localization  
 
 __Public Beta 0.2.0__  
+- [ ] Anonymous Mode  
 - [ ] Chat + Notification  
 - [ ] Inking + Editor  
 - [ ] Memegen  
@@ -49,4 +51,3 @@ __Public Beta 0.2.0__
 - [ ] Keyboard shortcut  
 ## Known issues
 - It is said that Imgur might block some China users from completing OAuth authentication. Personal experiment also suggests so. If you are in China and are experiencing authentication issues, please try again from _outside_ of China.
-- The app only loads one page from the gallery. The reason is that a control used in project does not currently support incremental loading. An issue has been filed, and if it is still not supported at the time of launch, a workaround would be considered.

@@ -124,13 +124,17 @@ namespace DL444.ImgurUwp.App.Pages
             UI.NavigationViewItem item = args.InvokedItemContainer as UI.NavigationViewItem;
             if (item == null) { return; }
 
-            if (item.Tag as string == "viral")
+            switch(item.Tag as string)
             {
-                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
-            }
-            else if (item.Tag as string == "user")
-            {
-                ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
+                case "viral":
+                    ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
+                    break;
+                case "user":
+                    ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.User);
+                    break;
+                case "random":
+                    //ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.);
+                    break;
             }
         }
 

@@ -16,6 +16,8 @@ using DL444.ImgurUwp.Models;
 using DL444.ImgurUwp.App.ViewModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -31,7 +33,7 @@ namespace DL444.ImgurUwp.App.Pages
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
         ObservableCollection<TagViewModel> Tags { get; set; } = new ObservableCollection<TagViewModel>();
         Visibility TagBarVisibility { get; set; } = Visibility.Collapsed;
-        GalleryCollectionViewModel GalleryVm { get; set; }
+        IncrementalLoadingCollection<GalleryDetailsSidebarItemSource, GalleryItemViewModel> GalleryVm { get; set; }
         
         public GalleryItemDetails()
         {
@@ -43,10 +45,12 @@ namespace DL444.ImgurUwp.App.Pages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is ValueTuple<GalleryItemViewModel, GalleryCollectionViewModel> vms)
+            if(e.Parameter is GalleryItemDetailsNavigationParameter navParams)
             {
-                GalleryVm = vms.Item2;
-                await PrepareViewModels(vms.Item1);
+                GalleryDetailsSidebarItemSource itemSource = new GalleryDetailsSidebarItemSource(navParams.GalleryItems);
+                GalleryVm = new IncrementalLoadingCollection<GalleryDetailsSidebarItemSource, GalleryItemViewModel>(itemSource);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GalleryVm)));
+                await PrepareViewModels(navParams.Item);
             }
         }
 
@@ -112,7 +116,7 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedFrom(e);
             if(e.NavigationMode == NavigationMode.New)
             {
-                PageStackEntry backStackEntry = new PageStackEntry(typeof(GalleryItemDetails), (ViewModel, GalleryVm), new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
+                PageStackEntry backStackEntry = new PageStackEntry(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(ViewModel, GalleryVm.Source.Source), new Windows.UI.Xaml.Media.Animation.EntranceNavigationTransitionInfo());
                 Navigation.ContentFrame.BackStack.RemoveAt(Navigation.ContentFrame.BackStack.Count - 1);
                 Navigation.ContentFrame.BackStack.Add(backStackEntry);
             }
@@ -124,6 +128,33 @@ namespace DL444.ImgurUwp.App.Pages
 
             await PrepareViewModels(item);
         }
+    }
+
+    class GalleryDetailsSidebarItemSource : Microsoft.Toolkit.Collections.IIncrementalSource<GalleryItemViewModel>
+    {
+        public IncrementalItemsSource<GalleryItemViewModel> Source { get; }
+        public GalleryDetailsSidebarItemSource(IncrementalItemsSource<GalleryItemViewModel> source)
+        {
+            this.Source = source;
+        }
+
+        public async Task<IEnumerable<GalleryItemViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if(Source == null) { return null; }
+            return await Source.GetPagedItemsAsync(pageIndex, pageSize, cancellationToken);
+        }
+    }
+
+    class GalleryItemDetailsNavigationParameter
+    {
+        public GalleryItemDetailsNavigationParameter(GalleryItemViewModel item, IncrementalItemsSource<GalleryItemViewModel> galleryItems)
+        {
+            Item = item;
+            GalleryItems = galleryItems;
+        }
+
+        public GalleryItemViewModel Item { get; set; }
+        public IncrementalItemsSource<GalleryItemViewModel> GalleryItems { get; set; }
     }
 
     public class SubItemTemplateSelector : DataTemplateSelector
