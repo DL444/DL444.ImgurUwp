@@ -40,6 +40,8 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             SubItemTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
             SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
+            CommentReactionImageTemplateSelector.ImageTemplate = this.Resources["CommentImageTemplate"] as DataTemplate;
+            CommentReactionImageTemplateSelector.VideoTemplate = this.Resources["CommentVideoTemplate"] as DataTemplate;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -174,6 +176,22 @@ namespace DL444.ImgurUwp.App.Pages
             {
                 return base.SelectTemplateCore(item);
             }
+        }
+    }
+
+    public class CommentReactionImageTemplateSelector : DataTemplateSelector
+    {
+        public static DataTemplate ImageTemplate { get; set; }
+        public static DataTemplate VideoTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if (item is CommentReactionImage i)
+            {
+                if (i.IsVideo) { return VideoTemplate; }
+                return ImageTemplate;
+            }
+            return base.SelectTemplateCore(item);
         }
     }
 }

@@ -38,10 +38,9 @@ namespace DL444.ImgurUwp.App.ViewModels
             result.Add(new TextComponent(strBuilder.ToString()));
             return result;
         }
-        public static FrameworkElement GetRichContentBox(IEnumerable<RichTextComponent> components)
+        public static TextBlock GetRichContentBox(IEnumerable<RichTextComponent> components)
         {
             List<Inline> inlines = new List<Inline>();
-            List<UriComponent> images = null;
 
             foreach (var c in components)
             {
@@ -49,86 +48,26 @@ namespace DL444.ImgurUwp.App.ViewModels
                 {
                     inlines.Add(new Run() { Text = t.Text });
                 }
-                else if (c is UriComponent u)
+                else if (c is UriComponent u && u.Type == UriType.Normal)
                 {
-                    if (u.Type == UriType.Normal)
-                    {
-                        var link = new Hyperlink() { NavigateUri = new Uri(u.Text) };
-                        link.Inlines.Add(new Run() { Text = $"{u.Text} " });
-                        inlines.Add(link);
-                    }
-                    else
-                    {
-                        if (images == null) { images = new List<UriComponent>(); }
-                        images.Add(u);
-                    }
+                    var link = new Hyperlink() { NavigateUri = new Uri(u.Text) };
+                    //link.Inlines.Add(new Run() { Text = $"{u.Text} " });
+                    link.Inlines.Add(new Run() { Text = $"{u.Text}" });
+                    inlines.Add(link);
                 }
             }
 
-            if (images == null)
+            if(inlines.Count == 0) { return null; }
+
+            TextBlock text = new TextBlock();
+            foreach (var i in inlines)
             {
-                TextBlock text = new TextBlock();
-                foreach (var i in inlines)
-                {
-                    text.Inlines.Add(i);
-                }
-                text.TextWrapping = TextWrapping.Wrap;
-                return text;
+                text.Inlines.Add(i);
             }
-            else
-            {
-                InlineUIContainer container = new InlineUIContainer();
-                var scrollViewer = new ScrollViewer();
-                scrollViewer.VerticalScrollMode = ScrollMode.Disabled;
-                scrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                scrollViewer.HorizontalScrollMode = ScrollMode.Auto;
-
-                var stackPanel = new StackPanel();
-                stackPanel.Margin = new Thickness(0, 4, 0, 0);
-                stackPanel.Spacing = 4;
-                foreach (var i in images)
-                {
-                    if (i.Type == UriType.Image)
-                    {
-                        Windows.UI.Xaml.Controls.Image img = new Windows.UI.Xaml.Controls.Image();
-                        img.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
-                        img.Height = 150;
-                        img.Source = new BitmapImage(new Uri(i.Text));
-                        stackPanel.Children.Add(img);
-                    }
-                    else
-                    {
-                        MediaElement vid = new MediaElement();
-                        vid.Height = 150;
-                        vid.Stretch = Windows.UI.Xaml.Media.Stretch.Uniform;
-                        vid.IsMuted = true;
-                        vid.AreTransportControlsEnabled = false;
-                        vid.Source = new Uri(i.Text);
-                        stackPanel.Children.Add(vid);
-                    }
-                }
-                scrollViewer.Content = stackPanel;
-                container.Child = scrollViewer;
-
-                RichTextBlock rtb = new RichTextBlock();
-                if (inlines.Count > 0)
-                {
-                    Paragraph text = new Paragraph();
-                    foreach (var i in inlines)
-                    {
-                        text.Inlines.Add(i);
-                    }
-                    rtb.Blocks.Add(text);
-                }
-                Paragraph imgs = new Paragraph();
-                imgs.Inlines.Add(container);
-                rtb.Blocks.Add(imgs);
-                rtb.TextWrapping = TextWrapping.Wrap;
-                rtb.IsTextSelectionEnabled = false;
-                return rtb;
-            }
+            text.TextWrapping = TextWrapping.Wrap;
+            return text;
         }
-        public static FrameworkElement GetRichContentBox(string comment)
+        public static TextBlock GetRichContentBox(string comment)
         {
             if(comment == null) { return null; }
             return GetRichContentBox(ParseComment(comment));
@@ -181,9 +120,9 @@ namespace DL444.ImgurUwp.App.ViewModels
     {
         public override string ToString() => $"{Type}: {Text}";
         public UriType Type { get; set; }
-        public string ImageThumbnail { get; set; }
         public UriComponent(string uri)
         {
+            // TODO: ImageThumbnail
             Text = uri;
             var ext = uri.Substring(uri.LastIndexOf('.') + 1).ToLower();
             switch (ext)
@@ -197,13 +136,19 @@ namespace DL444.ImgurUwp.App.ViewModels
                     Type = UriType.Image;
                     Text = $"{Text.Remove(Text.LastIndexOf('.'))}r.{ext}";
                     break;
-                // For some reason MediaElement acts weirdly. So use GIF instead. Maybe good for memory as well?
                 case "mp4":
                 case "gifv":
                 case "gif":
-                    Type = UriType.Image;
-                    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif";
+                    Type = UriType.Video;
+                    Text = $"{Text.Remove(Text.LastIndexOf('.'))}_lq.mp4";
                     break;
+                //case "mp4":
+                //case "gifv":
+                //    break;
+                //case "gif":
+                //    Type = UriType.Image;
+                //    Text = $"{Text.Remove(Text.LastIndexOf('.') + 1)}gif";
+                //    break;
                 default:
                     Type = UriType.Normal;
                     break;

@@ -13,6 +13,7 @@
 
     <Page.Resources>
         <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
+        <local:CommentReactionImageTemplateSelector x:Key="CommentReactionImageTemplateSelector"/>
         <DataTemplate x:Key="ImageTemplate" x:DataType="vm:ImageViewModel">
             <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                 <Grid.ContextFlyout>
@@ -94,7 +95,10 @@
 
                 <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
-                <ContentControl Content="{x:Bind RichContentBox}" Grid.Row="1" Grid.ColumnSpan="3"/>
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+                    <ContentControl Content="{x:Bind RichContentBox}"/>
+                    <ContentControl ContentTemplateSelector="{StaticResource CommentReactionImageTemplateSelector}" Content="{x:Bind ReactionImage}"/>
+                </StackPanel>
                 <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
 
                 <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
@@ -132,6 +136,12 @@
                     <TextBlock Text="{x:Bind AccountUrl}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 </StackPanel>
             </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="CommentImageTemplate" x:DataType="vm:CommentReactionImage">
+            <Image Source="{x:Bind Url}" Height="150"/>
+        </DataTemplate>
+        <DataTemplate x:Key="CommentVideoTemplate" x:DataType="vm:CommentReactionImage">
+            <MediaElement Source="{x:Bind Url}" Height="150" IsMuted="True" IsLooping="True" AutoPlay="True" AreTransportControlsEnabled="False"/>
         </DataTemplate>
     </Page.Resources>
 

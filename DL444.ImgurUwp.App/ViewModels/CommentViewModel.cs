@@ -16,6 +16,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         Visibility _replyFieldVisibility = Visibility.Collapsed;
         bool _upvoted;
         bool _downvoted;
+        IEnumerable<RichTextComponent> components;
 
         public Comment Comment
         {
@@ -24,11 +25,21 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 _comment = value;
                 //RichContentBox = RichTextParser.GetRichContentBox(Content);
+
+                components = RichTextParser.ParseComment(Content);
+                foreach (var c in components)
+                {
+                    if(c is UriComponent uri && uri.Type != UriType.Normal)
+                    {
+                        ReactionImage = new CommentReactionImage(uri.Type == UriType.Video, uri.Text);
+                        break;
+                    }
+                }
+
                 foreach (var c in _comment.Children)
                 {
                     Children.Add(new CommentViewModel(c));
                 }
-
                 _upvoted = _comment.Vote == "up";
                 _downvoted = _comment.Vote == "down";
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
@@ -77,7 +88,6 @@ namespace DL444.ImgurUwp.App.ViewModels
         public DateTime DateTime => Convert.ToDateTime(Comment.DateTime);
         public int ParentId => Comment.ParentId;
         public bool Deleted => Comment.Deleted;
-        //public string Vote => Comment.Vote;
 
         public bool Upvoted
         {
@@ -129,9 +139,10 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+        public CommentReactionImage ReactionImage { get; private set; } = null;
 
         // Caching this will cause problem with virtualization of TreeView. 
-        public FrameworkElement RichContentBox => RichTextParser.GetRichContentBox(Content);
+        public FrameworkElement RichContentBox => RichTextParser.GetRichContentBox(components);
 
         public CommentViewModel()
         {
@@ -154,7 +165,6 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AsyncCommand<int> SendReplyCommand { get; private set; }
         public AsyncCommand<bool> UpvoteCommand { get; private set; }
         public AsyncCommand<bool> DownvoteCommand { get; private set; }
-
 
         void ShowReplyField()
         {
@@ -199,7 +209,6 @@ namespace DL444.ImgurUwp.App.ViewModels
             return result;
         }
 
-
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
         {
             var request = args.Request;
@@ -208,6 +217,18 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public class CommentReactionImage
+    {
+        public CommentReactionImage(bool isVideo, string url)
+        {
+            IsVideo = isVideo;
+            Url = url ?? throw new ArgumentNullException(nameof(url));
+        }
+
+        public bool IsVideo { get; set; }
+        public string Url { get; set; }
     }
 
     static class CommentViewModelFactory
