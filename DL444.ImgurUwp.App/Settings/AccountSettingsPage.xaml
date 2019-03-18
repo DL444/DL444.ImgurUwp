@@ -11,88 +11,81 @@
 
     <Page.Resources>
         <SolidColorBrush x:Key="AlertForegroundBrush" Color="Red"/>
+        <local:AlbumPrivacyConverter x:Key="AlbumPrivacyConverter"/>
+        <local:NullableBoolCoverter x:Key="NullableBoolCoverter"/>
     </Page.Resources>
 
-    <ScrollViewer>
-        <StackPanel Margin="16,0" Padding="0,16" Spacing="32">
-            <StackPanel>
-                <!-- Terms section. -->
-                <TextBlock Text="Terms of Services" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                <TextBlock Text="You haven't accepted Imgur's Terms of Services." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
+    <Grid>
+        <ScrollViewer>
+            <StackPanel Margin="16,0" Padding="0,16" Spacing="20">
+                <StackPanel x:Name="TermsSection" x:Load="{x:Bind ViewModel.GalleryTermsNotAccepted, Mode=OneWay}">
+                    <!-- Terms section. -->
+                    <TextBlock Text="Terms of Services" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                    <TextBlock Text="You haven't accepted Imgur's Terms of Services." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
 
-                <TextBlock Text="Please read and accept the terms to avoid problems with your account."/>
-                <HyperlinkButton Content="Imgur Terms of Services" NavigateUri="https://imgur.com/tos"/>
+                    <TextBlock Text="Please read and accept the terms to avoid problems with your account."/>
+                    <HyperlinkButton Content="Imgur Terms of Services" NavigateUri="https://imgur.com/tos"/>
 
-                <CheckBox x:Name="AgreeCheckBox" Content="I agree to Imgur's Terms of Services and other applicable rules." Margin="0,8,0,4"/>
-                <Button Content="Accept terms"/>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock Text="Verify email" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                <TextBlock Text="Your email wasn't verified." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
+                    <CheckBox x:Name="AgreeCheckBox" Content="I agree to Imgur's Terms of Services and other applicable rules." Margin="0,8,0,4"/>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button x:Name="AcceptTermsBtn" Content="Accept terms" IsEnabled="{x:Bind AgreeCheckBox.IsChecked, Converter={StaticResource NullableBoolCoverter}, Mode=OneWay}" Click="AcceptTerms_Click"/>
+                        <ProgressRing x:Name="TermAcceptProgress" VerticalAlignment="Center" IsActive="False"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel x:Name="EmailSection" x:Load="{x:Bind ViewModel.EmailNotVerified, Mode=OneWay}">
+                    <TextBlock Text="Verify email" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                    <TextBlock Text="Your email wasn't verified." Foreground="{ThemeResource AlertForegroundBrush}" Margin="0,0,0,8"/>
 
-                <TextBlock Text="Please verify your email to avoid problems with your account."/>
-                <Button Content="Send verification email" Margin="0,20,0,0"/>
-            </StackPanel>
-
-            <!-- Move this to general page -->
-            <!--<StackPanel>
-                <TextBlock Text="Avatar + Cover" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
-                <TextBlock Text="Make Imgur your home with an avatar and cover you like."/>
-            </StackPanel>-->
-            
-            <!--<StackPanel>
-                <TextBlock Text="Username" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                <TextBlock Text="Make Imgur your home with an avatar and cover you like."/>
-            </StackPanel>-->
-            <StackPanel>
-                <TextBlock Text="Privacy" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
-                <ToggleSwitch>
-                    <ToggleSwitch.Header>
-                        <StackPanel>
-                            <TextBlock Text="Public uploads" Margin="0,0,0,4"/>
-                            <TextBlock Text="Make my uploads publicly available by default" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        </StackPanel>
-                    </ToggleSwitch.Header>
-                </ToggleSwitch>
-                <TextBlock Text="Default album privacy level" Margin="0,8,0,0"/>
-                <TextBlock Text="When I upload an album, set its privacy level to" Margin="0,4,0,8" 
+                    <TextBlock Text="Please verify your email to avoid problems with your account."/>
+                    <Button x:Name="SendEmailBtn" Content="Send verification email" Margin="0,20,0,4" Click="VerifyEmail_Click"/>
+                    <TextBlock x:Name="EmailSentText" Visibility="Collapsed" Text="Email sent! Please check your inbox and spam folder." Style="{ThemeResource CaptionTextBlockStyle}"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Privacy" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,8"/>
+                    <ToggleSwitch x:Name="PublicImgSwitch" IsOn="{x:Bind ViewModel.PublicImagesByDefault, Mode=OneWay}" Toggled="PublicByDefault_Toggled">
+                        <ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Public uploads" Margin="0,0,0,4"/>
+                                <TextBlock Text="Make my uploads publicly available by default" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            </StackPanel>
+                        </ToggleSwitch.Header>
+                    </ToggleSwitch>
+                    <TextBlock Text="Default album privacy level" Margin="0,8,0,0"/>
+                    <TextBlock Text="When I upload an album, set its privacy level to" Margin="0,4,0,8" 
                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Style="{ThemeResource CaptionTextBlockStyle}" />
-                <ComboBox MinWidth="200">
-                    <ComboBoxItem Content="Hidden" Tag="1"/>
-                    <ComboBoxItem Content="Secret" Tag="2"/>
-                    <ComboBoxItem Content="Public" Tag="0"/>
-                </ComboBox>
+                    <ComboBox x:Name="AlbumPrivacyBox" MinWidth="200" SelectionChanged="AlbumPrivacyLevel_SelectionChanged" SelectedIndex="{x:Bind ViewModel.AlbumPrivacy, Mode=OneWay, Converter={StaticResource AlbumPrivacyConverter}}">
+                        <ComboBoxItem Content="Hidden" Tag="Hidden"/>
+                        <ComboBoxItem Content="Secret" Tag="Secret"/>
+                        <ComboBoxItem Content="Public" Tag="Public"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Notification" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                    <ToggleSwitch x:Name="MessageSwitch" IsOn="{x:Bind ViewModel.MessagingEnabled, Mode=OneWay}" Toggled="Messaging_Toggled">
+                        <ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Messaging" Margin="0,0,0,4"/>
+                                <TextBlock Text="Allow other users to send me messages" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            </StackPanel>
+                        </ToggleSwitch.Header>
+                    </ToggleSwitch>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Content" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
+                    <ToggleSwitch x:Name="MatureSwitch" IsOn="{x:Bind ViewModel.ShowMature, Mode=OneWay}" Toggled="ShowMature_Toggled">
+                        <ToggleSwitch.Header>
+                            <StackPanel>
+                                <TextBlock Text="Mature content" Margin="0,0,0,4"/>
+                                <TextBlock Text="Show mature posts and comments in front page" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                            </StackPanel>
+                        </ToggleSwitch.Header>
+                    </ToggleSwitch>
+                    <TextBlock Text="You may still see mature content in user profiles." Visibility="{x:Bind MatureSwitch.IsOn, Mode=OneWay,Converter={StaticResource InvertedBoolVisibilityConverter}}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </StackPanel>
             </StackPanel>
-            <StackPanel>
-                <TextBlock Text="Notification" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                <ToggleSwitch>
-                    <ToggleSwitch.Header>
-                        <StackPanel>
-                            <TextBlock Text="Messaging" Margin="0,0,0,4"/>
-                            <TextBlock Text="Allow other users to send me messages" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        </StackPanel>
-                    </ToggleSwitch.Header>
-                </ToggleSwitch>
-                <ToggleSwitch Margin="0,8,0,0">
-                    <ToggleSwitch.Header>
-                        <StackPanel>
-                            <TextBlock Text="Reply notification" Margin="0,0,0,4"/>
-                            <TextBlock Text="Notify me when others metion me in comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        </StackPanel>
-                    </ToggleSwitch.Header>
-                </ToggleSwitch>
-            </StackPanel>
-            <StackPanel>
-                <TextBlock Text="Content" Style="{ThemeResource SubtitleTextBlockStyle}" Margin="0,0,0,4"/>
-                <ToggleSwitch>
-                    <ToggleSwitch.Header>
-                        <StackPanel>
-                            <TextBlock Text="Mature content" Margin="0,0,0,4"/>
-                            <TextBlock Text="Show mature posts and comments" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        </StackPanel>
-                    </ToggleSwitch.Header>
-                </ToggleSwitch>
-            </StackPanel>
-        </StackPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+        <Grid x:Name="LoadingMask" x:Load="{x:Bind PageLoading, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <ProgressRing IsActive="True" Width="48" Height="48"/>
+        </Grid>
+    </Grid>
 </Page>

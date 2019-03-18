@@ -137,7 +137,7 @@ namespace DL444.ImgurUwp.ApiClient
 
     class AccountSettingsParams
     {
-        public AccountSettingsParams(bool? publicImagesByDefault, bool? messagingEnabled, AlbumPrivacy? albumDefaultPrivacy, 
+        public AccountSettingsParams(bool? publicImagesByDefault, bool? messagingEnabled, Models.AlbumPrivacyOptions? albumDefaultPrivacy, 
             string username, bool? showMature, bool? newsletterSubscribe)
         {
             PublicImagesByDefault = publicImagesByDefault;
@@ -149,28 +149,14 @@ namespace DL444.ImgurUwp.ApiClient
         }
 
         public AccountSettingsParams(Models.AccountSettings settings)
-            : this(settings.PublicImagesByDefault, settings.MessagingEnabled, null, settings.Username, settings.ShowMature, settings.NewsletterSubscribed)
-        {
-            switch(settings.AlbumPrivacy)
-            {
-                case Models.AlbumPrivacyOptions.Public:
-                    AlbumDefaultPrivacy = AlbumPrivacy.Public;
-                    break;
-                case Models.AlbumPrivacyOptions.Hidden:
-                    AlbumDefaultPrivacy = AlbumPrivacy.Hidden;
-                    break;
-                case Models.AlbumPrivacyOptions.Secret:
-                    AlbumDefaultPrivacy = AlbumPrivacy.Secret;
-                    break;
-            }
-        }
+            : this(settings.PublicImagesByDefault, settings.MessagingEnabled, settings.AlbumPrivacy, settings.Username, settings.ShowMature, settings.NewsletterSubscribed) { }
 
         [JsonProperty(PropertyName = "public_images", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? PublicImagesByDefault { get; set; }
         [JsonProperty(PropertyName = "messaging_enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? MessagingEnabled { get; set; }
         [JsonProperty(PropertyName = "album_privacy", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public AlbumPrivacy? AlbumDefaultPrivacy { get; set; }
+        public Models.AlbumPrivacyOptions? AlbumDefaultPrivacy { get; set; }
         [JsonProperty(PropertyName = "username", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Username { get; set; }
         [JsonProperty(PropertyName = "show_mature", DefaultValueHandling = DefaultValueHandling.Ignore)]

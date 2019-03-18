@@ -332,8 +332,8 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
-        public async Task<bool> SetAccountSettingsAsync(string username, bool? publicImagesByDefault = null, bool? messagingEnabled = null, 
-            AlbumPrivacy? albumDefaultPrivacy = null, string newUsername = null, bool? showMature = null, bool? newsletterSubscribe = null)
+        public async Task<bool> SetAccountSettingsAsync(string username, bool? publicImagesByDefault = null, bool? messagingEnabled = null,
+            AlbumPrivacyOptions? albumDefaultPrivacy = null, string newUsername = null, bool? showMature = null, bool? newsletterSubscribe = null)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/account/{username}/settings");

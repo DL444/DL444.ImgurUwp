@@ -981,7 +981,8 @@
                 </Setter>
             </Style>
 
-            <cc:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <vm:BoolVisibilityConverter x:Key="BoolVisibilityConverter"/>
+            <vm:InvertedBoolVisibilityConverter x:Key="InvertedBoolVisibilityConverter"/>
             <vm:FavoriteIconConverter x:Key="FavoriteIconConverter"/>
             <vm:FriendlyTimeStringConverter x:Key="FriendlyTimeStringConverter"/>
             <vm:InvertBoolConverter x:Key="InvertBoolConverter"/>

@@ -8,6 +8,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using DL444.ImgurUwp.Models;
 using Windows.UI;
+using Windows.UI.Xaml;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -222,6 +223,21 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
     }
 
+    public class BoolVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if ((bool)value == true) { return Visibility.Visible; }
+            return Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if ((Visibility)value == Visibility.Visible) { return true; }
+            return false;
+        }
+    }
+
     public class InvertBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
@@ -232,6 +248,21 @@ namespace DL444.ImgurUwp.App.ViewModels
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return !(bool)value;
+        }
+    }
+
+    public class InvertedBoolVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if ((bool)value == true) { return Visibility.Collapsed; }
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            if ((Visibility)value == Visibility.Visible) { return false; }
+            return true;
         }
     }
 
