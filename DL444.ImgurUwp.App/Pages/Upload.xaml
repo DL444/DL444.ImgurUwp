@@ -65,8 +65,15 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Content="Post to gallery" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}"/>
+                <Button x:Name="UploadBtn" Content="Upload" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Click="UploadBtn_Click"/>
             </Grid>
+        </Grid>
+
+        <Grid x:Name="UploadProgressMask" x:Load="{x:Bind Uploading, Mode=OneWay}" Grid.RowSpan="2" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+            <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Uploading..." HorizontalAlignment="Center"/>
+                <ProgressBar Value="{x:Bind Progress, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

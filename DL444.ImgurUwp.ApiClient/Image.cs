@@ -55,6 +55,7 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ArgumentException("The specified image is larger than 10MB.");
             }
             byte[] imageBytes;
+            image.Position = 0;
             using (MemoryStream str = new MemoryStream(image.Length > int.MaxValue ? int.MaxValue : (int)image.Length))
             {
                 await image.CopyToAsync(str);

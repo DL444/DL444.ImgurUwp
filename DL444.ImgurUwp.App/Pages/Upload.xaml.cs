@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
+using System.ComponentModel;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,7 +24,7 @@ namespace DL444.ImgurUwp.App.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Upload : Page
+    public sealed partial class Upload : Page, INotifyPropertyChanged
     {
         public Upload()
         {
@@ -31,8 +32,28 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         ShareOperation shareOp = null;
+        bool _uploading;
+        double _progress;
 
         UploadViewModel ViewModel { get; set; } = new UploadViewModel();
+        bool Uploading
+        {
+            get => _uploading;
+            set
+            {
+                _uploading = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Uploading)));
+            }
+        }
+        double Progress
+        {
+            get => _progress;
+            set
+            {
+                _progress = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
+            }
+        }
 
         private void ImageList_DragOver(object sender, DragEventArgs e)
         {
@@ -121,5 +142,25 @@ namespace DL444.ImgurUwp.App.Pages
                 // See https://docs.microsoft.com/en-us/windows/uwp/app-to-app/receive-data
             }
         }
+
+        private async void UploadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Progress = 0;
+            Uploading = true;
+            var (albumId, _) = await ApiClient.Client.CreateAlbumAsync(title: ViewModel.Title);
+            double progressStep = 0;
+            if(ViewModel.Images.Count > 0)
+            {
+                progressStep = 100.0 / ViewModel.Images.Count;
+            }
+            foreach(var i in ViewModel.Images)
+            {
+                i.UploadedImage = await ApiClient.Client.UploadImageAsync(i.ImageStream, albumId, description: i.Description);
+                Progress += progressStep;
+            }
+            Uploading = false;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

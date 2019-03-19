@@ -106,6 +106,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Description)));
             }
         }
+        public Models.Image UploadedImage { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
