@@ -10,7 +10,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <SolidColorBrush x:Key="AlertForegroundBrush" Color="Red"/>
+        <SolidColorBrush x:Key="AlertForegroundBrush" Color="{ThemeResource AdaptiveRedColor}"/>
         <local:AlbumPrivacyConverter x:Key="AlbumPrivacyConverter"/>
         <local:NullableBoolCoverter x:Key="NullableBoolCoverter"/>
     </Page.Resources>

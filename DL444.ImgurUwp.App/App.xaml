@@ -992,13 +992,25 @@
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Dark">
                     <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorDark1}"/>
+                    <SolidColorBrush x:Key="AdaptiveRedColorBrush" Color="{ThemeResource AdaptiveRedColor}"/>
+                    <Color x:Key="AdaptiveRedColor">#EF4136</Color>
+                    <SolidColorBrush x:Key="AdaptiveGreenColorBrush" Color="{ThemeResource AdaptiveGreenColor}"/>
+                    <Color x:Key="AdaptiveGreenColor">#39B54A</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
                     <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAccentColorLight1}"/>
+                    <SolidColorBrush x:Key="AdaptiveRedColorBrush" Color="{ThemeResource AdaptiveRedColor}"/>
+                    <Color x:Key="AdaptiveRedColor">#EF4136</Color>
+                    <SolidColorBrush x:Key="AdaptiveGreenColorBrush" Color="{ThemeResource AdaptiveGreenColor}"/>
+                    <Color x:Key="AdaptiveGreenColor">#459B53</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <SolidColorBrush x:Key="HeroImagePlaceholderAccentColorBrush" Color="{ThemeResource SystemAltHighColor}"/>
                     <!-- Not sure the value is correct. -->
+                    <SolidColorBrush x:Key="AdaptiveRedColorBrush" Color="{ThemeResource AdaptiveRedColor}"/>
+                    <Color x:Key="AdaptiveRedColor">#FF0000</Color>
+                    <SolidColorBrush x:Key="AdaptiveGreenColorBrush" Color="{ThemeResource AdaptiveGreenColor}"/>
+                    <Color x:Key="AdaptiveGreenColor">#E00FF00</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 

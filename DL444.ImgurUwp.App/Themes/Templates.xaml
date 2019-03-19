@@ -56,8 +56,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" Grid.ColumnSpan="4" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="1" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen" Command="{x:Bind UpvoteCommand}"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed" Command="{x:Bind DownvoteCommand}">
+                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Upvoted, Mode=TwoWay}" Icon="Up" Grid.Row="1" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}" Command="{x:Bind UpvoteCommand}"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted, Mode=TwoWay}" Grid.Row="1" Grid.Column="1" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}" Command="{x:Bind DownvoteCommand}">
                     <cc:SymbolTextToggleButton.Icon>
                         <FontIcon Glyph="&#xE1FD;"/>
                     </cc:SymbolTextToggleButton.Icon>
@@ -93,6 +93,28 @@
     </DataTemplate>
     <DataTemplate x:Key="AccountAlbumGridTemplate" x:DataType="vm:AccountAlbumViewModel">
         <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+            <Grid.ContextFlyout>
+                <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                    <ui:CommandBarFlyout.PrimaryCommands>
+                        <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite}">
+                            <AppBarToggleButton.Icon>
+                                <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
+                            </AppBarToggleButton.Icon>
+                        </AppBarToggleButton>
+                        <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share"/>
+                        <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL"/>
+                        <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download"/>
+                    </ui:CommandBarFlyout.PrimaryCommands>
+                    <ui:CommandBarFlyout.SecondaryCommands>
+                        <AppBarButton Label="Open in browser" Icon="Globe"/>
+                        <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                            <AppBarButton.Resources>
+                                <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                            </AppBarButton.Resources>
+                        </AppBarButton>
+                    </ui:CommandBarFlyout.SecondaryCommands>
+                </ui:CommandBarFlyout>
+            </Grid.ContextFlyout>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>

@@ -60,8 +60,9 @@
                 </Grid.RowDefinitions>
                 <!-- Implement a custom light-weight transport control. -->
                 <Viewbox>
-                    <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
+                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
                 </Viewbox>
+                <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
                 <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
                 <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
             </Grid>
@@ -104,9 +105,9 @@
                 <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
                                      HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}"/>
                 <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"/>
                 <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}">
                     <cc:SymbolTextToggleButton.Icon>
                         <FontIcon Glyph="&#xE1FD;"/>
                     </cc:SymbolTextToggleButton.Icon>
@@ -265,9 +266,9 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Upvoted, Mode=OneWay}" Grid.Row="1" HorizontalAlignment="Left" HoverForeground="LawnGreen" PressedForeground="YellowGreen" CheckedForeground="Green" CheckedHoverForeground="YellowGreen"/>
-                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Downvoted, Mode=OneWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="Red" PressedForeground="DarkRed" CheckedForeground="Red" CheckedHoverForeground="DarkRed">
+
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" Command="{x:Bind ViewModel.UpvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Upvoted, Mode=OneWay}" Grid.Row="1" HorizontalAlignment="Left" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind ViewModel.Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Command="{x:Bind ViewModel.DownvoteCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Downvoted, Mode=OneWay}" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}">
                         <cc:SymbolTextToggleButton.Icon>
                             <FontIcon Glyph="&#xE1FD;"/>
                         </cc:SymbolTextToggleButton.Icon>
