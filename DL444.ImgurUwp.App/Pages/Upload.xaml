@@ -6,20 +6,69 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
+        <DataTemplate x:Key="ExistingImageDataTemplate" x:DataType="vm:ImageViewModel">
+            <Grid Padding="0,0,0,8" Margin="0,8" MaxWidth="{ThemeResource ImageListViewMaxWidth}" RowSpacing="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Viewbox>
+                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
+                </Viewbox>
+                <Image Source="{x:Bind HugeThumbnail}" Stretch="UniformToFill"/>
+                <Grid Grid.Row="1" Margin="8,0,16,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
+                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Tag="{x:Bind}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate x:Key="ExistingVideoDataTemplate" x:DataType="vm:ImageViewModel">
+            <Grid Padding="0,0,0,8" Margin="0,8" MaxWidth="{ThemeResource ImageListViewMaxWidth}" RowSpacing="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Viewbox>
+                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
+                </Viewbox>
+                <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
+                <Grid Grid.Row="1" Margin="8,0,16,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
+                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Tag="{x:Bind}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="UploaderImageDataTemplate" x:DataType="vm:UploadImageViewModel">
             <Grid Padding="0,0,0,8" Margin="0,8" MaxWidth="{ThemeResource ImageListViewMaxWidth}" RowSpacing="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Image Source="{x:Bind Image}"/>
-                <TextBox Grid.Row="1" Margin="8,0" Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
+                <Image Source="{x:Bind PreviewImage}"/>
+                <Grid Grid.Row="1" Margin="8,0,16,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{x:Bind PreviewDescription, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
+                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
+                </Grid>
             </Grid>
         </DataTemplate>
+        <local:AlbumEditorTemplateSelector x:Key="UploaderTemplateSelector"/>
     </Page.Resources>
 
     <Grid Background="Transparent" AllowDrop="True" DragOver="ImageList_DragOver" Drop="ImageList_Drop">
@@ -28,8 +77,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplate="{ThemeResource UploaderImageDataTemplate}" 
-                  SelectionMode="None" IsItemClickEnabled="False" CanReorderItems="True">
+        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplateSelector="{StaticResource UploaderTemplateSelector}"
+                  SelectionMode="None" IsItemClickEnabled="False">
             <ListView.Header>
                 <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}">
                     <TextBox PlaceholderText="Give your post a title..." Text="{x:Bind ViewModel.Title, Mode=TwoWay}" Margin="-8,0" Style="{ThemeResource ClickEditTextBoxStyle}" FontSize="20" TextWrapping="Wrap"/>
@@ -37,18 +86,11 @@
             </ListView.Header>
             <ListView.Footer>
                 <Grid Padding="0,12" MaxWidth="{ThemeResource ImageListViewMaxWidth}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/> <!-- New item -->
-                        <RowDefinition Height="Auto"/> <!-- Tags and description -->
-                    </Grid.RowDefinitions>
-
                     <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,0,0,16">
                         <SymbolIcon Symbol="Add" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <TextBlock Text="Drag image here or" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <Button Content="Select file" Command="{x:Bind ViewModel.PickImageCommand}" HorizontalAlignment="Center"/>
                     </StackPanel>
-
-                    <Rectangle Fill="Green" Grid.Row="1" Height="36"/>
                 </Grid>
             </ListView.Footer>
             <ListView.ItemContainerStyle>
@@ -59,20 +101,24 @@
         </ListView>
 
         <Grid Grid.Row="1" Background="{ThemeResource SystemControlAcrylicWindowBrush}">
-            <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" ColumnSpacing="8" Padding="12,12">
+            <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" Padding="12,12">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="UploadBtn" Content="Upload" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Click="UploadBtn_Click"/>
+                <Button x:Name="UploadBtn" x:Load="{x:Bind ViewModel.CanUpload, Mode=OneWay}" Content="Upload" Command="{x:Bind ViewModel.UploadImagesCommand}" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
+                <Button x:Name="SaveBtn" x:Load="{x:Bind ViewModel.CanSave, Mode=OneWay}" Content="Save" Command="{x:Bind ViewModel.UploadImagesCommand}" Grid.Column="2" Margin="4,0"/>
+                <Button x:Name="PostGalleryBtn" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" Content="Post to gallery" Grid.Column="3" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
             </Grid>
         </Grid>
 
-        <Grid x:Name="UploadProgressMask" x:Load="{x:Bind Uploading, Mode=OneWay}" Grid.RowSpan="2" Background="{ThemeResource SystemControlAcrylicElementBrush}">
+        <Grid x:Name="UploadProgressMask" x:Load="{x:Bind ViewModel.Uploading, Mode=OneWay}" Grid.RowSpan="2" Background="{ThemeResource SystemControlAcrylicElementBrush}">
             <StackPanel Spacing="8" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <TextBlock Text="Uploading..." HorizontalAlignment="Center"/>
-                <ProgressBar Value="{x:Bind Progress, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200"/>
+                <ProgressBar Value="{x:Bind ViewModel.Progress, Mode=OneWay}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200"/>
             </StackPanel>
         </Grid>
     </Grid>

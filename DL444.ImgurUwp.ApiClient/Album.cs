@@ -155,18 +155,35 @@ namespace DL444.ImgurUwp.ApiClient
 
         public async Task<bool> EditAlbumImageAsync(string id, IEnumerable<string> imageIds, AlbumEditMode editMode = AlbumEditMode.Add)
         {
-            if (editMode == AlbumEditMode.Remove) { throw new NotSupportedException("Removing images is not supported. Remote API does not work as expected."); }
             if (id == null) { throw new ArgumentNullException(nameof(id)); }
             if (imageIds == null) { throw new ArgumentNullException(nameof(imageIds)); }
 
-            string url = $"/3/album/{id}";
-            if(editMode == AlbumEditMode.Add) { url += "/add"; }
-            else if(editMode == AlbumEditMode.Remove) { url += "/remove_images"; }
+            string url;
+            if (editMode == AlbumEditMode.Remove)
+            {
+                // See https://stackoverflow.com/questions/23859696/imgur-api-wont-remove-image-from-album
+                if (!imageIds.Any()) { return true; }
+                StringBuilder urlBuilder = new StringBuilder($"/3/album/{id}/remove_images?");
+                foreach(var i in imageIds)
+                {
+                    urlBuilder.Append($"&ids[]={i}");
+                }
+                url = urlBuilder.ToString();
+            }
+            else
+            {
+                url = $"/3/album/{id}";
+            }
+
+            if (editMode == AlbumEditMode.Add) { url += "/add"; }
 
             HttpRequestMessage msg = new HttpRequestMessage(editMode == AlbumEditMode.Remove ? HttpMethod.Delete : HttpMethod.Post, url);
-            string contentStr = $"{{\"ids\":{JsonConvert.SerializeObject(imageIds)}}}";
-            msg.Content = new StringContent(contentStr);
-            msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            if(editMode != AlbumEditMode.Remove)
+            {
+                string contentStr = $"{{\"ids\":{JsonConvert.SerializeObject(imageIds)}}}";
+                msg.Content = new StringContent(contentStr);
+                msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            }
 
             var response = await client.SendAsync(msg);
 

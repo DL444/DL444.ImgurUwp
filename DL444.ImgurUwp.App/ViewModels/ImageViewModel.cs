@@ -51,7 +51,15 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public string Id => Image.Id;
         public string Title => Image.Title;
-        public string Description => Image.Description;
+        public string Description
+        {
+            get => Image.Description;
+            set
+            {
+                Image.Description = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
+            }
+        }
         public DateTime DateTime => Convert.ToDateTime(Image.DateTime);
         public string Type => Image.Type;
         public bool IsAnimated => Image.Animated;
@@ -72,6 +80,8 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool Nsfw => Image.Nsfw == true;
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;
+
+        public virtual bool Uploaded => true;
 
         public string Thumbnail { get; private set; }
         public string HugeThumbnail { get; private set; }

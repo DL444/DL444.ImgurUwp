@@ -23,7 +23,15 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public string Id => Album.Id;
-        public string Title => Album.Title;
+        public string Title
+        {
+            get => Album.Title;
+            set
+            {
+                Album.Title = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+            }
+        }
         public string Description => Album.Description;
         public DateTime DateTime => Convert.ToDateTime(Album.DateTime);
         public string Cover => Album.Cover;

@@ -24,36 +24,19 @@ namespace DL444.ImgurUwp.App.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Upload : Page, INotifyPropertyChanged
+    public sealed partial class Upload : Page
     {
         public Upload()
         {
             this.InitializeComponent();
+            AlbumEditorTemplateSelector.ImageTemplate = this.Resources["ExistingImageDataTemplate"] as DataTemplate;
+            AlbumEditorTemplateSelector.VideoTemplate = this.Resources["ExistingVideoDataTemplate"] as DataTemplate;
+            AlbumEditorTemplateSelector.UploadTemplate = this.Resources["UploaderImageDataTemplate"] as DataTemplate;
         }
 
         ShareOperation shareOp = null;
-        bool _uploading;
-        double _progress;
 
         UploadViewModel ViewModel { get; set; } = new UploadViewModel();
-        bool Uploading
-        {
-            get => _uploading;
-            set
-            {
-                _uploading = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Uploading)));
-            }
-        }
-        double Progress
-        {
-            get => _progress;
-            set
-            {
-                _progress = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
-            }
-        }
 
         private void ImageList_DragOver(object sender, DragEventArgs e)
         {
@@ -141,26 +124,53 @@ namespace DL444.ImgurUwp.App.Pages
                 // After uploading, you will have to call methods to notify completion.
                 // See https://docs.microsoft.com/en-us/windows/uwp/app-to-app/receive-data
             }
+            else if(e.Parameter is AccountAlbumViewModel vm)
+            {
+
+            }
+            else if(e.Parameter is string albumId)
+            {
+
+            }
         }
 
-        private async void UploadBtn_Click(object sender, RoutedEventArgs e)
+        private async void RemoveImageBtn_Click(object sender, RoutedEventArgs e)
         {
-            Progress = 0;
-            Uploading = true;
-            var (albumId, _) = await ApiClient.Client.CreateAlbumAsync(title: ViewModel.Title);
-            double progressStep = 0;
-            if(ViewModel.Images.Count > 0)
+            ImageViewModel model = (sender as FrameworkElement).Tag as ImageViewModel;
+            if(model.Uploaded)
             {
-                progressStep = 100.0 / ViewModel.Images.Count;
+                var result = await ApiClient.Client.EditAlbumImageAsync(ViewModel.AlbumId, new[] { model.Id }, ImgurUwp.ApiClient.AlbumEditMode.Remove);
+                if(result == false)
+                {
+                    // TODO: Notify user.
+                    return;
+                }
             }
-            foreach(var i in ViewModel.Images)
-            {
-                i.UploadedImage = await ApiClient.Client.UploadImageAsync(i.ImageStream, albumId, description: i.Description);
-                Progress += progressStep;
-            }
-            Uploading = false;
+            ViewModel.Images.Remove(model);
         }
+    }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    class AlbumEditorTemplateSelector : DataTemplateSelector
+    {
+        public static DataTemplate ImageTemplate { get; set; }
+        public static DataTemplate VideoTemplate { get; set; }
+        public static DataTemplate UploadTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            if (item is ImageViewModel image)
+            {
+                if (!image.Uploaded) { return UploadTemplate; }
+                else
+                {
+                    if (image.IsAnimated) { return VideoTemplate; }
+                    else { return ImageTemplate; }
+                }
+            }
+            else
+            {
+                return base.SelectTemplateCore(item);
+            }
+        }
     }
 }
