@@ -156,6 +156,25 @@ namespace DL444.ImgurUwp.App.ViewModels
             UploadImagesCommand = new AsyncCommand<string>(UploadImages);
         }
 
+        public static async Task<UploadViewModel> CreateFromAccountAlbum(AccountAlbumViewModel accountVm)
+        {
+            return await CreateFromAlbumId(accountVm.Id);
+        }
+        public static async Task<UploadViewModel> CreateFromAlbumId(string accountId)
+        {
+            var result = new UploadViewModel();
+            var album = await ApiClient.Client.GetAlbumAsync(accountId);
+            result.AlbumCreated = true;
+            result.AlbumId = album.Id;
+            result.originalTitle = album.Title;
+            result.Title = album.Title;
+            foreach (var i in album.Images)
+            {
+                result.Images.Add(new ImageViewModel(i));
+            }
+            return result;
+        }
+
         Windows.Storage.Pickers.FileOpenPicker GetFilePicker()
         {
             Windows.Storage.Pickers.FileOpenPicker picker = new Windows.Storage.Pickers.FileOpenPicker();

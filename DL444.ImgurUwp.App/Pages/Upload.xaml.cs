@@ -24,7 +24,7 @@ namespace DL444.ImgurUwp.App.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class Upload : Page
+    public sealed partial class Upload : Page, INotifyPropertyChanged
     {
         public Upload()
         {
@@ -126,15 +126,18 @@ namespace DL444.ImgurUwp.App.Pages
             }
             else if(e.Parameter is AccountAlbumViewModel albumVm)
             {
-
+                ViewModel = await UploadViewModel.CreateFromAccountAlbum(albumVm);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
             }
             else if(e.Parameter is UploadViewModel upVm)
             {
                 ViewModel = upVm;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
             }
             else if(e.Parameter is string albumId)
             {
-
+                ViewModel = await UploadViewModel.CreateFromAlbumId(albumId);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
             }
         }
 
@@ -147,6 +150,8 @@ namespace DL444.ImgurUwp.App.Pages
             }
             ViewModel.Images.Remove(model);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     class AlbumEditorTemplateSelector : DataTemplateSelector

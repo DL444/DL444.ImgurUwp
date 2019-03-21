@@ -142,7 +142,10 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void ItemGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-
+            if(e.ClickedItem is AccountAlbumViewModel accountAlbum)
+            {
+                Navigation.ContentFrame.Navigate(typeof(Pages.Upload), accountAlbum);
+            }
         }
     }
 

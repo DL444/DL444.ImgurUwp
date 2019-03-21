@@ -27,7 +27,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
-                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Tag="{x:Bind}"/>
+                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -47,7 +47,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
-                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Tag="{x:Bind}"/>
+                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -77,7 +77,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplateSelector="{StaticResource UploaderTemplateSelector}"
+        <ListView Padding="12,12" VerticalAlignment="Top" ItemsSource="{x:Bind ViewModel.Images, Mode=OneWay}" ItemTemplateSelector="{StaticResource UploaderTemplateSelector}"
                   SelectionMode="None" IsItemClickEnabled="False">
             <ListView.Header>
                 <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}">
@@ -89,7 +89,7 @@
                     <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,0,0,16">
                         <SymbolIcon Symbol="Add" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <TextBlock Text="Drag image here or" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        <Button Content="Select file" Command="{x:Bind ViewModel.PickImageCommand}" HorizontalAlignment="Center"/>
+                        <Button Content="Select file" Command="{x:Bind ViewModel.PickImageCommand, Mode=OneWay}" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </ListView.Footer>
@@ -109,8 +109,8 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button x:Name="UploadBtn" x:Load="{x:Bind ViewModel.CanUpload, Mode=OneWay}" Content="Upload" Command="{x:Bind ViewModel.UploadImagesCommand}" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
-                <Button x:Name="SaveBtn" x:Load="{x:Bind ViewModel.CanSave, Mode=OneWay}" Content="Save" Command="{x:Bind ViewModel.UploadImagesCommand}" Grid.Column="2" Margin="4,0"/>
+                <Button x:Name="UploadBtn" x:Load="{x:Bind ViewModel.CanUpload, Mode=OneWay}" Content="Upload" Command="{x:Bind ViewModel.UploadImagesCommand, Mode=OneWay}" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
+                <Button x:Name="SaveBtn" x:Load="{x:Bind ViewModel.CanSave, Mode=OneWay}" Content="Save" Command="{x:Bind ViewModel.UploadImagesCommand, Mode=OneWay}" Grid.Column="2" Margin="4,0"/>
                 <Button x:Name="PostGalleryBtn" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" Content="Post to gallery" Grid.Column="3" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
             </Grid>
         </Grid>
