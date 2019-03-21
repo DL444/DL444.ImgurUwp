@@ -20,6 +20,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         private bool _albumCreated;
         private bool _uploading;
         private double _progress;
+        private string originalTitle;
+
+        public List<ImageViewModel> DeleteList { get; } = new List<ImageViewModel>();
 
         public string Title
         {
@@ -49,6 +52,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AlbumCreated)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanUpload)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanSave)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanPostToGallery)));
             }
         }
         public bool Uploading
@@ -72,7 +76,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public bool CanUpload => !AlbumCreated;
         public bool CanSave => AlbumCreated;
-        public bool CanPostToGallery => false; // TODO: Implement.
+        public bool CanPostToGallery => AlbumCreated;
 
         public ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
 
@@ -107,6 +111,11 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 (string id, _) = await ApiClient.Client.CreateAlbumAsync(title: Title);
                 AlbumId = id;
+                originalTitle = Title;
+            }
+            else if(originalTitle != Title)
+            {
+                await ApiClient.Client.UpdateAlbumInfoAsync(AlbumId, title: Title);
             }
 
             double progressStep = 0;
@@ -115,14 +124,29 @@ namespace DL444.ImgurUwp.App.ViewModels
 
             foreach(var i in Images)
             {
-                if(!i.Uploaded && i is UploadImageViewModel upload)
+                if(i is UploadImageViewModel upload)
                 {
-                    await upload.Upload(AlbumId);
-                    Progress += progressStep;
+                    if(!i.Uploaded)
+                    {
+                        await upload.Upload(AlbumId);
+                        Progress += progressStep;
+                        continue;
+                    }
+                    else
+                    {
+                        i.Image.Description = upload.PreviewDescription;
+                    }
+                }
+                if(i.DescriptionChanged)
+                {
+                    await ApiClient.Client.UpdateImageInfoAsync(i.Id, description: i.Description);
                 }
             }
+
+            var deleteResult = await ApiClient.Client.EditAlbumImageAsync(AlbumId, DeleteList.Select(x => x.Id), ImgurUwp.ApiClient.AlbumEditMode.Remove);
+            if(deleteResult == true) { DeleteList.Clear(); }
+
             Uploading = false;
-            //Navigation.Navigate(typeof(AlbumEdit), albumId);
             return AlbumId;
         }
 
@@ -228,13 +252,4 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         #endregion
     }
-
-    //static class ImageViewModelExtensions
-    //{
-    //    public static bool Uploaded(this ImageViewModel vm)
-    //    {
-    //        if (vm is UploadImageViewModel u && u.Image == null) { return false; }
-    //        return true;
-    //    }
-    //}
 }

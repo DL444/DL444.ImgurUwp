@@ -30,6 +30,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 Album.Title = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasTitle)));
             }
         }
         public string Description => Album.Description;
@@ -68,7 +69,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return Images[0].Animated;
             }
         }
-        public bool HasTitle => string.IsNullOrEmpty(Title);
+        public bool HasTitle => !string.IsNullOrEmpty(Title);
 
         public AccountAlbumViewModel() { }
         public AccountAlbumViewModel(Album album) : this()

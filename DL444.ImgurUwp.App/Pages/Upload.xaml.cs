@@ -124,9 +124,13 @@ namespace DL444.ImgurUwp.App.Pages
                 // After uploading, you will have to call methods to notify completion.
                 // See https://docs.microsoft.com/en-us/windows/uwp/app-to-app/receive-data
             }
-            else if(e.Parameter is AccountAlbumViewModel vm)
+            else if(e.Parameter is AccountAlbumViewModel albumVm)
             {
 
+            }
+            else if(e.Parameter is UploadViewModel upVm)
+            {
+                ViewModel = upVm;
             }
             else if(e.Parameter is string albumId)
             {
@@ -134,17 +138,12 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        private async void RemoveImageBtn_Click(object sender, RoutedEventArgs e)
+        private void RemoveImageBtn_Click(object sender, RoutedEventArgs e)
         {
             ImageViewModel model = (sender as FrameworkElement).Tag as ImageViewModel;
             if(model.Uploaded)
             {
-                var result = await ApiClient.Client.EditAlbumImageAsync(ViewModel.AlbumId, new[] { model.Id }, ImgurUwp.ApiClient.AlbumEditMode.Remove);
-                if(result == false)
-                {
-                    // TODO: Notify user.
-                    return;
-                }
+                ViewModel.DeleteList.Add(model);
             }
             ViewModel.Images.Remove(model);
         }

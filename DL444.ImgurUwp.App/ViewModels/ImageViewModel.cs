@@ -11,6 +11,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     public class ImageViewModel : INotifyPropertyChanged, IReportable
     {
         Image _image;
+        string originalDescription;
 
         public Image Image
         {
@@ -44,6 +45,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                         }
                     }
                     RichDescriptionBox = RichTextParser.GetRichContentBox(Description);
+                    originalDescription = Description;
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
             }
@@ -81,6 +83,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;
 
+        public bool DescriptionChanged => !(originalDescription == Description);
         public virtual bool Uploaded => true;
 
         public string Thumbnail { get; private set; }
