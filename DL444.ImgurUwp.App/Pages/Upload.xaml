@@ -27,7 +27,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
-                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
+                    <cc:SymbolTextButton Icon="Remove" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -47,7 +47,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Text="{x:Bind Description, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
-                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
+                    <cc:SymbolTextButton Icon="Remove" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -64,7 +64,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Text="{x:Bind PreviewDescription, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
-                    <cc:SymbolTextButton Icon="Delete" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
+                    <cc:SymbolTextButton Icon="Remove" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -86,7 +86,38 @@
             </ListView.Header>
             <ListView.Footer>
                 <Grid Padding="0,12" MaxWidth="{ThemeResource ImageListViewMaxWidth}">
-                    <StackPanel HorizontalAlignment="Center" Spacing="12" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <ListView x:Name="TagList" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" ItemsSource="{x:Bind ViewModel.Tags, Mode=OneWay}" ItemContainerStyle="{ThemeResource PlainListViewItemStyle}" Margin="0,0,0,16"
+                              SelectionMode="None" IsItemClickEnabled="True" ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled" HorizontalAlignment="Left">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Button Style="{ThemeResource FrontpageItemButtonStyle}">
+                                    <Button.Flyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem Text="Remove" Icon="Remove" Tag="{x:Bind}" Click="RemoveTag_Click"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                    <Grid Background="{ThemeResource SystemAccentColorBrush}" Padding="16,6">
+                                        <TextBlock Text="{x:Bind}" RequestedTheme="Dark"/>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <AutoSuggestBox PlaceholderText="Add gallery tags..." QueryIcon="Accept" MinWidth="180" QuerySubmitted="NewTagBox_QuerySubmitted" IsEnabled="{x:Bind ViewModel.CanAddTag, Mode=OneWay}"/>
+                        </ListView.Footer>
+                    </ListView>
+                    
+                    <StackPanel HorizontalAlignment="Center" Spacing="12" Grid.Row="1" Margin="0,0,0,16">
                         <SymbolIcon Symbol="Add" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <TextBlock Text="Drag image here or" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                         <Button Content="Select file" Command="{x:Bind ViewModel.PickImageCommand, Mode=OneWay}" HorizontalAlignment="Center"/>

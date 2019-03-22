@@ -152,6 +152,20 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void NewTagBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if(ViewModel.AddTag(args.QueryText) == true)
+            {
+                sender.Text = "";
+            }
+        }
+
+        private void RemoveTag_Click(object sender, RoutedEventArgs e)
+        {
+            string tag = (sender as FrameworkElement).Tag as string;
+            ViewModel.RemoveTag(tag);
+        }
     }
 
     class AlbumEditorTemplateSelector : DataTemplateSelector

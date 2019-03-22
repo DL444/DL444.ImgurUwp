@@ -20,8 +20,10 @@ namespace DL444.ImgurUwp.App.ViewModels
         private bool _albumCreated;
         private bool _uploading;
         private double _progress;
+        private bool _canAddTag = true;
         private string originalTitle;
 
+        public ObservableCollection<string> Tags { get; private set; } = null;
         public List<ImageViewModel> DeleteList { get; } = new List<ImageViewModel>();
 
         public string Title
@@ -49,7 +51,9 @@ namespace DL444.ImgurUwp.App.ViewModels
             set
             {
                 _albumCreated = value;
+                if(Tags == null) { Tags = new ObservableCollection<string>(); }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AlbumCreated)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Tags)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanUpload)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanSave)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanPostToGallery)));
@@ -73,6 +77,16 @@ namespace DL444.ImgurUwp.App.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
             }
         }
+        public bool CanAddTag
+        {
+            get => _canAddTag;
+            set
+            {
+                _canAddTag = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanAddTag)));
+            }
+        }
+
 
         public bool CanUpload => !AlbumCreated;
         public bool CanSave => AlbumCreated;
@@ -148,6 +162,27 @@ namespace DL444.ImgurUwp.App.ViewModels
 
             Uploading = false;
             return AlbumId;
+        }
+        public bool AddTag(string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag)) { return false; }
+            if(CanAddTag && !Tags.Contains(tag))
+            {
+                Tags.Add(tag);
+                if (Tags.Count >= 5) { CanAddTag = false; }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void RemoveTag(string tag)
+        {
+            if(Tags.Remove(tag) == true)
+            {
+                if(Tags.Count < 5) { CanAddTag = true; }
+            }
         }
 
         public UploadViewModel()
