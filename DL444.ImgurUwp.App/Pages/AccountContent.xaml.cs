@@ -46,9 +46,16 @@ namespace DL444.ImgurUwp.App.Pages
         bool IsOwner => Account == null ? false : Account.Username == ApiClient.OwnerAccount;
         bool IsNotOwner => !IsOwner;
 
-        ObservableCollection<ItemViewModel> NonGalleryFavorites { get; } = new ObservableCollection<ItemViewModel>();
-        ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
-        ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
+        //ObservableCollection<ItemViewModel> NonGalleryFavorites { get; } = new ObservableCollection<ItemViewModel>();
+        //ObservableCollection<GalleryItemViewModel> GalleryFavorites { get; } = new ObservableCollection<GalleryItemViewModel>();
+        //ObservableCollection<CommentViewModel> Comments { get; } = new ObservableCollection<CommentViewModel>();
+
+        IncrementalLoadingCollection<NonGalleryFavoriteIncrementalSource, ItemViewModel> NonGalleryFavorites 
+            = new IncrementalLoadingCollection<NonGalleryFavoriteIncrementalSource, ItemViewModel>();
+        IncrementalLoadingCollection<GalleryFavoriteIncrementalSource, GalleryItemViewModel> GalleryFavorites
+            = new IncrementalLoadingCollection<GalleryFavoriteIncrementalSource, GalleryItemViewModel>();
+        IncrementalLoadingCollection<CommentIncrementalSource, CommentViewModel> Comments 
+            = new IncrementalLoadingCollection<CommentIncrementalSource, CommentViewModel>();
 
         IncrementalLoadingCollection<MyAlbumIncrementalSource, AccountAlbumViewModel> MyAlbums = null;
         IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel> MyImages = null;
@@ -87,35 +94,35 @@ namespace DL444.ImgurUwp.App.Pages
 
             switch((e.AddedItems[0] as PivotItem).Tag as string)
             {
-                case "Favorites":
-                    if(IsOwner)
-                    {
-                        if(NonGalleryFavorites.Count != 0) { break; }
-                        var favorites = await ApiClient.Client.GetAccountFavoritesAsync("me");
-                        foreach(var f in favorites)
-                        {
-                            NonGalleryFavorites.Add(new ItemViewModel(f));
-                        }
-                    }
-                    else
-                    {
-                        if(GalleryFavorites.Count != 0) { break; }
-                        var favorites = await ApiClient.Client.GetAccountGalleryFavoritesAsync(Account.Username);
-                        foreach(var f in favorites)
-                        {
-                            GalleryFavorites.Add(new GalleryItemViewModel(f));
-                        }
-                    }
-                    break;
-                case "Comments":
-                    if (Comments.Count != 0) { break; }
-                    var comments = await ApiClient.Client.GetAccountCommentsAsync(Account.Username);
-                    foreach (var c in comments)
-                    {
-                        if (c.Deleted) { continue; }
-                        Comments.Add(new CommentViewModel(c));
-                    }
-                    break;
+                //case "Favorites":
+                //    if(IsOwner)
+                //    {
+                //        if(NonGalleryFavorites.Count != 0) { break; }
+                //        var favorites = await ApiClient.Client.GetAccountFavoritesAsync("me");
+                //        foreach(var f in favorites)
+                //        {
+                //            NonGalleryFavorites.Add(new ItemViewModel(f));
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if(GalleryFavorites.Count != 0) { break; }
+                //        var favorites = await ApiClient.Client.GetAccountGalleryFavoritesAsync(Account.Username);
+                //        foreach(var f in favorites)
+                //        {
+                //            GalleryFavorites.Add(new GalleryItemViewModel(f));
+                //        }
+                //    }
+                //    break;
+                //case "Comments":
+                //    if (Comments.Count != 0) { break; }
+                //    var comments = await ApiClient.Client.GetAccountCommentsAsync(Account.Username);
+                //    foreach (var c in comments)
+                //    {
+                //        if (c.Deleted) { continue; }
+                //        Comments.Add(new CommentViewModel(c));
+                //    }
+                //    break;
                 case "Albums":
                     if(IsOwner && MyAlbums == null)
                     {
@@ -149,6 +156,54 @@ namespace DL444.ImgurUwp.App.Pages
         }
     }
 
+    public class NonGalleryFavoriteIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    {
+        public int Page { get; private set; }
+
+        protected override async Task<IEnumerable<ItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            var items = new List<ItemViewModel>();
+            var favs = await ApiClient.Client.GetAccountFavoritesAsync("me", Page);
+            foreach (var f in favs)
+            {
+                items.Add(new ItemViewModel(f));
+            }
+            Page++;
+            return items;
+        }
+    }
+    public class GalleryFavoriteIncrementalSource : IncrementalItemsSource<GalleryItemViewModel>
+    {
+        public int Page { get; private set; }
+
+        protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            var items = new List<GalleryItemViewModel>();
+            var favs = await ApiClient.Client.GetAccountGalleryFavoritesAsync("me", Page);
+            foreach (var f in favs)
+            {
+                items.Add(new GalleryItemViewModel(f));
+            }
+            Page++;
+            return items;
+        }
+    }
+    public class CommentIncrementalSource : IncrementalItemsSource<CommentViewModel>
+    {
+        public int Page { get; private set; }
+
+        protected override async Task<IEnumerable<CommentViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            var items = new List<CommentViewModel>();
+            var comments = await ApiClient.Client.GetAccountCommentsAsync("me", page: Page);
+            foreach (var c in comments)
+            {
+                items.Add(new CommentViewModel(c));
+            }
+            Page++;
+            return items;
+        }
+    }
     public class MyImageIncrementalSource : IncrementalItemsSource<ItemViewModel>
     {
         public int Page { get; private set; }

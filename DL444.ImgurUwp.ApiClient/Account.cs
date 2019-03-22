@@ -105,10 +105,10 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
-        public async Task<IEnumerable<Comment>> GetAccountCommentsAsync(string username)
+        public async Task<IEnumerable<Comment>> GetAccountCommentsAsync(string username, CommentDisplayParams.Sort sort = CommentDisplayParams.Sort.New, int page = 0)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
-            var response = await client.GetAsync($"/3/account/{username}/comments");
+            var response = await client.GetAsync($"/3/account/{username}/comments/{$"{sort}".ToLower()}/{page}");
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
@@ -192,11 +192,11 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<IEnumerable<IGalleryItem>> GetAccountLikesAsync(string username)
+        public async Task<IEnumerable<IGalleryItem>> GetAccountLikesAsync(string username, int page = 0)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IGalleryItem> result = new List<IGalleryItem>();
-            var response = await client.GetAsync($"/3/account/{username}/likes");
+            var response = await client.GetAsync($"/3/account/{username}/likes/{page}");
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
@@ -220,11 +220,11 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
-        public async Task<IEnumerable<IItem>> GetAccountFavoritesAsync(string username)
+        public async Task<IEnumerable<IItem>> GetAccountFavoritesAsync(string username, int page = 0)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IItem> result = new List<IItem>();
-            var response = await client.GetAsync($"/3/account/{username}/favorites");
+            var response = await client.GetAsync($"/3/account/{username}/favorites/{page}");
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
@@ -247,11 +247,11 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
-        public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username)
+        public async Task<IEnumerable<IGalleryItem>> GetAccountGalleryFavoritesAsync(string username, int page = 0)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }
             List<IGalleryItem> result = new List<IGalleryItem>();
-            var response = await client.GetAsync($"/3/account/{username}/gallery_favorites");
+            var response = await client.GetAsync($"/3/account/{username}/gallery_favorites/{page}");
             (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
             if (success)
             {
