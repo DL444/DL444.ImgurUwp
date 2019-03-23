@@ -181,4 +181,28 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(PropertyName = "cover", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Cover { get; set; }
     }
+
+    class GalleryPostParams
+    {
+        public GalleryPostParams(string title, string topic = null, bool terms = false, bool mature = false, IEnumerable<string> tags = null)
+        {
+            Title = title ?? throw new ArgumentNullException(nameof(title));
+            if (string.IsNullOrWhiteSpace(title)) { throw new ArgumentOutOfRangeException("Title cannot be null or whitespace."); }
+            Topic = topic;
+            Terms = terms ? 1 : 0;
+            Mature = mature ? 1 : 0;
+            Tags = tags;
+        }
+
+        [JsonProperty(PropertyName = "title")]
+        public string Title { get; set; }
+        [JsonProperty(PropertyName = "topic", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public string Topic { get; set; }
+        [JsonProperty(PropertyName = "terms", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int Terms { get; set; }
+        [JsonProperty(PropertyName = "mature", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int Mature { get; set; }
+        [JsonProperty(PropertyName = "tags", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public IEnumerable<string> Tags { get; set; }
+    }
 }

@@ -295,5 +295,28 @@ namespace DL444.ImgurUwp.ApiClient
                 throw new ApiRequestException(dataJson) { Status = status };
             }
         }
+
+        public async Task<bool> PostToGalleryAsync(string id, string title, string topic = null, bool isMature = false, IEnumerable<string> tags = null)
+        {
+            if (id == null) { throw new ArgumentNullException(nameof(id)); }
+            if (title == null) { throw new ArgumentNullException(nameof(title)); }
+
+            GalleryPostParams p = new GalleryPostParams(title, topic, false, isMature, tags);
+            HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, $"/3/gallery/{id}");
+            msg.Content = new StringContent(JsonConvert.SerializeObject(p));
+            msg.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            var response = await client.SendAsync(msg);
+
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                return JsonConvert.DeserializeObject<bool>(dataJson.ToLower());
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+
+        }
     }
 }

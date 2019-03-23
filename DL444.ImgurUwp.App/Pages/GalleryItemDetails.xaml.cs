@@ -137,7 +137,14 @@ namespace DL444.ImgurUwp.App.Pages
         public IncrementalItemsSource<GalleryItemViewModel> Source { get; }
         public GalleryDetailsSidebarItemSource(IncrementalItemsSource<GalleryItemViewModel> source)
         {
-            this.Source = source;
+            if(source == null)
+            {
+                Source = new GalleryIncrementalSource(ImgurUwp.ApiClient.DisplayParams.Section.Hot, ImgurUwp.ApiClient.DisplayParams.Sort.Viral);
+            }
+            else
+            {
+                this.Source = source;
+            }
         }
 
         public async Task<IEnumerable<GalleryItemViewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = default(CancellationToken))

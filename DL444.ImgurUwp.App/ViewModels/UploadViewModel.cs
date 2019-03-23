@@ -87,6 +87,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+        public bool IsMature { get; set; }
+
 
         public bool CanUpload => !AlbumCreated;
         public bool CanSave => AlbumCreated;
@@ -96,6 +98,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public AsyncCommand<bool> PickImageCommand { get; private set; }
         public AsyncCommand<string> UploadImagesCommand { get; private set; }
+        public AsyncCommand<bool> PostToGalleryCommand { get; private set; }
 
         async Task<bool> PickImage()
         {
@@ -163,6 +166,16 @@ namespace DL444.ImgurUwp.App.ViewModels
             Uploading = false;
             return AlbumId;
         }
+        async Task<bool> PostToGallery()
+        {
+            await UploadImages();
+            Uploading = true;
+            var result = await ApiClient.Client.PostToGalleryAsync(AlbumId, Title, null, IsMature, Tags);
+            var item = await ApiClient.Client.GetGalleryItemAsync(AlbumId);
+            Uploading = false;
+            Navigation.Navigate(typeof(Pages.GalleryItemDetails), new Pages.GalleryItemDetailsNavigationParameter(new GalleryItemViewModel(item), null));
+            return result;
+        }
         public bool AddTag(string tag)
         {
             if (string.IsNullOrWhiteSpace(tag)) { return false; }
@@ -189,6 +202,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             PickImageCommand = new AsyncCommand<bool>(PickImage, () => Images.Count < 50);
             UploadImagesCommand = new AsyncCommand<string>(UploadImages);
+            PostToGalleryCommand = new AsyncCommand<bool>(PostToGallery);
         }
 
         public static async Task<UploadViewModel> CreateFromAccountAlbum(AccountAlbumViewModel accountVm)
