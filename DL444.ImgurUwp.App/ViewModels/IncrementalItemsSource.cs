@@ -57,4 +57,14 @@ namespace DL444.ImgurUwp.App.ViewModels
         public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action onStartLoading = null, Action onEndLoading = null, Action<Exception> onError = null)
             : base(source, itemsPerPage, onStartLoading, onEndLoading, onError) { }
     }
+
+    public class StaticIncrementalSource<T> : IncrementalItemsSource<T>
+    {
+        public StaticIncrementalSource(IEnumerable<T> items) : base(items) { }
+
+        protected override async Task<IEnumerable<T>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            return null;
+        }
+    }
 }

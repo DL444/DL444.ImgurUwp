@@ -28,24 +28,24 @@
 
         <Grid Padding="28,20" Background="{ThemeResource SystemControlAccentAcrylicWindowAccentMediumHighBrush}">
             <StackPanel Orientation="Horizontal" Spacing="24">
-                <PersonPicture Height="64" ProfilePicture="{x:Bind Account.AvatarUrl, Mode=OneWay, TargetNullValue={x:Null}}"/>
-                <TextBlock Text="{x:Bind Account.Username, Mode=OneWay, TargetNullValue={x:Null}}" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
-                <TextBlock Text="{x:Bind Account.Reputation, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
-                <TextBlock Text="{x:Bind Account.ReputationName, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
+                <PersonPicture Height="64" ProfilePicture="{x:Bind ViewModel.Account.AvatarUrl, Mode=OneWay, TargetNullValue={x:Null}}"/>
+                <TextBlock Text="{x:Bind ViewModel.Account.Username, Mode=OneWay, TargetNullValue={x:Null}}" Style="{ThemeResource TitleTextBlockStyle}" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind ViewModel.Account.Reputation, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Bind ViewModel.Account.ReputationName, Mode=OneWay, TargetNullValue={x:Null}}" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
         
-        <Pivot x:Name="RootPivot" Grid.Row="1" Margin="20,0" SelectionChanged="RootPivot_SelectionChanged">
+        <Pivot x:Name="RootPivot" Grid.Row="1" Margin="20,0">
             <PivotItem Header="Favorites" Tag="Favorites" VerticalContentAlignment="Stretch">
                 <Grid>
-                    <tkc:AdaptiveGridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
-                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
-                    <tkc:AdaptiveGridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
-                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind NonGalleryFavorites}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                    <tkc:AdaptiveGridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind ViewModel.IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind ViewModel.GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                    <tkc:AdaptiveGridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind ViewModel.IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                              ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind ViewModel.NonGalleryFavorites}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
                 </Grid>
             </PivotItem>
             <PivotItem Header="Comments" Tag="Comments">
-                <ListView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind Comments}">
+                <ListView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.Comments}">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="vm:CommentViewModel">
                             <Grid Padding="12,8" ColumnSpacing="12">
@@ -79,13 +79,13 @@
                     </ListView.ItemContainerStyle>
                 </ListView>
             </PivotItem>
-            <PivotItem x:Name="AlbumPivot" Header="Albums" Tag="Albums" x:Load="{x:Bind IsOwner}">
-                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind MyAlbums, Mode=OneWay}"
+            <PivotItem x:Name="AlbumPivot" Header="Albums" Tag="Albums" x:Load="{x:Bind ViewModel.IsOwner}">
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.MyAlbums, Mode=OneWay}"
                           ItemClick="ItemGrid_ItemClick" ItemTemplate="{ThemeResource AccountAlbumGridTemplate}" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
-            <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind IsOwner}">
+            <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind ViewModel.IsOwner}">
                 <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
-                                      ItemsSource="{x:Bind MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                                      ItemsSource="{x:Bind ViewModel.MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
         </Pivot>
     </Grid>
