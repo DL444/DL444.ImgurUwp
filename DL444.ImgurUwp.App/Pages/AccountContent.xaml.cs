@@ -118,7 +118,21 @@ namespace DL444.ImgurUwp.App.Pages
         {
             if(e.ClickedItem is AccountAlbumViewModel accountAlbum)
             {
-                Navigation.ContentFrame.Navigate(typeof(Pages.Upload), accountAlbum);
+                if(accountAlbum.InGallery)
+                {
+                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), accountAlbum.Id);
+                }
+                else
+                {
+                    Navigation.ContentFrame.Navigate(typeof(Pages.Upload), accountAlbum);
+                }
+            }
+            else if(e.ClickedItem is ItemViewModel item)
+            {
+                if (item.InGallery)
+                {
+                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
+                }
             }
         }
     }

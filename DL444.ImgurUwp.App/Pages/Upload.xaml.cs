@@ -67,7 +67,7 @@ namespace DL444.ImgurUwp.App.Pages
                             case "tif":
                             case "tiff":
                                 UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync(await f.OpenStreamForReadAsync());
-                                ViewModel.Images.Add(imageVm);
+                                ViewModel.AddImage(imageVm);
                                 break;
                             default:
                                 // TODO: Alert user
@@ -82,7 +82,7 @@ namespace DL444.ImgurUwp.App.Pages
                 if(item != null)
                 {
                     UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync((await item.OpenReadAsync()).AsStreamForRead());
-                    ViewModel.Images.Add(imageVm);
+                    ViewModel.AddImage(imageVm);
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace DL444.ImgurUwp.App.Pages
                     if (item != null)
                     {
                         UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync((await item.OpenReadAsync()).AsStreamForRead());
-                        ViewModel.Images.Add(imageVm);
+                        ViewModel.AddImage(imageVm);
                     }
                 }
                 else if(op.Data.Contains(StandardDataFormats.StorageItems))
@@ -110,7 +110,7 @@ namespace DL444.ImgurUwp.App.Pages
                         if (i is Windows.Storage.StorageFile f)
                         {
                             UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync(await f.OpenStreamForReadAsync());
-                            ViewModel.Images.Add(imageVm);
+                            ViewModel.AddImage(imageVm);
                         }
                     }
                 }
@@ -144,11 +144,7 @@ namespace DL444.ImgurUwp.App.Pages
         private void RemoveImageBtn_Click(object sender, RoutedEventArgs e)
         {
             ImageViewModel model = (sender as FrameworkElement).Tag as ImageViewModel;
-            if(model.Uploaded)
-            {
-                ViewModel.DeleteList.Add(model);
-            }
-            ViewModel.Images.Remove(model);
+            ViewModel.RemoveImage(model);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

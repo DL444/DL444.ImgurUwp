@@ -95,6 +95,25 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool CanPostToGallery => AlbumCreated;
 
         public ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
+        public bool HasImage => Images.Count > 0;
+
+        public bool AddImage(ImageViewModel image)
+        {
+            if(Images.Count < 50)
+            {
+                Images.Add(image);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasImage)));
+                return true;
+            }
+            else { return false; }
+        }
+        public bool RemoveImage(ImageViewModel image)
+        {
+            if (image.Uploaded) { DeleteList.Add(image); }
+            var result = Images.Remove(image);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasImage)));
+            return result;
+        }
 
         public AsyncCommand<bool> PickImageCommand { get; private set; }
         public AsyncCommand<string> UploadImagesCommand { get; private set; }
@@ -115,7 +134,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
 
                 UploadImageViewModel imageVm = await UploadImageViewModel.CreateFromStreamAsync(await f.OpenStreamForReadAsync());
-                Images.Add(imageVm);
+                AddImage(imageVm);
             }
             PickImageCommand.RaiseCanExecuteChanged();
             return allSuccess;
@@ -219,7 +238,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             result.Title = album.Title;
             foreach (var i in album.Images)
             {
-                result.Images.Add(new ImageViewModel(i));
+                result.AddImage(new ImageViewModel(i));
             }
             return result;
         }

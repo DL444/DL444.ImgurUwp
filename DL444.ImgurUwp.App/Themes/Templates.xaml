@@ -107,7 +107,12 @@
                     </ui:CommandBarFlyout.PrimaryCommands>
                     <ui:CommandBarFlyout.SecondaryCommands>
                         <AppBarButton Label="Open in browser" Icon="Globe"/>
-                        <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                        <AppBarButton Icon="Delete" Visibility="{x:Bind InGallery, Converter={StaticResource InvertedBoolVisibilityConverter}}" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                            <AppBarButton.Resources>
+                                <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                            </AppBarButton.Resources>
+                        </AppBarButton>
+                        <AppBarButton Icon="Remove" Visibility="{x:Bind InGallery, Converter={StaticResource BoolVisibilityConverter}}" Label="Remove from gallery" Foreground="{ThemeResource AdaptiveRedColorBrush}">
                             <AppBarButton.Resources>
                                 <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
                             </AppBarButton.Resources>

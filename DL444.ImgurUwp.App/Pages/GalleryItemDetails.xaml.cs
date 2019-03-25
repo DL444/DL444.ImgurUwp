@@ -54,6 +54,13 @@ namespace DL444.ImgurUwp.App.Pages
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GalleryVm)));
                 await PrepareViewModels(navParams.Item);
             }
+            else if(e.Parameter is string id && !string.IsNullOrWhiteSpace(id))
+            {
+                GalleryItemViewModel vm = new GalleryItemViewModel(await ApiClient.Client.GetGalleryItemAsync(id));
+                GalleryDetailsSidebarItemSource itemSource = new GalleryDetailsSidebarItemSource(null);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GalleryVm)));
+                await PrepareViewModels(vm);
+            }
         }
 
         async System.Threading.Tasks.Task PrepareViewModels(GalleryItemViewModel vm)

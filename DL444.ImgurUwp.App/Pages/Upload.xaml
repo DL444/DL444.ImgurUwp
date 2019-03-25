@@ -143,7 +143,7 @@
                 <CheckBox x:Name="MatureCheck" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" Content="Mature content" IsChecked="{x:Bind ViewModel.IsMature, Mode=TwoWay}"/>
                 <Button x:Name="UploadBtn" x:Load="{x:Bind ViewModel.CanUpload, Mode=OneWay}" Content="Upload" Command="{x:Bind ViewModel.UploadImagesCommand, Mode=OneWay}" Grid.Column="1" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
                 <Button x:Name="SaveBtn" x:Load="{x:Bind ViewModel.CanSave, Mode=OneWay}" Content="Save" Command="{x:Bind ViewModel.UploadImagesCommand, Mode=OneWay}" Grid.Column="2" Margin="4,0"/>
-                <Button x:Name="PostGalleryBtn" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" Content="Post to gallery" Command="{x:Bind ViewModel.PostToGalleryCommand, Mode=OneWay}" Grid.Column="3" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
+                <Button x:Name="PostGalleryBtn" x:Load="{x:Bind ViewModel.CanPostToGallery, Mode=OneWay}" Content="Post to gallery" Command="{x:Bind ViewModel.PostToGalleryCommand, Mode=OneWay}" IsEnabled="{x:Bind ViewModel.HasImage, Mode=OneWay}" Grid.Column="3" Style="{ThemeResource AccentButtonStyle}" Margin="4,0"/>
             </Grid>
         </Grid>
 

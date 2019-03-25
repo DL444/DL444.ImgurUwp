@@ -27,7 +27,7 @@ __Private Beta 0.1.0__
 - [x] Gallery View  
 - [x] Gallery Item View  
 - [x] Commenting  
-- [ ] Upload (in work)  
+- [x] Upload  
 - [x] Share Target  
 - [x] Tags  
 - [x] My Posts  
