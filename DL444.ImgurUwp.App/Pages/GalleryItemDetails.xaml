@@ -60,9 +60,10 @@
                 </Grid.RowDefinitions>
                 <!-- Implement a custom light-weight transport control. -->
                 <Viewbox>
-                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
+                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}">
+                        <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
+                    </Grid>
                 </Viewbox>
-                <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
                 <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
                 <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
             </Grid>

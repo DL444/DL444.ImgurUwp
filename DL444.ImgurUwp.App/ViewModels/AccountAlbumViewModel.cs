@@ -71,7 +71,32 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         public bool HasTitle => !string.IsNullOrEmpty(Title);
 
-        public AccountAlbumViewModel() { }
+        public AsyncCommand<bool> DeleteAlbumCommand { get; private set; }
+        public AsyncCommand<bool> GalleryRemoveCommand { get; private set; }
+        async Task<bool> DeleteAlbum()
+        {
+            if (InGallery) { return false; }
+            var result = await ApiClient.Client.DeleteAlbumAsync(Id);
+            if(result == true)
+            {
+                var parentVm = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
+                if(parentVm != null)
+                {
+                    parentVm.MyAlbums.Remove(this);
+                }
+            }
+            return result;
+        }
+        async Task<bool> GalleryRemove()
+        {
+            return await ApiClient.Client.RemoveGalleryItemAsync(Id);
+        }
+
+        public AccountAlbumViewModel()
+        {
+            DeleteAlbumCommand = new AsyncCommand<bool>(DeleteAlbum);
+            GalleryRemoveCommand = new AsyncCommand<bool>(GalleryRemove);
+        }
         public AccountAlbumViewModel(Album album) : this()
         {
             Album = album;
