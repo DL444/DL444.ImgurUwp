@@ -22,44 +22,48 @@
     </Page.Resources>
 
     <Grid>
-        <tkc:AdaptiveGridView x:Name="TagList" ItemsSource="{x:Bind Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="TagList_ItemClick"
+        <tkc:AdaptiveGridView x:Name="TagList" ItemsSource="{x:Bind PageViewModel.Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="TagList_ItemClick"
                               DesiredWidth="300" ItemHeight="300" StretchContentForSingleRow="False" Padding="16,0">
             <tkc:AdaptiveGridView.Header>
-                <Grid Background="{x:Bind ViewModel.Accent}" Margin="-16,-100,-16,8" Padding="0,100,0,0">
+                <Grid Background="{x:Bind PageViewModel.ViewModel.Accent}" Margin="-16,-100,-16,8" Padding="0,100,0,0">
                     <ParallaxView Source="{x:Bind TagList}" Margin="0,-100,0,0" Height="420" Grid.Row="0" VerticalAlignment="Top" VerticalShift="480">
-                        <Image Source="{x:Bind ViewModel.BackgroundImage}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
+                        <Image Source="{x:Bind PageViewModel.ViewModel.BackgroundImage}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
                     </ParallaxView>
 
                     <Grid Grid.Row="0" VerticalAlignment="Bottom" Padding="0,16" RequestedTheme="Dark">
                         <Grid.Background>
-                            <AcrylicBrush TintColor="{x:Bind ViewModel.Accent.Color}" FallbackColor="{x:Bind ViewModel.Accent.Color}" TintOpacity="0.6"/>
+                            <AcrylicBrush TintColor="{x:Bind PageViewModel.ViewModel.Accent.Color}" FallbackColor="{x:Bind PageViewModel.ViewModel.Accent.Color}" TintOpacity="0.6"/>
                         </Grid.Background>
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="{x:Bind ViewModel.DisplayName}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}"/>
-                            <TextBlock Text="{x:Bind ViewModel.Description}" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="{x:Bind ViewModel.DescriptionVisibility}"/>
+                            <TextBlock Text="{x:Bind PageViewModel.ViewModel.DisplayName}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}"/>
+                            <TextBlock Text="{x:Bind PageViewModel.ViewModel.Description}" HorizontalAlignment="Center" Margin="0,8,0,0" Visibility="{x:Bind PageViewModel.ViewModel.DescriptionVisibility}"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="32" Margin="0,8,0,0">
-                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.TotalItems, Converter={StaticResource NumberStringConverter}}">
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind PageViewModel.ViewModel.TotalItems, Converter={StaticResource NumberStringConverter}}">
                                     <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Posts" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
                                     </tkc:HeaderedContentControl.Header>
                                 </tkc:HeaderedContentControl>
-                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Followers, Converter={StaticResource NumberStringConverter}}">
+                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind PageViewModel.ViewModel.Followers, Converter={StaticResource NumberStringConverter}}">
                                     <tkc:HeaderedContentControl.Header>
                                         <TextBlock Text="Followers" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
                                     </tkc:HeaderedContentControl.Header>
                                 </tkc:HeaderedContentControl>
                             </StackPanel>
-                            <cc:SymbolTextToggleButton x:Name="FollowBtn" IsEnabled="False" Style="{ThemeResource BorderedSymbolTextToggleButtonStyle}" CheckedForeground="{x:Bind ViewModel.Accent}"
-                                                       Content="{x:Bind ViewModel.FollowText, Mode=OneWay}" Icon="{x:Bind ViewModel.FollowIcon, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind ViewModel.Following, Mode=OneWay}"/>
+                            <cc:SymbolTextToggleButton x:Name="FollowBtn" IsEnabled="False" Style="{ThemeResource BorderedSymbolTextToggleButtonStyle}" CheckedForeground="{x:Bind PageViewModel.ViewModel.Accent}"
+                                                       Content="{x:Bind PageViewModel.ViewModel.FollowText, Mode=OneWay}" Icon="{x:Bind PageViewModel.ViewModel.FollowIcon, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,12,0,0" Command="{x:Bind PageViewModel.ViewModel.FollowCommand, Mode=OneWay}" IsChecked="{x:Bind PageViewModel.ViewModel.Following, Mode=OneWay}"/>
                         </StackPanel>
                     </Grid>
                 </Grid>
             </tkc:AdaptiveGridView.Header>
             <tkc:AdaptiveGridView.Footer>
-                <Grid x:Name="LoadBar" x:Load="{x:Bind Items.IsLoading, Mode=OneWay}" Padding="16">
+                <Grid x:Name="LoadBar" x:Load="{x:Bind PageViewModel.Items.IsLoading, Mode=OneWay}" Padding="16">
                     <ProgressBar IsIndeterminate="True"/>
                 </Grid>
             </tkc:AdaptiveGridView.Footer>
         </tkc:AdaptiveGridView>
+
+        <Grid x:Name="LoadingMask" x:Load="{x:Bind PageLoading, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <ProgressRing IsActive="True" Width="48" Height="48"/>
+        </Grid>
     </Grid>
 </Page>

@@ -32,16 +32,16 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
         }
 
-        TagViewModel ViewModel { get; set; }
+        bool _pageLoading;
 
-        private IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel> _items;
-        IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel> Items
+        TagPageViewModel PageViewModel { get; set; } = new TagPageViewModel();
+        bool PageLoading
         {
-            get => _items;
+            get => _pageLoading;
             set
             {
-                _items = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Items)));
+                _pageLoading = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PageLoading)));
             }
         }
 
@@ -50,28 +50,29 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedTo(e);
             if(e.Parameter is TagViewModel vm)
             {
-                ViewModel = vm;
-                var tag = await ApiClient.Client.GetTagAsync(ViewModel.Name, ImgurUwp.ApiClient.DisplayParams.Sort.Time);
-                // The tag info returned in gallery request may not reflect actual value (e.g. Following)
-                ViewModel = new TagViewModel(tag);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
-                FollowBtn.IsEnabled = true;
-
-                var images = new List<GalleryItemViewModel>(tag.Items.Count);
-                var items = tag.Items;
-                foreach(var i in items)
+                var cache = ViewModelManager.GetViewModel<TagPageViewModel>(nameof(TagPageViewModel));
+                if (cache != null && cache.ViewModel.Name == vm.Name)
                 {
-                    images.Add(new GalleryItemViewModel(i));
+                    PageViewModel = cache;
+                    Bindings.Update();
+                    FollowBtn.IsEnabled = true;
                 }
-
-                Items = new IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel>(new TagItemsSource(ViewModel.Name, images, 1));
+                else
+                {
+                    PageLoading = true;
+                    PageViewModel = await TagPageViewModel.CreateFromTag(vm);
+                    Bindings.Update();
+                    FollowBtn.IsEnabled = true;
+                    PageLoading = false;
+                    ViewModelManager.AddOrUpdateViewModel(nameof(TagPageViewModel), PageViewModel);
+                }
             }
         }
 
         private void TagList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
-            var source = new TagItemsSource(ViewModel.Name, Items, Items.Source.Page);
+            var source = new TagItemsSource(PageViewModel.ViewModel.Name, PageViewModel.Items, PageViewModel.Items.Source.Page);
             Navigation.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(item, source));
         }
 
