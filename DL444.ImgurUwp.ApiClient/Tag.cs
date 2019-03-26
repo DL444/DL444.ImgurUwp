@@ -106,6 +106,8 @@ namespace DL444.ImgurUwp.ApiClient
             result.TotalItems = obj["total_items"].ToObject<int>();
             result.DisplayName = obj["display_name"].ToObject<string>();
             result.Accent = obj["accent"].ToObject<string>();
+            result.BackgroundImageHash = obj["background_hash"].ToObject<string>();
+            result.Description = obj["description"].ToObject<string>();
             result.Items = new List<IGalleryItem>();
             JArray items = JArray.Parse(obj["items"].ToString());
             foreach (var i in items)
