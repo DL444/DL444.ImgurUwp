@@ -78,29 +78,4 @@ namespace DL444.ImgurUwp.App.Pages
 
         public event PropertyChangedEventHandler PropertyChanged;
     }
-
-    class TagItemsSource : IncrementalItemsSource<GalleryItemViewModel>
-    {
-        public string Name { get; }
-        public int Page { get; private set; }
-
-        public TagItemsSource(string name) => Name = name ?? throw new ArgumentNullException(nameof(name));
-        public TagItemsSource(string name, IEnumerable<GalleryItemViewModel> items, int startPage) : base(items)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Page = startPage;
-        }
-
-        protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
-        {
-            var tag = await ApiClient.Client.GetTagAsync(Name, ImgurUwp.ApiClient.DisplayParams.Sort.Time, page: Page);
-            List<GalleryItemViewModel> result = new List<GalleryItemViewModel>(tag.Items.Count);
-            foreach(var i in tag.Items)
-            {
-                result.Add(new GalleryItemViewModel(i));
-            }
-            Page++;
-            return result;
-        }
-    }
 }

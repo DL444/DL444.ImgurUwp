@@ -96,10 +96,10 @@
                 </ui:ItemsRepeater>
             </ScrollViewer>
         </ui:ScrollAnchorProvider>-->
-        <tkc:AdaptiveGridView ItemsSource="{x:Bind ViewModelInc, Mode=OneWay}" Padding="8,0" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" DesiredWidth="300" ItemHeight="300"
+        <tkc:AdaptiveGridView ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}" Padding="8,0" ItemTemplate="{ThemeResource GalleryItemGridTemplate}" DesiredWidth="300" ItemHeight="300"
                               ItemClick="FrontPageGrid_ItemClick" SelectionMode="None" IsItemClickEnabled="True" VerticalAlignment="Top" DataFetchSize="1.5">
             <tkc:AdaptiveGridView.Footer>
-                <Grid x:Name="LoadBar" x:Load="{x:Bind ViewModelInc.IsLoading, Mode=OneWay}" Padding="16">
+                <Grid x:Name="LoadBar" x:Load="{x:Bind ViewModel.Items.IsLoading, Mode=OneWay}" Padding="16">
                     <ProgressBar IsIndeterminate="True"/>
                 </Grid>
             </tkc:AdaptiveGridView.Footer>
