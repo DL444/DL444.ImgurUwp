@@ -96,17 +96,17 @@
             <Grid.ContextFlyout>
                 <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                     <ui:CommandBarFlyout.PrimaryCommands>
-                        <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite}">
+                        <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite}" Command="{x:Bind FavoriteItemCommand}">
                             <AppBarToggleButton.Icon>
                                 <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
                             </AppBarToggleButton.Icon>
                         </AppBarToggleButton>
-                        <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share"/>
-                        <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL"/>
+                        <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                        <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
                         <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download"/>
                     </ui:CommandBarFlyout.PrimaryCommands>
                     <ui:CommandBarFlyout.SecondaryCommands>
-                        <AppBarButton Label="Open in browser" Icon="Globe"/>
+                        <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
                         <AppBarButton Icon="Delete" Visibility="{x:Bind InGallery, Converter={StaticResource InvertedBoolVisibilityConverter}}" Label="Delete" Command="{x:Bind DeleteAlbumCommand}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
                             <AppBarButton.Resources>
                                 <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
