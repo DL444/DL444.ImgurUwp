@@ -50,4 +50,4 @@ __Public Beta 0.2.0__
 - [ ] Accessibility  
 - [ ] Keyboard shortcut  
 ## Known issues
-- It is said that Imgur might block some China users from completing OAuth authentication. Personal experiment also suggests so. If you are in China and are experiencing authentication issues, please try again from _outside_ of China.
+- It is said that Imgur might block some China users from completing OAuth authentication, and Imgur is inaccessible for some China users. If you are in China and are experiencing issues, please try again from _outside_ of China.

@@ -110,6 +110,13 @@ namespace DL444.ImgurUwp.App.Pages
                 }
             }
         }
-    }
 
+        private void ImageGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is ItemViewModel item)
+            {
+                Navigation.Navigate(typeof(ImageView), (ViewModel.MyImages, item));
+            }
+        }
+    }
 }

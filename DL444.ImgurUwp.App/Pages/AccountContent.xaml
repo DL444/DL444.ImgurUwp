@@ -85,7 +85,7 @@
             </PivotItem>
             <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind ViewModel.IsOwner}">
                 <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
-                                      ItemsSource="{x:Bind ViewModel.MyImages, Mode=OneWay}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                                      ItemsSource="{x:Bind ViewModel.MyImages, Mode=OneWay}" ItemClick="ImageGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
         </Pivot>
     </Grid>
