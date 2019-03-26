@@ -175,6 +175,7 @@
     <Compile Include="StaticData.cs" />
     <Compile Include="Themes\Templates.cs" />
     <Compile Include="ViewModels\AccountContentPageViewModel.cs" />
+    <Compile Include="ViewModels\AccountDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewPageViewModel.cs" />
     <Compile Include="ViewModels\TagPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelManager.cs" />

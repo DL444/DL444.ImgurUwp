@@ -22,111 +22,117 @@
         </ResourceDictionary>
     </Page.Resources>
 
-    <tkc:AdaptiveGridView x:Name="RootListView" ItemsSource="{x:Bind Posts, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemGridTemplate}"
+    <Grid>
+        <tkc:AdaptiveGridView x:Name="RootListView" ItemsSource="{x:Bind PageViewModel.Posts, Mode=OneWay}" ItemTemplate="{ThemeResource GalleryItemGridTemplate}"
               SelectionMode="None" IsItemClickEnabled="True" ItemClick="PostList_ItemClick" DesiredWidth="300" ItemHeight="300" StretchContentForSingleRow="False" Padding="16,0">
-        <tkc:AdaptiveGridView.Header>
-            <Grid Margin="-16,-100,-16,8" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
-                <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="520" VerticalAlignment="Top" VerticalShift="500">
-                    <Image Source="{x:Bind ViewModel.CoverUrl}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
-                </ParallaxView>
+            <tkc:AdaptiveGridView.Header>
+                <Grid Margin="-16,-100,-16,8" Padding="0,100,0,0" Background="{ThemeResource HeroImagePlaceholderAccentColorBrush}">
+                    <ParallaxView Source="{x:Bind RootListView}" Margin="0,-100,0,0" Height="520" VerticalAlignment="Top" VerticalShift="500">
+                        <Image Source="{x:Bind PageViewModel.ViewModel.CoverUrl}" Stretch="UniformToFill" HorizontalAlignment="Center"/>
+                    </ParallaxView>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <PersonPicture HorizontalAlignment="Center" VerticalAlignment="Center" ProfilePicture="{x:Bind ViewModel.AvatarUrl}" Height="96"/>
-                    <Grid Grid.Row="1" Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
-                        <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="{x:Bind ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}" Margin="0,16,0,0"/>
-                            
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
-                                <TextBox Text="{x:Bind ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
-                                 MaxWidth="460" IsEnabled="{x:Bind IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
-                                 TextWrapping="NoWrap" Visibility="{x:Bind BioVisilibity}"/>
-                                <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
-                            </StackPanel>
+                        <PersonPicture HorizontalAlignment="Center" VerticalAlignment="Center" ProfilePicture="{x:Bind PageViewModel.ViewModel.AvatarUrl}" Height="96"/>
+                        <Grid Grid.Row="1" Background="{ThemeResource AccountPageHeaderAcrylicBrush}">
+                            <StackPanel HorizontalAlignment="Center">
+                                <TextBlock Text="{x:Bind PageViewModel.ViewModel.Username}" HorizontalAlignment="Center" Style="{ThemeResource SubheaderTextBlockStyle}" Margin="0,16,0,0"/>
 
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="32" Margin="0,8,0,0">
-                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}">
-                                    <tkc:HeaderedContentControl.Header>
-                                        <TextBlock Text="Joined" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </tkc:HeaderedContentControl.Header>
-                                </tkc:HeaderedContentControl>
-                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.Reputation}">
-                                    <tkc:HeaderedContentControl.Header>
-                                        <TextBlock Text="Points" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </tkc:HeaderedContentControl.Header>
-                                </tkc:HeaderedContentControl>
-                                <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind ViewModel.ReputationName}">
-                                    <tkc:HeaderedContentControl.Header>
-                                        <TextBlock Text="Notoriety" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
-                                    </tkc:HeaderedContentControl.Header>
-                                </tkc:HeaderedContentControl>
-                            </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0" Spacing="8">
+                                    <TextBox Text="{x:Bind PageViewModel.ViewModel.Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="{x:Bind PageViewModel.BioPlaceholderText}" Style="{ThemeResource ClickEditTextBoxStyle}"
+                                 MaxWidth="460" IsEnabled="{x:Bind PageViewModel.IsOwner}" IsSpellCheckEnabled="False" VerticalAlignment="Center" TextAlignment="Center" GotFocus="BioTextBox_GotFocus" LostFocus="BioTextBox_LostFocus"
+                                 TextWrapping="NoWrap" Visibility="{x:Bind PageViewModel.BioVisilibity}"/>
+                                    <cc:SymbolTextButton x:Name="BioAcceptBtn" Visibility="Collapsed" Icon="Accept" Content="{x:Null}" VerticalAlignment="Center" HoverForeground="{ThemeResource SystemAccentColorBrush}" PressedForeground="{ThemeResource SystemAccentColorBrush}"/>
+                                </StackPanel>
 
-                            <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,8" Padding="16,0"
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="32" Margin="0,8,0,0">
+                                    <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind PageViewModel.ViewModel.CreatedTime, Converter={StaticResource DateStringConverter}}">
+                                        <tkc:HeaderedContentControl.Header>
+                                            <TextBlock Text="Joined" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                        </tkc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl>
+                                    <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind PageViewModel.ViewModel.Reputation}">
+                                        <tkc:HeaderedContentControl.Header>
+                                            <TextBlock Text="Points" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                        </tkc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl>
+                                    <tkc:HeaderedContentControl Orientation="Horizontal" Content="{x:Bind PageViewModel.ViewModel.ReputationName}">
+                                        <tkc:HeaderedContentControl.Header>
+                                            <TextBlock Text="Notoriety" Style="{ThemeResource BaseTextBlockStyle}" Margin="0,0,12,0"/>
+                                        </tkc:HeaderedContentControl.Header>
+                                    </tkc:HeaderedContentControl>
+                                </StackPanel>
+
+                                <ListView HorizontalAlignment="Center" ItemsSource="{x:Bind PageViewModel.DisplayedTrophies, Mode=OneWay}" IsItemClickEnabled="False" SelectionMode="None" Margin="0,16,0,8" Padding="16,0"
                                       ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollMode="Disabled">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="vm:TrophyViewModel">
-                                        <Image Source="{x:Bind Image}" Width="48" Height="48" ToolTipService.ToolTip="{x:Bind DisplayName}"/>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <ItemsStackPanel Orientation="Horizontal"/>
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="ListViewItem">
-                                        <Setter Property="Padding" Value="4,0"/>
-                                        <Setter Property="MinWidth" Value="0"/>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                                <ListView.Footer>
-                                    <Button VerticalAlignment="Stretch" Padding="8,0" Visibility="{x:Bind MoreTrophiesButtonVisibility, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent">
-                                        <Button.Flyout>
-                                            <Flyout Placement="Full">
-                                                <ListView VerticalAlignment="Top" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind Trophies, Mode=OneWay}">
-                                                    <ListView.ItemTemplate>
-                                                        <DataTemplate x:DataType="vm:TrophyViewModel">
-                                                            <Grid ColumnSpacing="12" Margin="0,8" MaxWidth="400">
-                                                                <Grid.ColumnDefinitions>
-                                                                    <ColumnDefinition Width="Auto"/>
-                                                                    <ColumnDefinition/>
-                                                                </Grid.ColumnDefinitions>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:TrophyViewModel">
+                                            <Image Source="{x:Bind Image}" Width="48" Height="48" ToolTipService.ToolTip="{x:Bind DisplayName}"/>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <ItemsStackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Padding" Value="4,0"/>
+                                            <Setter Property="MinWidth" Value="0"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.Footer>
+                                        <Button VerticalAlignment="Stretch" Padding="8,0" Visibility="{x:Bind PageViewModel.MoreTrophiesButtonVisibility, Mode=OneWay}" Background="Transparent" BorderBrush="Transparent">
+                                            <Button.Flyout>
+                                                <Flyout Placement="Full">
+                                                    <ListView VerticalAlignment="Top" HorizontalAlignment="Center" MaxWidth="640" IsItemClickEnabled="False" SelectionMode="None" ScrollViewer.VerticalScrollMode="Disabled" ItemsSource="{x:Bind PageViewModel.Trophies, Mode=OneWay}">
+                                                        <ListView.ItemTemplate>
+                                                            <DataTemplate x:DataType="vm:TrophyViewModel">
+                                                                <Grid ColumnSpacing="12" Margin="0,8" MaxWidth="400">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition/>
+                                                                    </Grid.ColumnDefinitions>
 
-                                                                <Image Source="{x:Bind Image}" Height="96" MinWidth="96"/>
-                                                                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
-                                                                    <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
-                                                                    <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
-                                                                    <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                                                                </StackPanel>
-                                                            </Grid>
-                                                        </DataTemplate>
-                                                    </ListView.ItemTemplate>
-                                                </ListView>
-                                            </Flyout>
-                                        </Button.Flyout>
-                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <TextBlock Text="{x:Bind HiddenTrophiesCount, Mode=OneWay}"/>
-                                            <TextBlock Text="+"/>
-                                        </StackPanel>
-                                    </Button>
-                                </ListView.Footer>
-                            </ListView>
+                                                                    <Image Source="{x:Bind Image}" Height="96" MinWidth="96"/>
+                                                                    <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center" Margin="0,12">
+                                                                        <TextBlock Text="{x:Bind DisplayName}" Style="{ThemeResource BaseTextBlockStyle}"/>
+                                                                        <TextBlock Text="{x:Bind Description}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextWrapping="Wrap"/>
+                                                                        <TextBlock Text="{x:Bind DateTime, Converter={StaticResource DateStringConverter}}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                            </DataTemplate>
+                                                        </ListView.ItemTemplate>
+                                                    </ListView>
+                                                </Flyout>
+                                            </Button.Flyout>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBlock Text="{x:Bind PageViewModel.HiddenTrophiesCount, Mode=OneWay}"/>
+                                                <TextBlock Text="+"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </ListView.Footer>
+                                </ListView>
 
-                            <cc:SymbolTextButton HorizontalAlignment="Center" Icon="Forward" Content="Favs + comments" Margin="0,4,0,12" Click="AccountContentButton_Click"/>
-                        </StackPanel>
+                                <cc:SymbolTextButton HorizontalAlignment="Center" Icon="Forward" Content="Favs + comments" Margin="0,4,0,12" Click="AccountContentButton_Click"/>
+                            </StackPanel>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-        </tkc:AdaptiveGridView.Header>
-        <tkc:AdaptiveGridView.Footer>
-            <Grid x:Name="LoadBar" x:Load="{x:Bind Posts.IsLoading, Mode=OneWay}" Padding="16">
-                <ProgressBar IsIndeterminate="True"/>
-            </Grid>
-        </tkc:AdaptiveGridView.Footer>
-    </tkc:AdaptiveGridView>
+            </tkc:AdaptiveGridView.Header>
+            <tkc:AdaptiveGridView.Footer>
+                <Grid x:Name="LoadBar" x:Load="{x:Bind PageViewModel.Posts.IsLoading, Mode=OneWay}" Padding="16">
+                    <ProgressBar IsIndeterminate="True"/>
+                </Grid>
+            </tkc:AdaptiveGridView.Footer>
+        </tkc:AdaptiveGridView>
+
+        <Grid x:Name="LoadingMask" x:Load="{x:Bind PageLoading, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+            <ProgressRing IsActive="True" Width="48" Height="48"/>
+        </Grid>
+    </Grid>
 </Page>

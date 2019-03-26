@@ -27,96 +27,60 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class AccountDetails : Page, INotifyPropertyChanged
     {
-        private AccountViewModel _viewModel;
-        private string originalBio;
-        private int _hiddenTrophiesCount;
-
-        AccountViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                _viewModel = value;
-                originalBio = value.Biography;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
-            }
-        }
-
-        GalleryProfileViewModel Profile { get; set; }
-        ObservableCollection<TrophyViewModel> Trophies { get; set; } = new ObservableCollection<TrophyViewModel>();
-        ObservableCollection<TrophyViewModel> DisplayedTrophies { get; set; } = new ObservableCollection<TrophyViewModel>();
-        int HiddenTrophiesCount
-        {
-            get => _hiddenTrophiesCount;
-            set
-            {
-                _hiddenTrophiesCount = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HiddenTrophiesCount)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MoreTrophiesButtonVisibility)));
-            }
-        }
-        Visibility MoreTrophiesButtonVisibility => HiddenTrophiesCount == 0 ? Visibility.Collapsed : Visibility.Visible;
-
-
-        IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel> Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>();
-
-        ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
-
-        string BioPlaceholderText { get; set; }
-        Visibility BioVisilibity => this.IsOwner ? Visibility.Visible : (ViewModel == null || string.IsNullOrWhiteSpace(ViewModel.Biography) ? Visibility.Collapsed : Visibility.Visible);
-
-        public bool IsOwner => ViewModel == null ? false : ViewModel.Username == ApiClient.OwnerAccount;
+        AccountDetailsPageViewModel PageViewModel { get; set; }
+        bool _pageLoading;
 
         public AccountDetails()
         {
             this.InitializeComponent();
         }
 
+        public bool PageLoading
+        {
+            get => _pageLoading;
+            set
+            {
+                _pageLoading = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PageLoading)));
+            }
+        }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            // TODO: After implementing account subpage, clean up this.
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                await PrepareViewModels(vm);
+                var cache = ViewModelManager.GetViewModel<AccountDetailsPageViewModel>(nameof(AccountDetailsPageViewModel));
+                if(cache != null && cache.ViewModel.Username == vm.Username)
+                {
+                    PageViewModel = cache;
+                }
+                else
+                {
+                    PageLoading = true;
+                    PageViewModel = await AccountDetailsPageViewModel.CreateFromAccount(vm);
+                    PageLoading = false;
+                    ViewModelManager.AddOrUpdateViewModel(nameof(AccountDetailsPageViewModel), PageViewModel);
+                }
+                Bindings.Update();
             }
             else if(e.Parameter is string username)
             {
-                var account = await ApiClient.Client.GetAccountAsync(username);
-                await PrepareViewModels(new AccountViewModel(account));
-            }
-
-        }
-
-        async Task PrepareViewModels(AccountViewModel vm)
-        {
-            ViewModel = vm;
-            if(IsOwner) { BioPlaceholderText = "Tell Imgur a little about yourself..."; }
-            else { BioPlaceholderText = ""; }
-            Bindings.Update();
-
-            var profile = await ApiClient.Client.GetAccountGalleryProfileAsync(ViewModel.Username);
-            Profile = new GalleryProfileViewModel(profile);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Profile)));
-
-            foreach (var t in profile.Trophies)
-            {
-                var trophyVm = new TrophyViewModel(t);
-                Trophies.Add(trophyVm);
-                if (DisplayedTrophies.Count < 7 && !DisplayedTrophies.Any(x => x.Name == trophyVm.Name))
+                var cache = ViewModelManager.GetViewModel<AccountDetailsPageViewModel>(nameof(AccountDetailsPageViewModel));
+                if(cache != null && cache.ViewModel.Username == username)
                 {
-                    DisplayedTrophies.Add(trophyVm);
+                    PageViewModel = cache;
                 }
+                else
+                {
+                    PageLoading = true;
+                    PageViewModel = await AccountDetailsPageViewModel.CreateFromAccountUsername(username);
+                    PageLoading = false;
+                    ViewModelManager.AddOrUpdateViewModel(nameof(AccountDetailsPageViewModel), PageViewModel);
+                }
+                Bindings.Update();
             }
-            HiddenTrophiesCount = Trophies.Count - DisplayedTrophies.Count;
-
-            AccountPostSource source = new AccountPostSource(ViewModel.Username);
-            Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Posts)));
-
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         private void BioTextBox_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -126,65 +90,22 @@ namespace DL444.ImgurUwp.App.Pages
         private async void BioTextBox_LostFocus(object sender, RoutedEventArgs e)
         {
             BioAcceptBtn.Visibility = Visibility.Collapsed;
-            if(originalBio != ViewModel.Biography)
-            {
-                bool result = await ApiClient.Client.SetAccountProfileAsync(ViewModel.Username, ViewModel.Biography);
-                if(result == true)
-                {
-                    originalBio = ViewModel.Biography;
-                }
-                else
-                {
-                    ViewModel.Biography = originalBio;
-                }
-            }
+            await PageViewModel.ChangeBio();
         }
 
         private void PostList_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
-            var source = new AccountPostSource(ViewModel.Username, Posts, Posts.Source.Page);
+            var source = new AccountPostSource(PageViewModel.ViewModel.Username, PageViewModel.Posts, PageViewModel.Posts.Source.Page);
             Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), new GalleryItemDetailsNavigationParameter(item, source));
         }
 
         private void AccountContentButton_Click(object sender, RoutedEventArgs e)
         {
-            if(ViewModel == null) { return; }
-            Navigation.ContentFrame.Navigate(typeof(AccountContent), ViewModel, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
-        }
-    }
-
-    public class AccountPostSource : IncrementalItemsSource<GalleryItemViewModel>
-    {
-        public string Account { get; private set; }
-        public int Page { get; private set; }
-
-        public AccountPostSource() : this("") { }
-        public AccountPostSource(string account)
-        {
-            Account = account ?? throw new ArgumentNullException(nameof(account));
-        }
-        public AccountPostSource(string account, IEnumerable<GalleryItemViewModel> items, int startPage) : base(items)
-        {
-            Account = account ?? throw new ArgumentNullException(nameof(account));
-            Page = startPage;
+            if(PageViewModel.ViewModel == null) { return; }
+            Navigation.ContentFrame.Navigate(typeof(AccountContent), PageViewModel.ViewModel, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
         }
 
-        protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
-        {
-            if(string.IsNullOrEmpty(Account))
-            {
-                return null;
-            }
-
-            var posts = await ApiClient.Client.GetAccountSubmissionsAsync(Account, Page);
-            List<GalleryItemViewModel> items = new List<GalleryItemViewModel>();
-            foreach(var p in posts)
-            {
-                items.Add(new GalleryItemViewModel(p));
-            }
-            Page++;
-            return items;
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
