@@ -988,6 +988,7 @@
             <vm:InvertBoolConverter x:Key="InvertBoolConverter"/>
 
             <x:Double x:Key="ImageListViewMaxWidth">800</x:Double>
+            <FontFamily x:Key="ImgurMDL2Font">/Assets/ImgurMDL2.ttf#ImgurMDL2</FontFamily>
 
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Dark">

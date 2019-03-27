@@ -204,6 +204,9 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="Assets\ApiKey.json" />
+    <Content Include="Assets\ImgurMDL2.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="DL444.ImgurUwp.App_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

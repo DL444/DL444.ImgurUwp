@@ -152,13 +152,24 @@
                 </FlipView.ItemTemplate>
             </FlipView>
 
-            <CommandBar Grid.Row="1" DefaultLabelPosition="Right" Background="Transparent" Padding="12,0">
-                <AppBarButton Icon="Add" Label="Add to album"/>
-                <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
-                    <AppBarButton.Resources>
-                        <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
-                    </AppBarButton.Resources>
-                </AppBarButton>
+            <CommandBar Grid.Row="1" DefaultLabelPosition="Right" Background="Transparent" Padding="8,0">
+                <CommandBar.PrimaryCommands>
+                    <AppBarButton Icon="Download" Label="Download"/>
+                    <AppBarButton Icon="Copy" Label="Copy link"/>
+                    <AppBarButton Label="Add to album">
+                        <AppBarButton.Icon>
+                            <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE900;"/>
+                        </AppBarButton.Icon>
+                    </AppBarButton>
+                    <!--<AppBarButton Icon="Edit" Label="Edit image"/>-->
+                </CommandBar.PrimaryCommands>
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                        <AppBarButton.Resources>
+                            <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                        </AppBarButton.Resources>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
             </CommandBar>
 
             <ListView Grid.Row="2" ItemsSource="{x:Bind Images}" SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" ItemContainerStyle="{ThemeResource ContextIndicatorListViewItemStyle}"
