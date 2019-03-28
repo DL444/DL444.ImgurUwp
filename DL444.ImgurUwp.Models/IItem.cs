@@ -18,5 +18,10 @@
         bool? IsAlbum { get; set; }
 
         string AccountUrl { get; set; }
+
+
+        // Non-gallery items generally do not have points. But since account favorites endpoint
+        // does not correctly indicate whether item is in gallery or not, this is used to determine.
+        int? Points { get; set; }
     }
 }

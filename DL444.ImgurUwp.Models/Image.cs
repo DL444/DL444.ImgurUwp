@@ -33,5 +33,7 @@ namespace DL444.ImgurUwp.Models
         public bool? IsAlbum { get; set; }
         [JsonProperty(PropertyName = "account_url")]
         public string AccountUrl { get; set; }
+
+        public int? Points { get; set; }
     }
 }

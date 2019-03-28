@@ -93,6 +93,7 @@ namespace DL444.ImgurUwp.App.Pages
         {
             if (e.ClickedItem is AccountAlbumViewModel accountAlbum)
             {
+                // Albums
                 if (accountAlbum.InGallery)
                 {
                     Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), accountAlbum.Id);
@@ -104,9 +105,15 @@ namespace DL444.ImgurUwp.App.Pages
             }
             else if (e.ClickedItem is ItemViewModel item)
             {
-                if (item.InGallery)
+                // Account Favorites
+                if (item.Item.Points != null && item.InGallery)
                 {
+                    // Gallery
                     Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
+                }
+                else
+                {
+                    // Non-gallery
                 }
             }
         }
