@@ -154,8 +154,8 @@
 
             <CommandBar Grid.Row="1" DefaultLabelPosition="Right" Background="Transparent" Padding="8,0">
                 <CommandBar.PrimaryCommands>
-                    <AppBarButton Icon="Download" Label="Download"/>
-                    <AppBarButton Icon="Copy" Label="Copy link"/>
+                    <AppBarButton Icon="Download" Label="Download" Command="{x:Bind SelectedItem.DownloadCommand, Mode=OneWay}"/>
+                    <AppBarButton Icon="Copy" Label="Copy link" Command="{x:Bind SelectedItem.CopyUrlCommand, Mode=OneWay}"/>
                     <AppBarButton Label="Add to album">
                         <AppBarButton.Icon>
                             <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE900;"/>
@@ -164,7 +164,7 @@
                     <!--<AppBarButton Icon="Edit" Label="Edit image"/>-->
                 </CommandBar.PrimaryCommands>
                 <CommandBar.SecondaryCommands>
-                    <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                    <AppBarButton Icon="Delete" Label="Delete" Foreground="{ThemeResource AdaptiveRedColorBrush}" Click="Delete_Click">
                         <AppBarButton.Resources>
                             <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
                         </AppBarButton.Resources>

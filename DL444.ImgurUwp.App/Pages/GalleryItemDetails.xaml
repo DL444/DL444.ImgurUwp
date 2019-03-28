@@ -73,7 +73,11 @@
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Icon="LeaveChat" Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}"/>
+                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}">
+                                <AppBarButton.Icon>
+                                    <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
+                                </AppBarButton.Icon>
+                            </AppBarButton>
                             <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
@@ -103,8 +107,12 @@
                 </StackPanel>
                 <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
 
-                <cc:SymbolTextButton Content="{x:Null}" Icon="LeaveChat" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}"/>
+                <cc:SymbolTextButton Content="{x:Null}" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
+                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}">
+                    <cc:SymbolTextButton.Icon>
+                            <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
+                    </cc:SymbolTextButton.Icon>
+                </cc:SymbolTextButton>
                 <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
                                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"/>
                 <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 

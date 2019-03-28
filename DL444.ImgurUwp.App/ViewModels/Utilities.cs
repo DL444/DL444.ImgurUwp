@@ -266,6 +266,25 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
     }
 
+    static class CommonOperations
+    {
+        public static async Task Save(Windows.Storage.Streams.IInputStream inputStream, string filename)
+        {
+            var pictureLib = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Pictures);
+            var defaultFolder = await pictureLib.SaveFolder.GetFolderAsync("Imgur");
+            if (defaultFolder == null)
+            {
+                defaultFolder = await pictureLib.SaveFolder.CreateFolderAsync("Imgur");
+            }
+
+            var file = await defaultFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.GenerateUniqueName);
+            using (var fileStream = (await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite)))
+            {
+                await Windows.Storage.Streams.RandomAccessStream.CopyAsync(inputStream, fileStream);
+            }
+        }
+    }
+
     public interface IReportable { }
     interface IManagedViewModel { }
 }

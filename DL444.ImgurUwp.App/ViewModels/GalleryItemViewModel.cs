@@ -259,17 +259,10 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         async Task<object> Download()
         {
-            var pictureLib = await Windows.Storage.StorageLibrary.GetLibraryAsync(Windows.Storage.KnownLibraryId.Pictures);
-            var defaultFolder = pictureLib.SaveFolder;
-
+            string filename = DisplayImage.Link.Substring(DisplayImage.Link.LastIndexOf('/') + 1);
             using (var imageStream = System.IO.WindowsRuntimeStreamExtensions.AsInputStream(await ApiClient.Client.DownloadMediaAsync(DisplayImage.Link)))
             {
-                string filename = DisplayImage.Link.Substring(DisplayImage.Link.LastIndexOf('/') + 1);
-                var file = await defaultFolder.CreateFileAsync(filename, Windows.Storage.CreationCollisionOption.GenerateUniqueName);
-                using (var fileStream = (await file.OpenAsync(Windows.Storage.FileAccessMode.ReadWrite)))
-                {
-                    await Windows.Storage.Streams.RandomAccessStream.CopyAndCloseAsync(imageStream, fileStream);
-                }
+                await CommonOperations.Save(imageStream, filename);
             }
             return null;
         }

@@ -110,7 +110,44 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public bool HasTitle => !string.IsNullOrEmpty(Title);
 
-        public ItemViewModel() { }
+        public AsyncCommand<object> DownloadCommand { get; private set; }
+        public Command CopyUrlCommand { get; private set; }
+        public AsyncCommand<bool> DeleteCommand { get; private set; }
+
+        async Task<object> Download()
+        {
+            string filename = DisplayImage.Link.Substring(DisplayImage.Link.LastIndexOf('/') + 1);
+            using (var imageStream = System.IO.WindowsRuntimeStreamExtensions.AsInputStream(await ApiClient.Client.DownloadMediaAsync(DisplayImage.Link)))
+            {
+                await CommonOperations.Save(imageStream, filename);
+            }
+            return null;
+        }
+        void CopyUrl()
+        {
+            var package = new Windows.ApplicationModel.DataTransfer.DataPackage();
+            package.SetText(Link);
+            Windows.ApplicationModel.DataTransfer.Clipboard.SetContent(package);
+        }
+        async Task<bool> Delete()
+        {
+            if(IsAlbum)
+            {
+                return await ApiClient.Client.DeleteAlbumAsync(Id);
+            }
+            else
+            {
+                return await ApiClient.Client.DeleteImageAsync(Id);
+            }
+        }
+
+
+        public ItemViewModel()
+        {
+            DownloadCommand = new AsyncCommand<object>(Download);
+            CopyUrlCommand = new Command(CopyUrl);
+            DeleteCommand = new AsyncCommand<bool>(Delete);
+        }
         public ItemViewModel(IItem item) : this()
         {
             Item = item;

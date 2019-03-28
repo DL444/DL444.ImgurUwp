@@ -37,17 +37,16 @@ namespace DL444.ImgurUwp.App.Pages
             get => _selectedItem;
             set
             {
-                if(object.ReferenceEquals(value, _selectedItem)) { return; }
+                if (object.ReferenceEquals(value, _selectedItem)) { return; }
                 _selectedItem = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedItem)));
             }
         }
 
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is ValueTuple<IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>, ItemViewModel> navParam)
+            if (e.Parameter is ValueTuple<IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>, ItemViewModel> navParam)
             {
                 Images = navParam.Item1;
                 SelectedItem = navParam.Item2;
@@ -55,5 +54,23 @@ namespace DL444.ImgurUwp.App.Pages
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private async void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            await SelectedItem.DeleteCommand.ExecuteAsync(null);
+            if(SelectedItem.DeleteCommand.Execution.Value == true)
+            {
+                var index = Images.IndexOf(SelectedItem);
+                Images.Remove(SelectedItem);
+                if(Images.Count == 0)
+                {
+                    Navigation.ContentFrame.GoBack();
+                }
+                else
+                {
+                    SelectedItem = Images[index];
+                }
+            }
+        }
     }
 }
