@@ -57,12 +57,11 @@ namespace DL444.ImgurUwp.App.Pages
 
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
+            var index = Images.IndexOf(SelectedItem);
             await SelectedItem.DeleteCommand.ExecuteAsync(null);
-            if(SelectedItem.DeleteCommand.Execution.Value == true)
+            if(SelectedItem == null)
             {
-                var index = Images.IndexOf(SelectedItem);
-                Images.Remove(SelectedItem);
-                if(Images.Count == 0)
+                if (Images.Count == 0)
                 {
                     Navigation.ContentFrame.GoBack();
                 }

@@ -34,6 +34,5 @@ namespace DL444.ImgurUwp.Models
         public bool InGallery { get; set; }
         [JsonProperty(PropertyName = "is_album")]
         public bool? IsAlbum { get; set; }
-
     }
 }

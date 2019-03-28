@@ -69,6 +69,29 @@
     </DataTemplate>
     <DataTemplate x:Key="NonGalleryItemGridTemplate" x:DataType="vm:ItemViewModel">
         <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+            <Grid.ContextFlyout>
+                <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                    <ui:CommandBarFlyout.PrimaryCommands>
+                        <AppBarToggleButton Label="Favorite" ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind Favorite}" Command="{x:Bind FavoriteItemCommand}">
+                            <AppBarToggleButton.Icon>
+                                <FontIcon Glyph="{x:Bind Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
+                            </AppBarToggleButton.Icon>
+                        </AppBarToggleButton>
+                        <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                        <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
+                        <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
+                    </ui:CommandBarFlyout.PrimaryCommands>
+                    <ui:CommandBarFlyout.SecondaryCommands>
+                        <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
+                        <AppBarButton Icon="Delete" Visibility="{x:Bind IsOwner, Converter={StaticResource BoolVisibilityConverter}}" Label="Delete" Command="{x:Bind DeleteCommand}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                            <AppBarButton.Resources>
+                                <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                            </AppBarButton.Resources>
+                        </AppBarButton>
+                    </ui:CommandBarFlyout.SecondaryCommands>
+                </ui:CommandBarFlyout>
+            </Grid.ContextFlyout>
+            
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>

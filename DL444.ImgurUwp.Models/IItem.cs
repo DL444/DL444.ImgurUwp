@@ -16,5 +16,7 @@
         bool InGallery { get; set; }
 
         bool? IsAlbum { get; set; }
+
+        string AccountUrl { get; set; }
     }
 }

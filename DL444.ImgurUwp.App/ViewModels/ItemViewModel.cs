@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -62,6 +63,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string Description => Item.Description;
         public DateTime DateTime => Convert.ToDateTime(Item.DateTime);
         public string Link => Item.Link;
+        public string AccountUrl => Item.AccountUrl;
 
         public int Views => Item.Views;
         public string DeleteHash => Item.DeleteHash;
@@ -109,10 +111,14 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public bool HasTitle => !string.IsNullOrEmpty(Title);
+        public bool IsOwner => AccountUrl == ApiClient.OwnerAccount;
 
         public AsyncCommand<object> DownloadCommand { get; private set; }
         public Command CopyUrlCommand { get; private set; }
         public AsyncCommand<bool> DeleteCommand { get; private set; }
+        public AsyncCommand<bool> FavoriteItemCommand { get; private set; }
+        public Command ShareCommand { get; set; }
+        public AsyncCommand<object> OpenBrowserCommand { get; private set; }
 
         async Task<object> Download()
         {
@@ -137,16 +143,59 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
             else
             {
-                return await ApiClient.Client.DeleteImageAsync(Id);
+                var result = await ApiClient.Client.DeleteImageAsync(Id);
+                if(result == true)
+                {
+                    var vmCache = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
+                    if(vmCache != null)
+                    {
+                        vmCache.MyImages.Remove(this);
+                    }
+                }
+                return result;
             }
         }
+        async Task<bool> FavoriteItem()
+        {
+            bool result;
+            if (this.IsAlbum)
+            {
+                result = await ApiClient.Client.FavoriteAlbumAsync(Id);
+            }
+            else
+            {
+                result = await ApiClient.Client.FavoriteImageAsync(Id);
+            }
+            this.Favorite = result;
+            return result;
+        }
+        void Share()
+        {
+            var transferMgr = DataTransferManager.GetForCurrentView();
+            transferMgr.DataRequested += TransferMgr_DataRequested;
+            DataTransferManager.ShowShareUI();
+        }
+        async Task<object> OpenBrowser()
+        {
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(Link));
+            return null;
+        }
 
+        private void TransferMgr_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            var request = args.Request;
+            request.Data.SetWebLink(new Uri(Link));
+            request.Data.Properties.Title = string.IsNullOrWhiteSpace(Title) ? "Take a look at this on Imgur!" : $"{Title} - Imgur";
+        }
 
         public ItemViewModel()
         {
             DownloadCommand = new AsyncCommand<object>(Download);
             CopyUrlCommand = new Command(CopyUrl);
             DeleteCommand = new AsyncCommand<bool>(Delete);
+            FavoriteItemCommand = new AsyncCommand<bool>(FavoriteItem);
+            ShareCommand = new Command(Share);
+            OpenBrowserCommand = new AsyncCommand<object>(OpenBrowser);
         }
         public ItemViewModel(IItem item) : this()
         {
