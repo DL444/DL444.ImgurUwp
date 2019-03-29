@@ -12,6 +12,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     {
         protected List<T> items = new List<T>();
         bool hasMoreItems = true;
+        int producedItems = 0;
 
         public IncrementalItemsSource() { }
         public IncrementalItemsSource(IEnumerable<T> items) : this()
@@ -31,6 +32,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 if(newItems == null || !newItems.Any())
                 {
                     hasMoreItems = false;
+                    producedItems += items.Count;
                     return items.Skip(lowerBound).Take(pageSize);
                 }
                 else
@@ -39,13 +41,33 @@ namespace DL444.ImgurUwp.App.ViewModels
                     {
                         items.Add(i);
                     }
+                    producedItems += pageSize;
                 }
             }
 
             return items.Skip(lowerBound).Take(pageSize);
         }
-
         protected abstract Task<IEnumerable<T>> GetItemsFromSourceAsync(CancellationToken cancellationToken);
+
+        public bool Replace(Func<T, bool> predicate, T newItem)
+        {
+            var item = items.Skip(producedItems).FirstOrDefault(predicate);
+            if (item != null)
+            {
+                item = newItem;
+                return true;
+            }
+            else { return false; }
+        }
+        public bool Remove(Func<T, bool> predicate)
+        {
+            var item = items.FirstOrDefault(predicate);
+            if(item != null)
+            {
+                return items.Remove(item);
+            }
+            else { return false; }
+        }
     }
 
     class IncrementalLoadingCollection<TSource, IType> : Microsoft.Toolkit.Uwp.IncrementalLoadingCollection<TSource, IType> where TSource : IIncrementalSource<IType>
@@ -56,6 +78,40 @@ namespace DL444.ImgurUwp.App.ViewModels
             : base(itemsPerPage, onStartLoading, onEndLoading, onError) { }
         public IncrementalLoadingCollection(TSource source, int itemsPerPage = 20, Action onStartLoading = null, Action onEndLoading = null, Action<Exception> onError = null)
             : base(source, itemsPerPage, onStartLoading, onEndLoading, onError) { }
+
+        public bool Replace(Func<IType, bool> predicate, IType newItem)
+        {
+            var item = this.FirstOrDefault(predicate);
+            if (item != null)
+            {
+                item = newItem;
+                return true;
+            }
+            else if (Source is IncrementalItemsSource<IType> incSource)
+            {
+                return incSource.Replace(predicate, newItem);
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool Remove(Func<IType, bool> predicate)
+        {
+            var item = this.FirstOrDefault(predicate);
+            if(item == null)
+            {
+                if(Source is IncrementalItemsSource<IType> incSource)
+                {
+                    return incSource.Remove(predicate);
+                }
+                else { return false; }
+            }
+            else
+            {
+                return this.Remove(item);
+            }
+        }
     }
 
     public class StaticIncrementalSource<T> : IncrementalItemsSource<T>

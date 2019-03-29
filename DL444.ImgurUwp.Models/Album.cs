@@ -17,7 +17,7 @@ namespace DL444.ImgurUwp.Models
         [JsonProperty(PropertyName = "account_url")]
         public string AccountUrl { get; set; }
         [JsonProperty(PropertyName = "account_id")]
-        public int AccountId { get; set; }
+        public int? AccountId { get; set; }
         public string Privacy { get; set; }
         public string Layout { get; set; }
         public int Views { get; set; }

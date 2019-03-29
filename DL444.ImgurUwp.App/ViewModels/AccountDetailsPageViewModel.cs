@@ -10,7 +10,7 @@ using Windows.UI.Xaml;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class AccountDetailsPageViewModel : IManagedViewModel, INotifyPropertyChanged
+    class AccountDetailsPageViewModel : CachingViewModel, INotifyPropertyChanged
     {
         private AccountViewModel _viewModel;
         private string originalBio;

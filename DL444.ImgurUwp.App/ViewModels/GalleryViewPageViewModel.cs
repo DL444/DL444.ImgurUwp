@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class GalleryViewPageViewModel : IManagedViewModel, INotifyPropertyChanged
+    class GalleryViewPageViewModel : CachingViewModel, INotifyPropertyChanged
     {
         private IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> _items;
         public IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> Items

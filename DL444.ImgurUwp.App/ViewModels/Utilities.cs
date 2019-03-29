@@ -286,5 +286,4 @@ namespace DL444.ImgurUwp.App.ViewModels
     }
 
     public interface IReportable { }
-    interface IManagedViewModel { }
 }

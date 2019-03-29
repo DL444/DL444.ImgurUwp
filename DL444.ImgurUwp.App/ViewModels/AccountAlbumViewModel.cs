@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class AccountAlbumViewModel : INotifyPropertyChanged
+    class AccountAlbumViewModel : INotifyPropertyChanged
     {
         private Album _album;
         public Album Album
@@ -39,7 +39,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public int CoverWidth => Album.CoverWidth ?? 0;
         public int CoverHeight => Album.CoverHeight ?? 0;
         public string AccountUrl => Album.AccountUrl;
-        public int AccountId => Album.AccountId;
+        public int AccountId => Album.AccountId ?? 0;
         public string Privacy => Album.Privacy;
         public int Views => Album.Views;
         public string Link => Album.Link;
@@ -94,22 +94,24 @@ namespace DL444.ImgurUwp.App.ViewModels
             var result = await ApiClient.Client.DeleteAlbumAsync(Id);
             if(result == true)
             {
-                var parentVm = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
-                if(parentVm != null)
-                {
-                    parentVm.MyAlbums.Remove(this);
-                }
+                // TODO: Implement
             }
             return result;
         }
         async Task<bool> GalleryRemove()
         {
-            return await ApiClient.Client.RemoveGalleryItemAsync(Id);
+            var result = await ApiClient.Client.RemoveGalleryItemAsync(Id);
+            if(result == true)
+            {
+                // TODO: Implement
+            }
+            return result;
         }
         async Task<bool> FavoriteItem()
         {
             bool result = await ApiClient.Client.FavoriteAlbumAsync(Id);
             Favorite = result;
+            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             return result;
         }
         void Share()

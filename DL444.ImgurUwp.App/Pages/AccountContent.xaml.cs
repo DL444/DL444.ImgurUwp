@@ -40,7 +40,6 @@ namespace DL444.ImgurUwp.App.Pages
             set
             {
                 _viewModel = value;
-                ViewModelManager.AddOrUpdateViewModel(nameof(AccountContentPageViewModel), _viewModel);
             }
         }
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -49,20 +48,21 @@ namespace DL444.ImgurUwp.App.Pages
             int index = 0;
             if (e.Parameter is AccountViewModel vm)
             {
-                var cache = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
-                if(cache != null && cache.Account.Username == vm.Username)
+                var cache = ViewModelCacheManager.Instance.Peek<AccountContentPageViewModel>();
+                if (cache != null && cache.Account.Username == vm.Username)
                 {
                     _viewModel = cache;
                 }
                 else
                 {
                     ViewModel = new AccountContentPageViewModel(vm);
+                    ViewModelCacheManager.Instance.Push(ViewModel);
                 }
                 Bindings.Update();
             }
             else if (e.Parameter is ValueTuple<AccountViewModel, int> vmIndex)
             {
-                var cache = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
+                var cache = ViewModelCacheManager.Instance.Peek<AccountContentPageViewModel>();
                 if (cache != null && cache.Account.Username == vmIndex.Item1.Username)
                 {
                     _viewModel = cache;
@@ -70,6 +70,7 @@ namespace DL444.ImgurUwp.App.Pages
                 else
                 {
                     ViewModel = new AccountContentPageViewModel(vmIndex.Item1);
+                    ViewModelCacheManager.Instance.Push(ViewModel);
                 }
                 Bindings.Update();
                 index = vmIndex.Item2;
@@ -82,6 +83,15 @@ namespace DL444.ImgurUwp.App.Pages
                 }
             }
             RootPivot.SelectedIndex = index;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if(e.NavigationMode == NavigationMode.Back)
+            {
+                ViewModelCacheManager.Instance.Pop<AccountContentPageViewModel>();
+            }
         }
 
         private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
@@ -105,6 +115,7 @@ namespace DL444.ImgurUwp.App.Pages
             }
             else if (e.ClickedItem is ItemViewModel item)
             {
+                // TODO: Hey! Everything seems wrong from Favorites endpoint.
                 // Account Favorites
                 if (item.Item.Points != null && item.InGallery)
                 {
@@ -114,6 +125,14 @@ namespace DL444.ImgurUwp.App.Pages
                 else
                 {
                     // Non-gallery
+                    if(item.IsAlbum)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
                 }
             }
         }

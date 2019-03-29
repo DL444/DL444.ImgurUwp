@@ -32,7 +32,7 @@ namespace DL444.ImgurUwp.App.Pages
         private ItemViewModel _selectedItem;
 
         IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel> Images { get; set; } = null;
-        public ItemViewModel SelectedItem
+        ItemViewModel SelectedItem
         {
             get => _selectedItem;
             set

@@ -29,6 +29,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -180,6 +181,8 @@
     <Compile Include="ViewModels\AccountContentPageViewModel.cs" />
     <Compile Include="ViewModels\AccountDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewPageViewModel.cs" />
+    <Compile Include="ViewModels\MessageBus\Messages.cs" />
+    <Compile Include="ViewModels\MessageBus\ViewModelMessageBus.cs" />
     <Compile Include="ViewModels\TagPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelManager.cs" />
     <Compile Include="ViewModels\AccountAlbumViewModel.cs" />

@@ -126,6 +126,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Downvoted)));
             }
         }
+        public bool IsOwner => Item.AccountUrl == ApiClient.OwnerAccount;
 
         public int Points => _item.Points;
         public int Score => _item.Score.GetValueOrDefault();
@@ -188,6 +189,16 @@ namespace DL444.ImgurUwp.App.ViewModels
             PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
             FavoriteCommand = new AsyncCommand<bool>(FavoriteItem);
             GoToAuthorCommand = new Command(GoToAuthor);
+            FavoriteChangedMessageHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
+            {
+                if (x.Id == Id && x.IsAlbum == IsAlbum)
+                {
+                    Favorite = x.Favorite;
+                    return true;
+                }
+                return false;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.FavoriteChangedMessageListener(FavoriteChangedMessageHandler));
         }
         public GalleryItemViewModel(IGalleryItem item) : this()
         {
@@ -229,6 +240,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 result = await ApiClient.Client.FavoriteImageAsync(Id);
             }
             this.Favorite = result;
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.FavoriteChangedMessage(Id, IsAlbum, Favorite));
             return result;
         }
 
@@ -284,6 +296,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             Comment = "";
             return commentId;
         }
+
+        Func<MessageBus.FavoriteChangedMessage, bool> FavoriteChangedMessageHandler = null;
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
         {

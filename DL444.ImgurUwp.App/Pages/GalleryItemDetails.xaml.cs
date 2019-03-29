@@ -58,6 +58,7 @@ namespace DL444.ImgurUwp.App.Pages
             {
                 GalleryItemViewModel vm = new GalleryItemViewModel(await ApiClient.Client.GetGalleryItemAsync(id));
                 GalleryDetailsSidebarItemSource itemSource = new GalleryDetailsSidebarItemSource(null);
+                GalleryVm = new IncrementalLoadingCollection<GalleryDetailsSidebarItemSource, GalleryItemViewModel>(itemSource);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(GalleryVm)));
                 await PrepareViewModels(vm);
             }

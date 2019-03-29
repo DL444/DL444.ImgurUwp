@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class UploadViewModel : INotifyPropertyChanged
+    class UploadViewModel : INotifyPropertyChanged
     {
         public const int ImageSizeLimit = 10 * 1024 * 1024;
         private string _title;
@@ -182,6 +182,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             var deleteResult = await ApiClient.Client.EditAlbumImageAsync(AlbumId, DeleteList.Select(x => x.Id), ImgurUwp.ApiClient.AlbumEditMode.Remove);
             if(deleteResult == true) { DeleteList.Clear(); }
 
+            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             Uploading = false;
             return AlbumId;
         }
@@ -192,6 +193,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             var result = await ApiClient.Client.PostToGalleryAsync(AlbumId, Title, null, IsMature, Tags);
             var item = await ApiClient.Client.GetGalleryItemAsync(AlbumId);
             Uploading = false;
+            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             Navigation.Navigate(typeof(Pages.GalleryItemDetails), new Pages.GalleryItemDetailsNavigationParameter(new GalleryItemViewModel(item), null));
             return result;
         }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class AccountContentPageViewModel : INotifyPropertyChanged, IManagedViewModel
+    class AccountContentPageViewModel : CachingViewModel, INotifyPropertyChanged
     {
         private AccountViewModel _account;
 
@@ -57,10 +57,15 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AccountContentPageViewModel() { }
         public AccountContentPageViewModel(AccountViewModel account) => Account = account ?? throw new ArgumentNullException(nameof(account));
 
+        public override bool EqualTo(object item)
+        {
+            return item is AccountContentPageViewModel vm && this.Account.Username == vm.Account.Username;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public class NonGalleryFavoriteIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    class NonGalleryFavoriteIncrementalSource : IncrementalItemsSource<ItemViewModel>
     {
         public int Page { get; private set; }
 
@@ -76,7 +81,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             return items;
         }
     }
-    public class GalleryFavoriteIncrementalSource : IncrementalItemsSource<GalleryItemViewModel>
+    class GalleryFavoriteIncrementalSource : IncrementalItemsSource<GalleryItemViewModel>
     {
         public int Page { get; private set; }
         public string Username { get; }
@@ -97,7 +102,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public GalleryFavoriteIncrementalSource() : this("me") { }
         public GalleryFavoriteIncrementalSource(string username) => Username = username ?? throw new ArgumentNullException(nameof(username));
     }
-    public class CommentIncrementalSource : IncrementalItemsSource<CommentViewModel>
+    class CommentIncrementalSource : IncrementalItemsSource<CommentViewModel>
     {
         public int Page { get; private set; }
         public string Username { get; }
@@ -105,7 +110,6 @@ namespace DL444.ImgurUwp.App.ViewModels
         protected override async Task<IEnumerable<CommentViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
         {
             var items = new List<CommentViewModel>();
-            // TODO: Wait what? Me?
             var comments = await ApiClient.Client.GetAccountCommentsAsync(Username, page: Page);
             foreach (var c in comments)
             {
@@ -118,7 +122,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public CommentIncrementalSource() : this("me") { }
         public CommentIncrementalSource(string username) => Username = username ?? throw new ArgumentNullException(nameof(username));
     }
-    public class MyImageIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    class MyImageIncrementalSource : IncrementalItemsSource<ItemViewModel>
     {
         public int Page { get; private set; }
 
@@ -134,7 +138,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             return items;
         }
     }
-    public class MyAlbumIncrementalSource : IncrementalItemsSource<AccountAlbumViewModel>
+    class MyAlbumIncrementalSource : IncrementalItemsSource<AccountAlbumViewModel>
     {
         public int Page { get; private set; }
 

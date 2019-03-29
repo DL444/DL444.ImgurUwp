@@ -50,8 +50,8 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedTo(e);
             if(e.Parameter is AccountViewModel vm)
             {
-                var cache = ViewModelManager.GetViewModel<AccountDetailsPageViewModel>(nameof(AccountDetailsPageViewModel));
-                if(cache != null && cache.ViewModel.Username == vm.Username)
+                var cache = ViewModelCacheManager.Instance.Peek<AccountDetailsPageViewModel>();
+                if (cache != null && cache.ViewModel.Username == vm.Username)
                 {
                     PageViewModel = cache;
                 }
@@ -60,14 +60,14 @@ namespace DL444.ImgurUwp.App.Pages
                     PageLoading = true;
                     PageViewModel = await AccountDetailsPageViewModel.CreateFromAccount(vm);
                     PageLoading = false;
-                    ViewModelManager.AddOrUpdateViewModel(nameof(AccountDetailsPageViewModel), PageViewModel);
+                    ViewModelCacheManager.Instance.Push(PageViewModel);
                 }
                 Bindings.Update();
             }
             else if(e.Parameter is string username)
             {
-                var cache = ViewModelManager.GetViewModel<AccountDetailsPageViewModel>(nameof(AccountDetailsPageViewModel));
-                if(cache != null && cache.ViewModel.Username == username)
+                var cache = ViewModelCacheManager.Instance.Peek<AccountDetailsPageViewModel>();
+                if (cache != null && cache.ViewModel.Username == username)
                 {
                     PageViewModel = cache;
                 }
@@ -76,9 +76,18 @@ namespace DL444.ImgurUwp.App.Pages
                     PageLoading = true;
                     PageViewModel = await AccountDetailsPageViewModel.CreateFromAccountUsername(username);
                     PageLoading = false;
-                    ViewModelManager.AddOrUpdateViewModel(nameof(AccountDetailsPageViewModel), PageViewModel);
+                    ViewModelCacheManager.Instance.Push(PageViewModel);
                 }
                 Bindings.Update();
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                ViewModelCacheManager.Instance.Pop<AccountDetailsPageViewModel>();
             }
         }
 
@@ -103,7 +112,7 @@ namespace DL444.ImgurUwp.App.Pages
         private void AccountContentButton_Click(object sender, RoutedEventArgs e)
         {
             if(PageViewModel.ViewModel == null) { return; }
-            Navigation.ContentFrame.Navigate(typeof(AccountContent), PageViewModel.ViewModel, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+            Navigation.ContentFrame.Navigate(typeof(AccountContent), PageViewModel.ViewModel, null);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

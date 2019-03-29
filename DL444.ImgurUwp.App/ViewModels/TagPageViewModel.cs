@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class TagPageViewModel : IManagedViewModel, INotifyPropertyChanged
+    class TagPageViewModel : CachingViewModel, INotifyPropertyChanged
     {
         public TagViewModel ViewModel { get; set; }
 

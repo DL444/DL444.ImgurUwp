@@ -9,7 +9,7 @@ using Windows.ApplicationModel.DataTransfer;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    public class ItemViewModel : INotifyPropertyChanged
+    class ItemViewModel : INotifyPropertyChanged
     {
         IItem _item;
         Image _displayImage;
@@ -146,11 +146,12 @@ namespace DL444.ImgurUwp.App.ViewModels
                 var result = await ApiClient.Client.DeleteImageAsync(Id);
                 if(result == true)
                 {
-                    var vmCache = ViewModelManager.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
-                    if(vmCache != null)
-                    {
-                        vmCache.MyImages.Remove(this);
-                    }
+                    // TODO: Implement
+                    //var vmCache = ViewModelManagerC.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
+                    //if(vmCache != null)
+                    //{
+                    //    vmCache.MyImages.Remove(this);
+                    //}
                 }
                 return result;
             }
@@ -166,7 +167,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 result = await ApiClient.Client.FavoriteImageAsync(Id);
             }
-            this.Favorite = result;
+            Favorite = result;
+            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             return result;
         }
         void Share()

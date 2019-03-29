@@ -40,8 +40,8 @@ namespace DL444.ImgurUwp.App.Pages
 
             if (e.Parameter is DisplayParams.Section sect)
             {
-                var cache = ViewModelManager.GetViewModel<GalleryViewPageViewModel>(nameof(GalleryViewPageViewModel));
-                if(cache != null && cache.Section == sect)
+                var cache = ViewModelCacheManager.Instance.Peek<GalleryViewPageViewModel>();
+                if (cache != null && cache.Section == sect)
                 {
                     ViewModel = cache;
                     Bindings.Update();
@@ -51,8 +51,17 @@ namespace DL444.ImgurUwp.App.Pages
                     DisplayParams.Sort sort = sect == DisplayParams.Section.User ? DisplayParams.Sort.Time : DisplayParams.Sort.Viral;
                     ViewModel = new GalleryViewPageViewModel(sect, sort);
                     Bindings.Update();
-                    ViewModelManager.AddOrUpdateViewModel(nameof(GalleryViewPageViewModel), ViewModel);
+                    ViewModelCacheManager.Instance.Push(ViewModel);
                 }
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                ViewModelCacheManager.Instance.Pop<GalleryViewPageViewModel>();
             }
         }
 

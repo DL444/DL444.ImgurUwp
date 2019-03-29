@@ -50,7 +50,7 @@ namespace DL444.ImgurUwp.App.Pages
             base.OnNavigatedTo(e);
             if(e.Parameter is TagViewModel vm)
             {
-                var cache = ViewModelManager.GetViewModel<TagPageViewModel>(nameof(TagPageViewModel));
+                var cache = ViewModelCacheManager.Instance.Peek<TagPageViewModel>();
                 if (cache != null && cache.ViewModel.Name == vm.Name)
                 {
                     PageViewModel = cache;
@@ -64,8 +64,17 @@ namespace DL444.ImgurUwp.App.Pages
                     Bindings.Update();
                     FollowBtn.IsEnabled = true;
                     PageLoading = false;
-                    ViewModelManager.AddOrUpdateViewModel(nameof(TagPageViewModel), PageViewModel);
+                    ViewModelCacheManager.Instance.Push(PageViewModel);
                 }
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                ViewModelCacheManager.Instance.Pop<TagPageViewModel>();
             }
         }
 
