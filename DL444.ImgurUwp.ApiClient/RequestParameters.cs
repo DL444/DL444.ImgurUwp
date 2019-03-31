@@ -26,6 +26,10 @@ namespace DL444.ImgurUwp.ApiClient
             Best, Top, New
         }
     }
+    public enum AccountItemSort
+    {
+        Newest, Oldest
+    }
     public enum GalleryItemType
     {
         Image, Album
@@ -142,10 +146,24 @@ namespace DL444.ImgurUwp.ApiClient
         {
             PublicImagesByDefault = publicImagesByDefault;
             MessagingEnabled = messagingEnabled;
-            AlbumDefaultPrivacy = albumDefaultPrivacy;
             Username = username;
             ShowMature = showMature;
             NewsletterSubscribe = newsletterSubscribe;
+            switch (albumDefaultPrivacy)
+            {
+                case Models.AlbumPrivacyOptions.Hidden:
+                    AlbumDefaultPrivacy = "hidden";
+                    break;
+                case Models.AlbumPrivacyOptions.Secret:
+                    AlbumDefaultPrivacy = "secret";
+                    break;
+                case Models.AlbumPrivacyOptions.Public:
+                    AlbumDefaultPrivacy = "public";
+                    break;
+                default:
+                    AlbumDefaultPrivacy = null;
+                    break;
+            }
         }
 
         public AccountSettingsParams(Models.AccountSettings settings)
@@ -156,7 +174,7 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(PropertyName = "messaging_enabled", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool? MessagingEnabled { get; set; }
         [JsonProperty(PropertyName = "album_privacy", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public Models.AlbumPrivacyOptions? AlbumDefaultPrivacy { get; set; }
+        public string AlbumDefaultPrivacy { get; set; }
         [JsonProperty(PropertyName = "username", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Username { get; set; }
         [JsonProperty(PropertyName = "show_mature", DefaultValueHandling = DefaultValueHandling.Ignore)]

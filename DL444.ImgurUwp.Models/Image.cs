@@ -24,7 +24,7 @@ namespace DL444.ImgurUwp.Models
         [JsonProperty(PropertyName = "mp4_size")]
         public int Mp4Size { get; set; }
         public bool Looping { get; set; }
-        public bool Favorite { get; set; }
+        public bool? Favorite { get; set; }
         public bool? Nsfw { get; set; }
         public string Vote { get; set; }
         [JsonProperty(PropertyName = "in_gallery")]

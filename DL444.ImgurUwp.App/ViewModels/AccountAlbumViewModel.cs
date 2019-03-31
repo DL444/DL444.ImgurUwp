@@ -39,13 +39,13 @@ namespace DL444.ImgurUwp.App.ViewModels
         public int CoverWidth => Album.CoverWidth ?? 0;
         public int CoverHeight => Album.CoverHeight ?? 0;
         public string AccountUrl => Album.AccountUrl;
-        public int AccountId => Album.AccountId ?? 0;
+        public string AccountId => Album.AccountId;
         public string Privacy => Album.Privacy;
         public int Views => Album.Views;
         public string Link => Album.Link;
         public bool Favorite
         {
-            get => Album.Favorite;
+            get => Album.Favorite == true;
             set
             {
                 Album.Favorite = value;
@@ -94,7 +94,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             var result = await ApiClient.Client.DeleteAlbumAsync(Id);
             if(result == true)
             {
-                // TODO: Implement
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.ItemDeleteMessage(Id, IsAlbum));
             }
             return result;
         }
@@ -111,7 +111,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             bool result = await ApiClient.Client.FavoriteAlbumAsync(Id);
             Favorite = result;
-            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.FavoriteChangedMessage(Id, IsAlbum, Favorite, this.Album));
             return result;
         }
         void Share()

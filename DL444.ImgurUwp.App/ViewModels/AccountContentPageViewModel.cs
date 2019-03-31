@@ -11,6 +11,8 @@ namespace DL444.ImgurUwp.App.ViewModels
     class AccountContentPageViewModel : CachingViewModel, INotifyPropertyChanged
     {
         private AccountViewModel _account;
+        readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
+        readonly Func<MessageBus.ItemDeleteMessage, bool> itemDeleteHandler;
 
         public AccountViewModel Account
         {
@@ -28,10 +30,12 @@ namespace DL444.ImgurUwp.App.ViewModels
                     Comments = new IncrementalLoadingCollection<CommentIncrementalSource, CommentViewModel>();
                     MyAlbums = new IncrementalLoadingCollection<MyAlbumIncrementalSource, AccountAlbumViewModel>();
                     MyImages = new IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>();
+                    MyItems = new IncrementalLoadingCollection<MyItemsIncrementalSource, ItemViewModel>();
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NonGalleryFavorites)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Comments)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyAlbums)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyImages)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MyItems)));
                 }
                 else
                 {
@@ -53,9 +57,46 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public IncrementalLoadingCollection<MyAlbumIncrementalSource, AccountAlbumViewModel> MyAlbums { get; private set; } = null;
         public IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel> MyImages { get; private set; } = null;
+        public IncrementalLoadingCollection<MyItemsIncrementalSource, ItemViewModel> MyItems { get; private set; } = null;
 
-        public AccountContentPageViewModel() { }
-        public AccountContentPageViewModel(AccountViewModel account) => Account = account ?? throw new ArgumentNullException(nameof(account));
+        public AccountContentPageViewModel()
+        {
+            favoriteChangedHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
+            {
+                if (!IsOwner) { return false; }
+                if (x.Item != null)
+                {
+                    if (x.Favorite == true)
+                    {
+                        NonGalleryFavorites.Insert(0, new ItemViewModel(x.Item));
+                        return true;
+                    }
+                    else
+                    {
+                        return NonGalleryFavorites.Remove(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                    }
+                }
+                else { return false; }
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.FavoriteChangedMessageListener(favoriteChangedHandler));
+            itemDeleteHandler = new Func<MessageBus.ItemDeleteMessage, bool>(x =>
+            {
+                if (!IsOwner) { return false; }
+                NonGalleryFavorites.Remove(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                MyItems.Remove(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                if(x.IsAlbum)
+                {
+                    MyAlbums.Remove(i => i.Id == x.Id);
+                }
+                else
+                {
+                    MyImages.Remove(i => i.Id == x.Id);
+                }
+                return true;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.ItemDeleteMessageListener(itemDeleteHandler));
+        }
+        public AccountContentPageViewModel(AccountViewModel account) : this() => Account = account ?? throw new ArgumentNullException(nameof(account));
 
         public override bool EqualTo(object item)
         {
@@ -89,7 +130,6 @@ namespace DL444.ImgurUwp.App.ViewModels
         protected override async Task<IEnumerable<GalleryItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
         {
             var items = new List<GalleryItemViewModel>();
-            // TODO: Wait what? Me?
             var favs = await ApiClient.Client.GetAccountGalleryFavoritesAsync(Username, Page);
             foreach (var f in favs)
             {
@@ -152,6 +192,22 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
             Page++;
             return items;
+        }
+    }
+    class MyItemsIncrementalSource : IncrementalItemsSource<ItemViewModel>
+    {
+        public int Page { get; private set; }
+
+        protected override async Task<IEnumerable<ItemViewModel>> GetItemsFromSourceAsync(CancellationToken cancellationToken)
+        {
+            var result = new List<ItemViewModel>();
+            var items = await ApiClient.Client.GetAccountItemsAsync("me", page: Page);
+            foreach (var i in items)
+            {
+                result.Add(new ItemViewModel(i));
+            }
+            Page++;
+            return result;
         }
     }
 }

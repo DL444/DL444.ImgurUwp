@@ -16,6 +16,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         private bool _downvoted;
         private bool _favorite;
         string _comment = "";
+        readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedMessageHandler = null;
 
         public IGalleryItem Item
         {
@@ -189,7 +190,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             PostCommentCommand = new AsyncCommand<int>(PostComment, () => !string.IsNullOrWhiteSpace(Comment));
             FavoriteCommand = new AsyncCommand<bool>(FavoriteItem);
             GoToAuthorCommand = new Command(GoToAuthor);
-            FavoriteChangedMessageHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
+            favoriteChangedMessageHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
             {
                 if (x.Id == Id && x.IsAlbum == IsAlbum)
                 {
@@ -198,7 +199,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
                 return false;
             });
-            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.FavoriteChangedMessageListener(FavoriteChangedMessageHandler));
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.FavoriteChangedMessageListener(favoriteChangedMessageHandler));
         }
         public GalleryItemViewModel(IGalleryItem item) : this()
         {
@@ -240,7 +241,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 result = await ApiClient.Client.FavoriteImageAsync(Id);
             }
             this.Favorite = result;
-            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.FavoriteChangedMessage(Id, IsAlbum, Favorite));
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.FavoriteChangedMessage(Id, IsAlbum, Favorite, this.Item.ToItem()));
             return result;
         }
 
@@ -296,8 +297,6 @@ namespace DL444.ImgurUwp.App.ViewModels
             Comment = "";
             return commentId;
         }
-
-        Func<MessageBus.FavoriteChangedMessage, bool> FavoriteChangedMessageHandler = null;
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
         {

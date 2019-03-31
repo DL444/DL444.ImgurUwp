@@ -47,8 +47,32 @@ namespace DL444.ImgurUwp.Models
         public bool ShowMature { get; set; }
     }
 
+    /// <summary>
+    /// Represents the privacy setting of an album.
+    /// </summary>
     public enum AlbumPrivacyOptions
     {
-        Public, Hidden, Secret
+        /// <summary>
+        /// The album is available for all. 
+        /// </summary>
+        /// <remarks>
+        /// Posting to gallery automatically makes an album public. 
+        /// However, marking an album as public does not automatically post it into the gallery.
+        /// Posting to gallery has to be done explicitly.
+        /// An album marked as public but has not yet been posted to gallery is the same as Hidden.
+        /// </remarks>
+        Public,
+        /// <summary>
+        /// The album is only available for its author and people who have link.
+        /// </summary>
+        Hidden,
+        /// <summary>
+        /// The album is only available for its author.
+        /// </summary>
+        /// <remarks>
+        /// Imgur is trying to remove this option.
+        /// It's unclear if it will be deprecated in the future.
+        /// </remarks>
+        Secret
     }
 }

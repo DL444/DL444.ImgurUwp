@@ -92,6 +92,11 @@ namespace DL444.ImgurUwp.App.Pages
             {
                 ViewModelCacheManager.Instance.Pop<AccountContentPageViewModel>();
             }
+            else
+            {
+                Navigation.ContentFrame.BackStack.RemoveAt(Navigation.ContentFrame.BackStack.Count - 1);
+                Navigation.ContentFrame.BackStack.Add(new PageStackEntry(typeof(AccountContent), (ViewModel.Account, RootPivot.SelectedIndex), null));
+            }
         }
 
         private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)

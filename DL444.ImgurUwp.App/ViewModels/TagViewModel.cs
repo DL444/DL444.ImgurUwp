@@ -16,6 +16,8 @@ namespace DL444.ImgurUwp.App.ViewModels
     class TagViewModel : INotifyPropertyChanged
     {
         Tag _tag;
+        readonly Func<MessageBus.TagFollowChangedMessage, bool> followChangedHandler;
+
         public Tag Tag
         {
             get => _tag;
@@ -55,16 +57,26 @@ namespace DL444.ImgurUwp.App.ViewModels
             if(!Following)
             {
                 result = await ApiClient.Client.FollowTagAsync(Name);
-                if(result == true) { Tag.Following = true; }
+                if(result == true)
+                {
+                    Tag.Following = true;
+                }
             }
             else
             {
                 result = await ApiClient.Client.UnfollowTagAsync(Name);
-                if (result == true) { Tag.Following = false; }
+                if (result == true)
+                {
+                    Tag.Following = false;
+                }
             }
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FollowIcon)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FollowText)));
+            if(result == true)
+            {
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.TagFollowChangedMessage(Name, Following));
+            }
             return result;
         }
 
@@ -72,6 +84,16 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             FollowCommand = new AsyncCommand<bool>(Follow);
             ShowDetailsCommand = new Command(ShowDetails);
+            followChangedHandler = new Func<MessageBus.TagFollowChangedMessage, bool>(x =>
+            {
+                if(x.TagName == this.Name)
+                {
+                    this.Tag.Following = x.Following;
+                    return true;
+                }
+                else { return false; }
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.TagFollowChangedMessageListener(followChangedHandler));
         }
         public TagViewModel(Tag tag) : this()
         {

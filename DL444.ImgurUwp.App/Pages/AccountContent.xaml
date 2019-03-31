@@ -87,6 +87,10 @@
                 <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
                                       ItemsSource="{x:Bind ViewModel.MyImages, Mode=OneWay}" ItemClick="ImageGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
+            <PivotItem x:Name="ItemsPivot" Header="All" Tag="Items" x:Load="{x:Bind ViewModel.IsOwner}">
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
+                                      ItemsSource="{x:Bind ViewModel.MyItems, Mode=OneWay}" ItemClick="ItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+            </PivotItem>
         </Pivot>
     </Grid>
 </Page>

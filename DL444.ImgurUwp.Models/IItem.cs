@@ -11,7 +11,7 @@
         string DeleteHash { get; set; }
         string Section { get; set; }
         string Link { get; set; }
-        bool Favorite { get; set; }
+        bool? Favorite { get; set; }
         bool? Nsfw { get; set; }
         bool InGallery { get; set; }
 

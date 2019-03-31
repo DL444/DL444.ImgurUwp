@@ -141,6 +141,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         async Task<string> UploadImages()
         {
+            // TODO: Imgur does not return single-image albums. This is a design choice, and many users expect this behavior. 
+            // So we should try to avoid creating single-image albums.
+            // But if an album BECOMES single-image, there's no need to worry, since we could still get access to them, with Items endpoint.
             Progress = 0;
             Uploading = true;
             if(!AlbumCreated)
@@ -179,8 +182,11 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
             }
 
-            var deleteResult = await ApiClient.Client.EditAlbumImageAsync(AlbumId, DeleteList.Select(x => x.Id), ImgurUwp.ApiClient.AlbumEditMode.Remove);
-            if(deleteResult == true) { DeleteList.Clear(); }
+            if(DeleteList.Any())
+            {
+                var deleteResult = await ApiClient.Client.EditAlbumImageAsync(AlbumId, DeleteList.Select(x => x.Id), ImgurUwp.ApiClient.AlbumEditMode.Remove);
+                if (deleteResult == true) { DeleteList.Clear(); }
+            }
 
             //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             Uploading = false;

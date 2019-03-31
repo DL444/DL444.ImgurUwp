@@ -71,7 +71,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool Nsfw => Item.Nsfw == true;
         public bool Favorite
         {
-            get => Item.Favorite;
+            get => Item.Favorite == true;
             set
             {
                 Item.Favorite = value;
@@ -89,7 +89,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                         return 0;
                     case Image _:
                     case GalleryImage _:
-                        return 0;
+                        return 1;
                     case Album a:
                         return a.ImageCount;
                     case GalleryAlbum ga:
@@ -99,7 +99,17 @@ namespace DL444.ImgurUwp.App.ViewModels
                 }
             }
         }
-        public string Thumbnail => _thumbnail;
+        public Windows.UI.Xaml.Media.Imaging.BitmapImage Thumbnail
+        {
+            get
+            {
+                if(string.IsNullOrEmpty(_thumbnail)) { return null; }
+                else
+                {
+                    return new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri(_thumbnail));
+                }
+            }
+        }
         public Image DisplayImage
         {
             get => _displayImage;
@@ -111,6 +121,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public bool HasTitle => !string.IsNullOrEmpty(Title);
+        public bool HasImage => ImageCount > 0;
         public bool IsOwner => AccountUrl == ApiClient.OwnerAccount;
 
         public AsyncCommand<object> DownloadCommand { get; private set; }
@@ -137,25 +148,57 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
         async Task<bool> Delete()
         {
+            bool result;
             if(IsAlbum)
             {
-                return await ApiClient.Client.DeleteAlbumAsync(Id);
+                if(ImageCount == 1)
+                {
+                    var confirmResult = await CreateConfirmDialog().ShowAsync();
+                    if (confirmResult == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+                    {
+                        result = await ApiClient.Client.DeleteAlbumAsync(Id);
+                    }
+                    else if (confirmResult == Windows.UI.Xaml.Controls.ContentDialogResult.Secondary)
+                    {
+                        string imageId = DisplayImage.Id;
+                        var imageResult = await ApiClient.Client.DeleteImageAsync(imageId);
+                        result = await ApiClient.Client.DeleteAlbumAsync(Id);
+                        if(imageResult == true)
+                        {
+                            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.ItemDeleteMessage(DisplayImage.Id, false));
+                        }
+                    }
+                    else { return true; }
+                }
+                else
+                {
+                    result = await ApiClient.Client.DeleteAlbumAsync(Id);
+                }
             }
             else
             {
-                var result = await ApiClient.Client.DeleteImageAsync(Id);
-                if(result == true)
-                {
-                    // TODO: Implement
-                    //var vmCache = ViewModelManagerC.GetViewModel<AccountContentPageViewModel>(nameof(AccountContentPageViewModel));
-                    //if(vmCache != null)
-                    //{
-                    //    vmCache.MyImages.Remove(this);
-                    //}
-                }
-                return result;
+                result = await ApiClient.Client.DeleteImageAsync(Id);
+            }
+
+            if(result == true)
+            {
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.ItemDeleteMessage(Id, IsAlbum));
+            }
+            return result;
+
+            Windows.UI.Xaml.Controls.ContentDialog CreateConfirmDialog()
+            {
+                Windows.UI.Xaml.Controls.ContentDialog confirmDialog = new Windows.UI.Xaml.Controls.ContentDialog();
+                confirmDialog.Title = "This is a single-image album";
+                confirmDialog.Content = "Do you want to keep that image inside?";
+                confirmDialog.PrimaryButtonText = "Yes";
+                confirmDialog.SecondaryButtonText = "No";
+                confirmDialog.CloseButtonText = "Cancel";
+                confirmDialog.DefaultButton = Windows.UI.Xaml.Controls.ContentDialogButton.Primary;
+                return confirmDialog;
             }
         }
+
         async Task<bool> FavoriteItem()
         {
             bool result;
@@ -168,7 +211,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 result = await ApiClient.Client.FavoriteImageAsync(Id);
             }
             Favorite = result;
-            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.FavoriteChangedMessage(Id, IsAlbum, Favorite, this.Item));
             return result;
         }
         void Share()

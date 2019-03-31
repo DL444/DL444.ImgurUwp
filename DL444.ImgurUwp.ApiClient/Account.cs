@@ -33,6 +33,47 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
+        /// <summary>
+        /// Get all the items associated with an account.
+        /// </summary>
+        /// <param name="username">The account to get items for.</param>
+        /// <param name="sort">The sorting of results. Defaults to Newest.</param>
+        /// <param name="page">The page number. Defaults to 0.</param>
+        /// <returns>
+        /// The items associated with the specified account, including all multi-image albums, empty albums, single-image albums, and non-albun images. 
+        /// Images that are in albums are not included.
+        /// </returns>
+        /// <remarks>
+        /// The result corresponds to the ALL section in the post page on imgur.com. You must be logged in to call this API.
+        /// </remarks>
+        public async Task<IEnumerable<IItem>> GetAccountItemsAsync(string username, AccountItemSort sort = AccountItemSort.Newest, int page = 0)
+        {
+            if (username == null) { throw new ArgumentNullException(nameof(username)); }
+            var response = await client.GetAsync($"/3/account/{username}/items/{sort.ToString().ToLower()}/{page}");
+            (bool success, int status, string dataJson) = GetDataToken(await response.Content.ReadAsStringAsync());
+            if (success)
+            {
+                JArray imgJsonArray = JArray.Parse(dataJson);
+                var result = new List<IItem>(imgJsonArray.Count);
+                foreach (var i in imgJsonArray)
+                {
+                    if (i["is_album"].ToObject<bool>())
+                    {
+                        result.Add(i.ToObject<Album>());
+                    }
+                    else
+                    {
+                        result.Add(i.ToObject<Image>());
+                    }
+                }
+                return result;
+            }
+            else
+            {
+                throw new ApiRequestException(dataJson) { Status = status };
+            }
+        }
+
         public async Task<int> GetAccountAlbumCountAsync(string username)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }

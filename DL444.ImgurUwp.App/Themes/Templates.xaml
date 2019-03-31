@@ -91,10 +91,11 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Image Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill"/>
+            <TextBlock x:Name="EmptyPlaceholder" Text="Empty album" x:Load="{x:Bind HasImage, Converter={StaticResource InvertBoolConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            <Image x:Name="CoverImage" x:Load="{x:Bind HasImage}" Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill"/>
             <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
                                     VerticalAlignment="Top" Margin="0,8,8,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                <Grid x:Name="AnimationIndicator" Visibility="{x:Bind DisplayImage.Animated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                <Grid x:Name="AnimationIndicator" Visibility="{x:Bind DisplayImage.Animated, Converter={StaticResource BoolVisibilityConverter}, FallbackValue=Collapsed}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
                               HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
                     <TextBlock Text="GIF"/>
                 </Grid>

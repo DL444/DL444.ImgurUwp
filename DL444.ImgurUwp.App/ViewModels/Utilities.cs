@@ -57,7 +57,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
     }
 
-    static class ImageExtensions
+    static class ItemExtensions
     {
         public static Image ToImage(this GalleryImage galleryImage)
         {
@@ -84,8 +84,49 @@ namespace DL444.ImgurUwp.App.ViewModels
                 Favorite = galleryImage.Favorite == true,
                 Nsfw = galleryImage.Nsfw,
                 Vote = galleryImage.Vote,
-                IsAlbum = galleryImage.IsAlbum
+                IsAlbum = galleryImage.IsAlbum,
+                InGallery = galleryImage.InGallery,
+                AccountUrl = galleryImage.AccountUrl,
+                Points = galleryImage.Points                
             };
+        }
+        public static Album ToAlbum(this GalleryAlbum galleryAlbum)
+        {
+            return new Album()
+            {
+                Id = galleryAlbum.Id,
+                Title = galleryAlbum.Title,
+                Description = galleryAlbum.Description,
+                DateTime = galleryAlbum.DateTime,
+                Cover = galleryAlbum.Cover,
+                CoverWidth = galleryAlbum.CoverWidth,
+                CoverHeight = galleryAlbum.CoverHeight,
+                AccountUrl = galleryAlbum.AccountUrl,
+                AccountId = galleryAlbum.AccountId,
+                Privacy = galleryAlbum.Privacy,
+                Layout = galleryAlbum.Layout,
+                Views = galleryAlbum.Views,
+                Link = galleryAlbum.Link,
+                Favorite = galleryAlbum.Favorite == true,
+                Nsfw = galleryAlbum.Nsfw,
+                ImageCount = galleryAlbum.ImageCount,
+                Images = galleryAlbum.Images,
+                InGallery = galleryAlbum.InGallery,
+                IsAlbum = galleryAlbum.IsAlbum,
+                Points = galleryAlbum.Points
+            };
+        }
+        public static IItem ToItem(this IGalleryItem galleryItem)
+        {
+            if (galleryItem.IsAlbum && galleryItem is GalleryAlbum album)
+            {
+                return album.ToAlbum();
+            }
+            else if(!galleryItem.IsAlbum && galleryItem is GalleryImage image)
+            {
+                return image.ToImage();
+            }
+            return null;
         }
     }
 

@@ -122,7 +122,6 @@ namespace DL444.ImgurUwp.App.ViewModels
         public UriType Type { get; set; }
         public UriComponent(string uri)
         {
-            // TODO: ImageThumbnail
             Text = uri;
             var ext = uri.Substring(uri.LastIndexOf('.') + 1).ToLower();
             switch (ext)

@@ -78,7 +78,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public string Mp4 => Image.Mp4;
         public int Mp4Size => Image.Mp4Size;
         public bool Looping => Image.Looping;
-        public bool Favorite => Image.Favorite;
+        public bool Favorite => Image.Favorite == true;
         public bool Nsfw => Image.Nsfw == true;
         public string Vote => Image.Vote;
         public bool InGallery => Image.InGallery;

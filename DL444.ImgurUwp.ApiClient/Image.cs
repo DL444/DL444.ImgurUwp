@@ -68,7 +68,7 @@ namespace DL444.ImgurUwp.ApiClient
         {
             if(imageBase64 == null) { throw new ArgumentNullException(nameof(imageBase64)); }
             // TODO: Find a efficient way to determine the size of image before making this public.
-
+            
             ImageUploadParams img = new ImageUploadParams(imageBase64, album, null, title, description);
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, "/3/image");
