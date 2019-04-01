@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class GalleryViewPageViewModel : CachingViewModel, INotifyPropertyChanged
+    class GalleryViewPageViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
         private IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> _items;
         public IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> Items
@@ -51,6 +52,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
+
         public GalleryViewPageViewModel() : this(DisplayParams.Section.Hot, DisplayParams.Sort.Viral) { }
         public GalleryViewPageViewModel(DisplayParams.Section sect, DisplayParams.Sort sort)
         {
@@ -61,6 +63,41 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public string ScrollPosition { get; private set; }
+        GalleryItemViewModel scrollViewAnchorItem;
+        public void SetScrollPosition(ListViewBase listView)
+        {
+            ScrollPosition = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, 
+                x => 
+                {
+                    scrollViewAnchorItem = x as GalleryItemViewModel;
+                    return scrollViewAnchorItem.Id;
+                });
+        }
+        public async Task RecoverScrollPosition(ListViewBase listView)
+        {
+            if(ScrollPosition == null) { return; }
+            ListViewKeyToItemHandler keyToItemHandler = key =>
+            {
+                Func<CancellationToken, Task<object>> task = x =>
+                {
+                    object result;
+                    if (scrollViewAnchorItem.Id == key)
+                    {
+                        result = scrollViewAnchorItem;
+                    }
+                    else
+                    {
+                        result = Items.FirstOrDefault(i => i.Id == key);
+                    }
+                    return Task.FromResult(result);
+                };
+                return System.Runtime.InteropServices.WindowsRuntime.AsyncInfo.Run(task);
+            };
+            await ListViewPersistenceHelper.SetRelativeScrollPositionAsync(listView, ScrollPosition, keyToItemHandler);
+        }
+
     }
     public class GalleryIncrementalSource : IncrementalItemsSource<GalleryItemViewModel>
     {

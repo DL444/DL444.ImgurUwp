@@ -132,4 +132,11 @@ namespace DL444.ImgurUwp.App.ViewModels
             CreatedTime = DateTime.Now;
         }
     }
+
+    interface IListViewPersistent
+    {
+        string ScrollPosition { get; }
+        void SetScrollPosition(Windows.UI.Xaml.Controls.ListViewBase listView);
+        Task RecoverScrollPosition(Windows.UI.Xaml.Controls.ListViewBase listView);
+    }
 }

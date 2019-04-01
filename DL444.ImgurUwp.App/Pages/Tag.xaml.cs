@@ -30,6 +30,18 @@ namespace DL444.ImgurUwp.App.Pages
         public Tag()
         {
             this.InitializeComponent();
+            this.Loaded += Tag_Loaded;
+        }
+
+        private async void Tag_Loaded(object sender, RoutedEventArgs e)
+        {
+            // This does not seem graceful, but we do have to wait until the list is fully loaded before we can scroll.
+            // Otherwise, the scroll is likely to overshot.
+            while(PageViewModel == null)
+            {
+                await Task.Delay(100);
+            }
+            await PageViewModel.RecoverScrollPosition(TagList);
         }
 
         bool _pageLoading;
@@ -75,6 +87,10 @@ namespace DL444.ImgurUwp.App.Pages
             if (e.NavigationMode == NavigationMode.Back)
             {
                 ViewModelCacheManager.Instance.Pop<TagPageViewModel>();
+            }
+            else
+            {
+                PageViewModel.SetScrollPosition(TagList);
             }
         }
 

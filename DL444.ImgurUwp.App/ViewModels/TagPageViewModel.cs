@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
-    class TagPageViewModel : CachingViewModel, INotifyPropertyChanged
+    class TagPageViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
         public TagViewModel ViewModel { get; set; }
 
@@ -42,6 +43,40 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
             vm.Items = new IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel>(new TagItemsSource(tagName, images, 1));
             return vm;
+        }
+
+        public string ScrollPosition { get; private set; }
+        public string AnchorItemId => scrollViewAnchorItem == null ? null : scrollViewAnchorItem.Id;
+        GalleryItemViewModel scrollViewAnchorItem;
+        public void SetScrollPosition(ListViewBase listView)
+        {
+            ScrollPosition = ListViewPersistenceHelper.GetRelativeScrollPosition(listView, x =>
+            {
+                scrollViewAnchorItem = x as GalleryItemViewModel;
+                return scrollViewAnchorItem.Id;
+            });
+        }
+        public async Task RecoverScrollPosition(ListViewBase listView)
+        {
+            if(ScrollPosition == null) { return; }
+            ListViewKeyToItemHandler keyToItemHandler = key =>
+            {
+                Func<CancellationToken, Task<object>> task = x =>
+                {
+                    object result;
+                    if (scrollViewAnchorItem.Id == key)
+                    {
+                        result = scrollViewAnchorItem;
+                    }
+                    else
+                    {
+                        result = Items.FirstOrDefault(i => i.Id == key);
+                    }
+                    return Task.FromResult(result);
+                };
+                return System.Runtime.InteropServices.WindowsRuntime.AsyncInfo.Run(task);
+            };
+            await ListViewPersistenceHelper.SetRelativeScrollPositionAsync(listView, ScrollPosition, keyToItemHandler);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

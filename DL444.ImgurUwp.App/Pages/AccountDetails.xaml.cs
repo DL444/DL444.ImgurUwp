@@ -33,6 +33,16 @@ namespace DL444.ImgurUwp.App.Pages
         public AccountDetails()
         {
             this.InitializeComponent();
+            this.Loaded += AccountDetails_Loaded;
+        }
+
+        private async void AccountDetails_Loaded(object sender, RoutedEventArgs e)
+        {
+            while(PageViewModel == null)
+            {
+                await Task.Delay(100);
+            }
+            await PageViewModel.RecoverScrollPosition(RootListView);
         }
 
         public bool PageLoading
@@ -88,6 +98,10 @@ namespace DL444.ImgurUwp.App.Pages
             if (e.NavigationMode == NavigationMode.Back)
             {
                 ViewModelCacheManager.Instance.Pop<AccountDetailsPageViewModel>();
+            }
+            else
+            {
+                PageViewModel.SetScrollPosition(RootListView);
             }
         }
 

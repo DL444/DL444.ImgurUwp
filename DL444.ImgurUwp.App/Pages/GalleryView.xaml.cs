@@ -34,7 +34,7 @@ namespace DL444.ImgurUwp.App.Pages
 
         GalleryViewPageViewModel ViewModel { get; set; }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -45,6 +45,7 @@ namespace DL444.ImgurUwp.App.Pages
                 {
                     ViewModel = cache;
                     Bindings.Update();
+                    await ViewModel.RecoverScrollPosition(RootListView);
                 }
                 else
                 {
@@ -62,6 +63,10 @@ namespace DL444.ImgurUwp.App.Pages
             if (e.NavigationMode == NavigationMode.Back)
             {
                 ViewModelCacheManager.Instance.Pop<GalleryViewPageViewModel>();
+            }
+            else
+            {
+                ViewModel.SetScrollPosition(RootListView);
             }
         }
 
