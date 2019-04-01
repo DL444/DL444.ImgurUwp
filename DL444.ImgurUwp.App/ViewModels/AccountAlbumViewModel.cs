@@ -103,7 +103,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             var result = await ApiClient.Client.RemoveGalleryItemAsync(Id);
             if(result == true)
             {
-                // TODO: Implement
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.GalleryRemoveMessage(Id, IsAlbum));
             }
             return result;
         }

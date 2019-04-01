@@ -13,6 +13,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         private AccountViewModel _account;
         readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
         readonly Func<MessageBus.ItemDeleteMessage, bool> itemDeleteHandler;
+        readonly Func<MessageBus.ItemUploadMessage, bool> itemUploadHandler;
 
         public AccountViewModel Account
         {
@@ -95,6 +96,27 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return true;
             });
             MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.ItemDeleteMessageListener(itemDeleteHandler));
+            itemUploadHandler = new Func<MessageBus.ItemUploadMessage, bool>(x =>
+            {
+                if (!IsOwner) { return false; }
+                if (x.Item == null) { return false; }
+                var item = new ItemViewModel(x.Item);
+                if (x.Item.IsAlbum == true && x.Item is Models.Album a)
+                {
+                    if(a.ImageCount > 1)
+                    {
+                        MyAlbums.Insert(0, new AccountAlbumViewModel(a));
+                    }
+                    MyItems.Insert(0, new ItemViewModel(a));
+                }
+                else if(x.Item.IsAlbum == false)
+                {
+                    MyImages.Insert(0, new ItemViewModel(x.Item));
+                }
+                else { return false; }
+                return true;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.ItemUploadMessageListener(itemUploadHandler));
         }
         public AccountContentPageViewModel(AccountViewModel account) : this() => Account = account ?? throw new ArgumentNullException(nameof(account));
 

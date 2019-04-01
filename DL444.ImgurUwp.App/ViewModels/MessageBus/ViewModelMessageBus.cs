@@ -13,19 +13,26 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
         {
             Instance = new ViewModelMessageBus();
         }
-        private ViewModelMessageBus() { }
+        private ViewModelMessageBus()
+        {
+            Task.Run(async () =>
+            {
+                while(true)
+                {
+                    await Task.Delay(120000);
+                    CleanupListeners();
+                }
+            });
+        }
 
-        Dictionary<string, List<IMessageListener>> listeners = new Dictionary<string, List<IMessageListener>>();
+        System.Collections.Concurrent.ConcurrentDictionary<string, List<IMessageListener>> listeners = 
+            new System.Collections.Concurrent.ConcurrentDictionary<string, List<IMessageListener>>();
 
         public void RegisterListener<T>(MessageListener<T> listener) where T : Message
         {
             if(listeners == null) { throw new ArgumentNullException(nameof(listeners)); }
-
             string key = typeof(T).ToString();
-            if(!listeners.ContainsKey(key))
-            {
-                listeners.Add(key, new List<IMessageListener>());
-            }
+            listeners.TryAdd(key, new List<IMessageListener>());
             listeners[key].Add(listener);
         }
         public bool SendMessage<T>(T message) where T : Message
@@ -49,18 +56,22 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
 
         public void CleanupListeners()
         {
-            LinkedList<string> keysToRemove = new LinkedList<string>();
+            LinkedList<string> keysToRemove = null;
             foreach(var g in listeners)
             {
                 g.Value.RemoveAll(x => !x.IsValid);
                 if(g.Value.Count == 0)
                 {
+                    if(keysToRemove == null) { keysToRemove = new LinkedList<string>(); }
                     keysToRemove.AddLast(g.Key);
                 }
             }
-            foreach(var k in keysToRemove)
+            if(keysToRemove != null)
             {
-                listeners.Remove(k);
+                foreach (var k in keysToRemove)
+                {
+                    listeners.Remove(k, out _);
+                }
             }
         }
     }

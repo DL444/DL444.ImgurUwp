@@ -151,10 +151,12 @@ namespace DL444.ImgurUwp.App.ViewModels
                 (string id, _) = await ApiClient.Client.CreateAlbumAsync(title: Title);
                 AlbumId = id;
                 originalTitle = Title;
+                ViewModelCacheManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             }
             else if(originalTitle != Title)
             {
                 await ApiClient.Client.UpdateAlbumInfoAsync(AlbumId, title: Title);
+                // TODO: Notify
             }
 
             double progressStep = 0;
@@ -187,8 +189,6 @@ namespace DL444.ImgurUwp.App.ViewModels
                 var deleteResult = await ApiClient.Client.EditAlbumImageAsync(AlbumId, DeleteList.Select(x => x.Id), ImgurUwp.ApiClient.AlbumEditMode.Remove);
                 if (deleteResult == true) { DeleteList.Clear(); }
             }
-
-            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
             Uploading = false;
             return AlbumId;
         }
@@ -199,7 +199,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             var result = await ApiClient.Client.PostToGalleryAsync(AlbumId, Title, null, IsMature, Tags);
             var item = await ApiClient.Client.GetGalleryItemAsync(AlbumId);
             Uploading = false;
-            //ViewModelManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.GalleryPostMessage(item));
             Navigation.Navigate(typeof(Pages.GalleryItemDetails), new Pages.GalleryItemDetailsNavigationParameter(new GalleryItemViewModel(item), null));
             return result;
         }

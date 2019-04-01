@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DL444.ImgurUwp.Models;
 
 namespace DL444.ImgurUwp.App.ViewModels.MessageBus
 {
@@ -42,9 +43,9 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
         public TagFollowChangedMessageListener(Func<TagFollowChangedMessage, bool> handler) : base(handler) { }
     }
 
-    class ItemDeleteMessage : Message
+    abstract class ItemMessage : Message
     {
-        public ItemDeleteMessage(string id, bool isAlbum)
+        protected ItemMessage(string id, bool isAlbum)
         {
             Id = id ?? throw new ArgumentNullException(nameof(id));
             IsAlbum = isAlbum;
@@ -53,8 +54,78 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
         public string Id { get; }
         public bool IsAlbum { get; }
     }
+
+    class ItemDeleteMessage : ItemMessage
+    {
+        public ItemDeleteMessage(string id, bool isAlbum) : base(id, isAlbum) { }
+    }
     class ItemDeleteMessageListener : MessageListener<ItemDeleteMessage>
     {
         public ItemDeleteMessageListener(Func<ItemDeleteMessage, bool> handler) : base(handler) { }
+    }
+
+    class GalleryRemoveMessage : ItemMessage
+    {
+        public GalleryRemoveMessage(string id, bool isAlbum) : base(id, isAlbum) { }
+    }
+    class GalleryRemoveMessageListener : MessageListener<GalleryRemoveMessage>
+    {
+        public GalleryRemoveMessageListener(Func<GalleryRemoveMessage, bool> handler) : base(handler) { }
+    }
+
+    class BioChangedMessage : Message
+    {
+        public BioChangedMessage(string newBio = null)
+        {
+            NewBio = newBio;
+        }
+
+        public string NewBio { get; }
+    }
+    class BioChangedMessageListener : MessageListener<BioChangedMessage>
+    {
+        public BioChangedMessageListener(Func<BioChangedMessage, bool> handler) : base(handler) { }
+    }
+
+    class ItemUploadMessage : Message
+    {
+        public ItemUploadMessage(IItem item)
+        {
+            Item = item ?? throw new ArgumentNullException(nameof(item));
+        }
+        public static async Task<ItemUploadMessage> CreateFromId(string id, bool isAlbum)
+        {
+            if(id == null) { throw new ArgumentNullException(nameof(id)); }
+            IItem item;
+            if(isAlbum)
+            {
+                item = await ApiClient.Client.GetAlbumAsync(id);
+            }
+            else
+            {
+                item = await ApiClient.Client.GetImageAsync(id);
+            }
+            return new ItemUploadMessage(item);
+        }
+
+        public IItem Item { get; }
+    }
+    class ItemUploadMessageListener : MessageListener<ItemUploadMessage>
+    {
+        public ItemUploadMessageListener(Func<ItemUploadMessage, bool> handler) : base(handler) { }
+    }
+
+    class GalleryPostMessage : Message
+    {
+        public GalleryPostMessage(IGalleryItem item)
+        {
+            Item = item ?? throw new ArgumentNullException(nameof(item));
+        }
+
+        public IGalleryItem Item { get; }
+    }
+    class GalleryPostMessageListener : MessageListener<GalleryPostMessage>
+    {
+        public GalleryPostMessageListener(Func<GalleryPostMessage, bool> handler) : base(handler) { }
     }
 }

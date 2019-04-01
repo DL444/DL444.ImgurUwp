@@ -15,6 +15,9 @@ namespace DL444.ImgurUwp.App.ViewModels
         private AccountViewModel _viewModel;
         private string originalBio;
         private int _hiddenTrophiesCount;
+        readonly Func<MessageBus.GalleryRemoveMessage, bool> galleryRemoveHandler;
+        readonly Func<MessageBus.BioChangedMessage, bool> bioChangeHandler;
+        readonly Func<MessageBus.GalleryPostMessage, bool> galleryPostHandler;
 
         public AccountViewModel ViewModel
         {
@@ -58,6 +61,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 if (result == true)
                 {
                     originalBio = ViewModel.Biography;
+                    MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.BioChangedMessage(ViewModel.Biography));
                 }
                 else
                 {
@@ -92,6 +96,40 @@ namespace DL444.ImgurUwp.App.ViewModels
             AccountPostSource source = new AccountPostSource(vm.Username);
             r.Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
             return r;
+        }
+
+        AccountDetailsPageViewModel()
+        {
+            galleryRemoveHandler = new Func<MessageBus.GalleryRemoveMessage, bool>(x =>
+            {
+                if (IsOwner)
+                {
+                    return Posts.Remove(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                }
+                return false;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.GalleryRemoveMessageListener(galleryRemoveHandler));
+            bioChangeHandler = new Func<MessageBus.BioChangedMessage, bool>(x =>
+            {
+                if(IsOwner)
+                {
+                    originalBio = x.NewBio;
+                    ViewModel.Biography = x.NewBio;
+                    return true;
+                }
+                return false;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.BioChangedMessageListener(bioChangeHandler));
+            galleryPostHandler = new Func<MessageBus.GalleryPostMessage, bool>(x =>
+            {
+                if(IsOwner)
+                {
+                    Posts.Insert(0, new GalleryItemViewModel(x.Item));
+                    return true;
+                }
+                return false;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.GalleryPostMessageListener(galleryPostHandler));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
