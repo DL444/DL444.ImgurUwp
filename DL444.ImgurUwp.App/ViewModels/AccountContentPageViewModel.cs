@@ -14,6 +14,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
         readonly Func<MessageBus.ItemDeleteMessage, bool> itemDeleteHandler;
         readonly Func<MessageBus.ItemUploadMessage, bool> itemUploadHandler;
+        readonly Func<MessageBus.CommentPostMessage, bool> commentPostHandler;
 
         public AccountViewModel Account
         {
@@ -117,6 +118,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return true;
             });
             MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.ItemUploadMessageListener(itemUploadHandler));
+            commentPostHandler = new Func<MessageBus.CommentPostMessage, bool>(x =>
+            {
+                if (!IsOwner) { return false; }
+                Comments.Insert(0, new CommentViewModel(x.Comment));
+                return true;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.CommentPostMessageListener(commentPostHandler));
         }
         public AccountContentPageViewModel(AccountViewModel account) : this() => Account = account ?? throw new ArgumentNullException(nameof(account));
 

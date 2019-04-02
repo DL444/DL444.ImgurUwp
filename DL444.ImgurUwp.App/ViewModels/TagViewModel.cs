@@ -17,6 +17,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     {
         Tag _tag;
         readonly Func<MessageBus.TagFollowChangedMessage, bool> followChangedHandler;
+        readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
 
         public Tag Tag
         {
@@ -94,6 +95,13 @@ namespace DL444.ImgurUwp.App.ViewModels
                 else { return false; }
             });
             MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.TagFollowChangedMessageListener(followChangedHandler));
+            favoriteChangedHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
+            {
+                var item = Items.FirstOrDefault(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                if(item == null) { return false; }
+                item.Favorite = true;
+                return true;
+            });
         }
         public TagViewModel(Tag tag) : this()
         {

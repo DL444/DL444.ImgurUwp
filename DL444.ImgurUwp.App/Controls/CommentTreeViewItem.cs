@@ -20,25 +20,13 @@ namespace DL444.ImgurUwp.App.Controls
         {
             this.DefaultStyleKey = typeof(CommentTreeViewItem);
         }
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            if ((this.ItemsSource as IEnumerable<object>).Count() == 0)
-            {
-                ChevronVisibility = Visibility.Collapsed;
-            }
-            else
-            {
-                ChevronVisibility = Visibility.Visible;
-            }
-            return base.ArrangeOverride(finalSize);
-        }
 
         public static readonly DependencyProperty ChevronVisibilityProperty = DependencyProperty.Register(nameof(ChevronVisibility), 
             typeof(Visibility), typeof(CommentTreeViewItem), new PropertyMetadata(Visibility.Collapsed, null));
         public Visibility ChevronVisibility
         {
             get => (Visibility)GetValue(ChevronVisibilityProperty);
-            private set => SetValue(ChevronVisibilityProperty, value);
+            set => SetValue(ChevronVisibilityProperty, value);
         }
     }
 }

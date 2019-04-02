@@ -28,6 +28,8 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class GalleryItemDetails : Page, INotifyPropertyChanged
     {
+        readonly Func<ViewModels.MessageBus.CommentPostMessage, bool> commentPostHandler;
+
         GalleryItemViewModel ViewModel { get; set; }
         ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
         ObservableCollection<CommentViewModel> Comments { get; set; } = new ObservableCollection<CommentViewModel>();
@@ -42,6 +44,26 @@ namespace DL444.ImgurUwp.App.Pages
             SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
             CommentReactionImageTemplateSelector.ImageTemplate = this.Resources["CommentImageTemplate"] as DataTemplate;
             CommentReactionImageTemplateSelector.VideoTemplate = this.Resources["CommentVideoTemplate"] as DataTemplate;
+
+            commentPostHandler = new Func<ViewModels.MessageBus.CommentPostMessage, bool>(x =>
+            {
+                if (x.Comment.ImageId != ViewModel.Id) { return false; }
+                if (x.Comment.ParentId == 0)
+                {
+                    Comments.Insert(0, new CommentViewModel(x.Comment));
+                    var listControl = FindChildByName(CommentTree, "ListControl") as ListViewBase;
+                    listControl.ScrollIntoView(CommentTree.RootNodes.FirstOrDefault());
+                    return true;
+                }
+                else
+                {
+                    var comment = CommentFindRecursive(Comments, c => c.Id == x.Comment.ParentId);
+                    if(comment == null) { return false; }
+                    comment.Children.Insert(0, new CommentViewModel(x.Comment));
+                    return true;
+                }
+            });
+            ViewModels.MessageBus.ViewModelMessageBus.Instance.RegisterListener(new ViewModels.MessageBus.CommentPostMessageListener(commentPostHandler));
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -137,6 +159,34 @@ namespace DL444.ImgurUwp.App.Pages
             var item = e.AddedItems[0] as GalleryItemViewModel;
 
             await PrepareViewModels(item);
+        }
+
+        CommentViewModel CommentFindRecursive(IEnumerable<CommentViewModel> comments, Predicate<CommentViewModel> predicate)
+        {
+            if (comments == null) { return null; }
+            foreach (var c in comments)
+            {
+                if (predicate(c) == true) { return c; }
+                var childCandidate = CommentFindRecursive(c.Children, predicate);
+                if (childCandidate == null) { continue; }
+                else { return childCandidate; }
+            }
+            return null;
+        }
+        DependencyObject FindChildByName(DependencyObject parant, string controlName)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parant); i++)
+            {
+                var child = VisualTreeHelper.GetChild(parant, i);
+                if (child is FrameworkElement && ((FrameworkElement)child).Name == controlName)
+                {
+                    return child;
+                }
+
+                var result = FindChildByName(child, controlName);
+                if (result != null) { return result; }
+            }
+            return null;
         }
     }
 

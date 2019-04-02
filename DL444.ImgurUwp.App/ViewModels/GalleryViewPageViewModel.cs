@@ -12,6 +12,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 {
     class GalleryViewPageViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
+        readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
         private IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> _items;
         public IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> Items
         {
@@ -60,6 +61,13 @@ namespace DL444.ImgurUwp.App.ViewModels
             _sort = sort;
             var source = new GalleryIncrementalSource(Section, Sort);
             Items = new IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel>(source);
+            favoriteChangedHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
+            {
+                var item = Items.FirstOrDefault(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);
+                if (item == null) { return false; }
+                item.Favorite = true;
+                return true;
+            });
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

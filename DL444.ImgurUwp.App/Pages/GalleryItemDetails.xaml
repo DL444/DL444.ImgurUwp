@@ -193,10 +193,11 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <ui:TreeView ItemsSource="{x:Bind Comments, Mode=OneWay}" CanReorderItems="False" CanDragItems="False" Grid.ColumnSpan="2" SelectionMode="None">
+                            <ui:TreeView x:Name="CommentTree" ItemsSource="{x:Bind Comments, Mode=OneWay}" CanReorderItems="False" CanDragItems="False" Grid.ColumnSpan="2" SelectionMode="None">
                                 <ui:TreeView.ItemTemplate>
                                     <DataTemplate x:DataType="vm:CommentViewModel">
-                                        <cc:CommentTreeViewItem ContentTemplate="{ThemeResource CommentTemplate}" HorizontalContentAlignment="Stretch" ItemsSource="{x:Bind Children}" Content="{x:Bind}"/>
+                                        <cc:CommentTreeViewItem ContentTemplate="{ThemeResource CommentTemplate}" HorizontalContentAlignment="Stretch" ItemsSource="{x:Bind Children}" Content="{x:Bind}" 
+                                                                ChevronVisibility="{x:Bind HasChildren, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
                                     </DataTemplate>
                                 </ui:TreeView.ItemTemplate>
                             </ui:TreeView>

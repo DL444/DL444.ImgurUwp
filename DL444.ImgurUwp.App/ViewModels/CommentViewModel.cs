@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DL444.ImgurUwp.Models;
 using Windows.UI.Xaml;
+using System.Collections.ObjectModel;
 
 namespace DL444.ImgurUwp.App.ViewModels
 {
@@ -36,9 +37,12 @@ namespace DL444.ImgurUwp.App.ViewModels
                     }
                 }
 
-                foreach (var c in _comment.Children)
+                if(_comment.Children != null)
                 {
-                    Children.Add(new CommentViewModel(c));
+                    foreach (var c in _comment.Children)
+                    {
+                        Children.Add(new CommentViewModel(c));
+                    }
                 }
                 _upvoted = _comment.Vote == "up";
                 _downvoted = _comment.Vote == "down";
@@ -116,9 +120,10 @@ namespace DL444.ImgurUwp.App.ViewModels
             }
         }
 
-        public List<CommentViewModel> Children { get; } = new List<CommentViewModel>();
+        public ObservableCollection<CommentViewModel> Children { get; } = new ObservableCollection<CommentViewModel>();
 
         public int Level { get; private set; }
+        public bool HasChildren => Children == null ? false : Children.Count > 0;
 
         public string Reply {
             get => _reply;
@@ -146,6 +151,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public CommentViewModel()
         {
+            Children.CollectionChanged += Children_CollectionChanged;
             ShowReplyFieldCommand = new Command(ShowReplyField);
             ShareCommand = new Command(Share);
             ReportCommand = new AsyncCommand<bool>(Report);
@@ -153,11 +159,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             UpvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Up));
             DownvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Down));
         }
-        public CommentViewModel(Comment comment, int level = 0) : this()
-        {
-            Comment = comment;
-            Level = level;
-        }
+
+        public CommentViewModel(Comment comment) : this() => Comment = comment;
 
         public Command ShowReplyFieldCommand { get; private set; }
         public Command ShareCommand { get; private set; }
@@ -197,6 +200,8 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             ReplyFieldVisibilty = Visibility.Collapsed;
             int newId = await ApiClient.Client.PostCommentAsync(ImageId, Reply, Id.ToString());
+            MessageBus.ViewModelMessageBus.Instance.SendMessage(
+                new MessageBus.CommentPostMessage(newId, ImageId, Reply, ApiClient.OwnerAccount, AlbumCover, Convert.ToEpoch(DateTime.Now), Id));
             Reply = "";
             return newId;
         }
@@ -214,6 +219,10 @@ namespace DL444.ImgurUwp.App.ViewModels
             var request = args.Request;
             request.Data.SetWebLink(new Uri($"https://imgur.com/gallery/{ImageId}/comment/{Id}"));
             request.Data.Properties.Title = $"Comment from Imgur";
+        }
+        private void Children_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasChildren)));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

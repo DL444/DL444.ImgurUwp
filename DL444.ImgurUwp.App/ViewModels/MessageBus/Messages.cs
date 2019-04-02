@@ -128,4 +128,38 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
     {
         public GalleryPostMessageListener(Func<GalleryPostMessage, bool> handler) : base(handler) { }
     }
+
+    class CommentPostMessage : Message
+    {
+        public Comment Comment { get; }
+        public CommentPostMessage(Comment comment) => Comment = comment;
+        public CommentPostMessage(int id, string imageId, string content, string author, string albumCover, int dateTime, int parentId = 0)
+        {
+            Comment = new Comment()
+            {
+                Id = id,
+                ImageId = imageId,
+                Content = content,
+                Author = author,
+                AlbumCover = albumCover,
+                DateTime = dateTime,
+                ParentId = parentId,
+                Children = new List<Comment>()
+            };
+        }
+    }
+    class CommentPostMessageListener : MessageListener<CommentPostMessage>
+    {
+        public CommentPostMessageListener(Func<CommentPostMessage, bool> handler) : base(handler) { }
+    }
+
+    class CommentDeleteMessage : Message
+    {
+        public CommentDeleteMessage(int id) => Id = id;
+        public int Id { get; }
+    }
+    class CommentDeleteMessageListener : MessageListener<CommentDeleteMessage>
+    {
+        public CommentDeleteMessageListener(Func<CommentDeleteMessage, bool> handler) : base(handler) { }
+    }
 }
