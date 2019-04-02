@@ -155,8 +155,16 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
 
     class CommentDeleteMessage : Message
     {
-        public CommentDeleteMessage(int id) => Id = id;
+        public CommentDeleteMessage(int id, string imageId, bool isVirtual)
+        {
+            Id = id;
+            ImageId = imageId ?? throw new ArgumentNullException(nameof(imageId));
+            IsVirtualDelete = isVirtual;
+        }
+
         public int Id { get; }
+        public string ImageId { get; }
+        public bool IsVirtualDelete { get; }
     }
     class CommentDeleteMessageListener : MessageListener<CommentDeleteMessage>
     {

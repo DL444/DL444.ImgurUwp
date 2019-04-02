@@ -29,6 +29,7 @@ namespace DL444.ImgurUwp.App.Pages
     public sealed partial class GalleryItemDetails : Page, INotifyPropertyChanged
     {
         readonly Func<ViewModels.MessageBus.CommentPostMessage, bool> commentPostHandler;
+        readonly Func<ViewModels.MessageBus.CommentDeleteMessage, bool> commentDeleteHandler;
 
         GalleryItemViewModel ViewModel { get; set; }
         ObservableCollection<ImageViewModel> Images { get; } = new ObservableCollection<ImageViewModel>();
@@ -64,6 +65,19 @@ namespace DL444.ImgurUwp.App.Pages
                 }
             });
             ViewModels.MessageBus.ViewModelMessageBus.Instance.RegisterListener(new ViewModels.MessageBus.CommentPostMessageListener(commentPostHandler));
+            commentDeleteHandler = new Func<ViewModels.MessageBus.CommentDeleteMessage, bool>(x =>
+            {
+                if(x.ImageId != ViewModel.Id) { return false; }
+                if(!x.IsVirtualDelete)
+                {
+                    return CommentDeleteRecursive(Comments, i => i.Id == x.Id);
+                }
+                else
+                {
+                    return false;
+                }
+            });
+            ViewModels.MessageBus.ViewModelMessageBus.Instance.RegisterListener(new ViewModels.MessageBus.CommentDeleteMessageListener(commentDeleteHandler));
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -86,7 +100,7 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        async System.Threading.Tasks.Task PrepareViewModels(GalleryItemViewModel vm)
+        async Task PrepareViewModels(GalleryItemViewModel vm)
         {
             ViewModel = vm;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
@@ -172,6 +186,24 @@ namespace DL444.ImgurUwp.App.Pages
                 else { return childCandidate; }
             }
             return null;
+        }
+        bool CommentDeleteRecursive(IList<CommentViewModel> comments, Func<CommentViewModel, bool> predicate)
+        {
+            if(comments == null) { return false; }
+            var item = comments.FirstOrDefault(predicate);
+            if (item != null)
+            {
+                comments.Remove(item);
+                return true;
+            }
+            else
+            {
+                foreach(var c in comments)
+                {
+                    if(CommentDeleteRecursive(c.Children, predicate) == true) { return true; }
+                }
+                return false;
+            }
         }
         DependencyObject FindChildByName(DependencyObject parant, string controlName)
         {

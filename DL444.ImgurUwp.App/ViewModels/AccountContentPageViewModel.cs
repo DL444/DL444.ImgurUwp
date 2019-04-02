@@ -15,6 +15,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         readonly Func<MessageBus.ItemDeleteMessage, bool> itemDeleteHandler;
         readonly Func<MessageBus.ItemUploadMessage, bool> itemUploadHandler;
         readonly Func<MessageBus.CommentPostMessage, bool> commentPostHandler;
+        readonly Func<MessageBus.CommentDeleteMessage, bool> commentDeleteHandler;
 
         public AccountViewModel Account
         {
@@ -125,6 +126,12 @@ namespace DL444.ImgurUwp.App.ViewModels
                 return true;
             });
             MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.CommentPostMessageListener(commentPostHandler));
+            commentDeleteHandler = new Func<MessageBus.CommentDeleteMessage, bool>(x =>
+            {
+                if (!IsOwner) { return false; }
+                return Comments.Remove(i => i.Id == x.Id);
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.CommentDeleteMessageListener(commentDeleteHandler));
         }
         public AccountContentPageViewModel(AccountViewModel account) : this() => Account = account ?? throw new ArgumentNullException(nameof(account));
 

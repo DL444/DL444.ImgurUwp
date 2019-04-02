@@ -295,7 +295,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             int commentId = await ApiClient.Client.PostCommentAsync(Id, Comment);
             MessageBus.ViewModelMessageBus.Instance.SendMessage(
-                new MessageBus.CommentPostMessage(commentId, Id, Comment, ApiClient.OwnerAccount, Thumbnail, Convert.ToEpoch(DateTime.Now)));
+                new MessageBus.CommentPostMessage(commentId, Id, Comment, ApiClient.OwnerAccount, DisplayImage.Id, Convert.ToEpoch(DateTime.Now)));
             Comment = "";
             return commentId;
         }

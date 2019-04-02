@@ -73,15 +73,20 @@
                 <Grid.ContextFlyout>
                     <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
                         <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}">
+                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
                                 <AppBarButton.Icon>
                                     <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
                                 </AppBarButton.Icon>
                             </AppBarButton>
-                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
+                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
                         </ui:CommandBarFlyout.PrimaryCommands>
                         <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}"/>
+                            <AppBarButton Icon="Delete" Label="Delete" Command="{x:Bind DeleteCommand}" Visibility="{x:Bind IsOwner, Converter={StaticResource BoolVisibilityConverter}, Mode=OneWay}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                                <AppBarButton.Resources>
+                                    <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                                </AppBarButton.Resources>
+                            </AppBarButton>
+                            <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
                         </ui:CommandBarFlyout.SecondaryCommands>
                     </ui:CommandBarFlyout>
                 </Grid.ContextFlyout>
@@ -99,24 +104,27 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{x:Bind Author}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="{x:Bind Author, Mode=OneWay}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                 <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
-                    <ContentControl Content="{x:Bind RichContentBox}"/>
-                    <ContentControl ContentTemplateSelector="{StaticResource CommentReactionImageTemplateSelector}" Content="{x:Bind ReactionImage}"/>
+                    <ContentControl Content="{x:Bind RichContentBox, Mode=OneWay}"/>
+                    <ContentControl ContentTemplateSelector="{StaticResource CommentReactionImageTemplateSelector}" Content="{x:Bind ReactionImage, Mode=OneWay}"/>
                 </StackPanel>
-                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
 
-                <cc:SymbolTextButton Content="{x:Null}" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" 
-                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}">
+                <cc:SymbolTextButton Content="{x:Null}" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}" 
+                                     Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
                     <cc:SymbolTextButton.Icon>
                             <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
                     </cc:SymbolTextButton.Icon>
                 </cc:SymbolTextButton>
                 <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left" 
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}">
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"
+                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
+                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left"
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}" 
+                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
                     <cc:SymbolTextToggleButton.Icon>
                         <FontIcon Glyph="&#xE1FD;"/>
                     </cc:SymbolTextToggleButton.Icon>

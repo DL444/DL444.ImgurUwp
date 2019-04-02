@@ -27,17 +27,9 @@ namespace DL444.ImgurUwp.App.ViewModels
                 _comment = value;
                 //RichContentBox = RichTextParser.GetRichContentBox(Content);
 
-                components = RichTextParser.ParseComment(Content);
-                foreach (var c in components)
-                {
-                    if(c is UriComponent uri && uri.Type != UriType.Normal)
-                    {
-                        ReactionImage = new CommentReactionImage(uri.Type == UriType.Video, uri.Text);
-                        break;
-                    }
-                }
+                SetComponents();
 
-                if(_comment.Children != null)
+                if (_comment.Children != null)
                 {
                     foreach (var c in _comment.Children)
                     {
@@ -124,6 +116,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public int Level { get; private set; }
         public bool HasChildren => Children == null ? false : Children.Count > 0;
+        public bool IsOwner => Author == ApiClient.OwnerAccount && !Deleted;
 
         public string Reply {
             get => _reply;
@@ -158,6 +151,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             SendReplyCommand = new AsyncCommand<int>(SendReply, () => !string.IsNullOrWhiteSpace(Reply));
             UpvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Up));
             DownvoteCommand = new AsyncCommand<bool>(() => Vote(ImgurUwp.ApiClient.Vote.Down));
+            DeleteCommand = new AsyncCommand<bool>(Delete);
         }
 
         public CommentViewModel(Comment comment) : this() => Comment = comment;
@@ -168,6 +162,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AsyncCommand<int> SendReplyCommand { get; private set; }
         public AsyncCommand<bool> UpvoteCommand { get; private set; }
         public AsyncCommand<bool> DownvoteCommand { get; private set; }
+        public AsyncCommand<bool> DeleteCommand { get; private set; }
 
         void ShowReplyField()
         {
@@ -205,13 +200,49 @@ namespace DL444.ImgurUwp.App.ViewModels
             Reply = "";
             return newId;
         }
-        public async Task<bool> Vote(ImgurUwp.ApiClient.Vote vote)
+        async Task<bool> Vote(ImgurUwp.ApiClient.Vote vote)
         {
             bool result = await ApiClient.Client.VoteCommentAsync(Id, vote);
             Comment comment = await ApiClient.Client.GetCommentAsync(Id);
             Ups = comment.Ups;
             Downs = comment.Downs;
             return result;
+        }
+        async Task<bool> Delete()
+        {
+            var result = await ApiClient.Client.DeleteCommentAsync(Id);
+            if(result == true)
+            {
+                if (Children.Count != 0)
+                {
+                    SetVirtualDeleteState();
+                }
+
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.CommentDeleteMessage(Id, ImageId, Children.Count != 0));
+            }
+            return result;
+        }
+
+        void SetVirtualDeleteState()
+        {
+            Comment.Content = "[deleted]";
+            Comment.Author = "[deleted]";
+            ReactionImage = null;
+            Comment.Deleted = true;
+            SetComponents();
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(null));
+        }
+        private void SetComponents()
+        {
+            components = RichTextParser.ParseComment(Content);
+            foreach (var c in components)
+            {
+                if (c is UriComponent uri && uri.Type != UriType.Normal)
+                {
+                    ReactionImage = new CommentReactionImage(uri.Type == UriType.Video, uri.Text);
+                    break;
+                }
+            }
         }
 
         private void TransferMgr_DataRequested(Windows.ApplicationModel.DataTransfer.DataTransferManager sender, Windows.ApplicationModel.DataTransfer.DataRequestedEventArgs args)
