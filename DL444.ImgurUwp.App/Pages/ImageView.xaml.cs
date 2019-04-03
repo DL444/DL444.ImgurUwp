@@ -49,7 +49,7 @@ namespace DL444.ImgurUwp.App.Pages
             if (e.Parameter is ValueTuple<IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>, ItemViewModel> navParam)
             {
                 Images = navParam.Item1;
-                SelectedItem = navParam.Item2;
+                SelectedItem = Images.FirstOrDefault(x => x.Id == navParam.Item2.Id);
             }
         }
 

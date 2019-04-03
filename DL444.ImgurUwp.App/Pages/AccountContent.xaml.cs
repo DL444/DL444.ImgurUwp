@@ -27,21 +27,13 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class AccountContent : Page
     {
-        private AccountContentPageViewModel _viewModel = null;
-
         public AccountContent()
         {
             this.InitializeComponent();
         }
 
-        AccountContentPageViewModel ViewModel
-        {
-            get => _viewModel;
-            set
-            {
-                _viewModel = value;
-            }
-        }
+        AccountContentPageViewModel ViewModel { get; set; }
+
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -51,7 +43,7 @@ namespace DL444.ImgurUwp.App.Pages
                 var cache = ViewModelCacheManager.Instance.Peek<AccountContentPageViewModel>();
                 if (cache != null && cache.Account.Username == vm.Username)
                 {
-                    _viewModel = cache;
+                    ViewModel = cache;
                 }
                 else
                 {
@@ -65,7 +57,7 @@ namespace DL444.ImgurUwp.App.Pages
                 var cache = ViewModelCacheManager.Instance.Peek<AccountContentPageViewModel>();
                 if (cache != null && cache.Account.Username == vmIndex.Item1.Username)
                 {
-                    _viewModel = cache;
+                    ViewModel = cache;
                 }
                 else
                 {
@@ -104,11 +96,50 @@ namespace DL444.ImgurUwp.App.Pages
             Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(e.ClickedItem as GalleryItemViewModel, new StaticIncrementalSource<GalleryItemViewModel>(ViewModel.GalleryFavorites)));
         }
 
-        private void ItemGrid_ItemClick(object sender, ItemClickEventArgs e)
+        private void NonGalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            // TODO: Hey! Everything seems wrong from Favorites endpoint.
+            if (e.ClickedItem is ItemViewModel item)
+            {
+                if (item.Item.Points != null && item.InGallery)
+                {
+                    // Gallery
+                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
+                }
+                else
+                {
+                    // Non-gallery own
+                    if (item.IsOwner)
+                    {
+                        if (!item.IsAlbum)
+                        {
+                            Navigation.Navigate(typeof(ImageView), (ViewModel.MyImages, item));
+                        }
+                        else
+                        {
+                            Navigation.Navigate(typeof(Upload), item);
+                        }
+                    }
+                    // Non-gallery others
+                    else
+                    {
+                        if (item.IsAlbum)
+                        {
+
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AlbumGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is AccountAlbumViewModel accountAlbum)
             {
-                // Albums
                 if (accountAlbum.InGallery)
                 {
                     Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), accountAlbum.Id);
@@ -118,28 +149,6 @@ namespace DL444.ImgurUwp.App.Pages
                     Navigation.ContentFrame.Navigate(typeof(Pages.Upload), accountAlbum);
                 }
             }
-            else if (e.ClickedItem is ItemViewModel item)
-            {
-                // TODO: Hey! Everything seems wrong from Favorites endpoint.
-                // Account Favorites
-                if (item.Item.Points != null && item.InGallery)
-                {
-                    // Gallery
-                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
-                }
-                else
-                {
-                    // Non-gallery
-                    if(item.IsAlbum)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }
         }
 
         private void ImageGrid_ItemClick(object sender, ItemClickEventArgs e)
@@ -147,6 +156,28 @@ namespace DL444.ImgurUwp.App.Pages
             if (e.ClickedItem is ItemViewModel item)
             {
                 Navigation.Navigate(typeof(ImageView), (ViewModel.MyImages, item));
+            }
+        }
+
+        private void AllItemGrd_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (e.ClickedItem is ItemViewModel item)
+            {
+                if (item.InGallery)
+                {
+                    Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), item.Id);
+                }
+                else
+                {
+                    if (!item.IsAlbum)
+                    {
+                        Navigation.Navigate(typeof(ImageView), (ViewModel.MyImages, item));
+                    }
+                    else
+                    {
+                        Navigation.Navigate(typeof(Upload), item);
+                    }
+                }
             }
         }
     }

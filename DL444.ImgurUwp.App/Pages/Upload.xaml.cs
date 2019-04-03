@@ -134,6 +134,14 @@ namespace DL444.ImgurUwp.App.Pages
                 ViewModel = upVm;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
             }
+            else if(e.Parameter is ItemViewModel itemVm)
+            {
+                if(itemVm.IsAlbum)
+                {
+                    ViewModel = UploadViewModel.CreateFromAlbum(itemVm.Item as Models.Album);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
+                }
+            }
             else if(e.Parameter is string albumId)
             {
                 ViewModel = await UploadViewModel.CreateFromAlbumId(albumId);
