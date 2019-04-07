@@ -171,6 +171,7 @@
       <DependentUpon>GeneralSettingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\HeaderCaptionControl.cs" />
+    <Compile Include="Settings\AppSettingsManager.cs" />
     <Compile Include="Settings\PersonalizeSettingsPage.xaml.cs">
       <DependentUpon>PersonalizeSettingsPage.xaml</DependentUpon>
     </Compile>

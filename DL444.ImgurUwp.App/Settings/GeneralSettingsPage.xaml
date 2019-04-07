@@ -10,8 +10,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel Margin="16,0" Padding="0,16">
-        <cc:HeaderCaptionControl Header="Autoplay" Caption="Play GIFs and videos automatically">
-            <ToggleSwitch/>
+        <cc:HeaderCaptionControl Header="Meh" Caption="You know, it doesn't do anything anyway.">
+            <ToggleSwitch IsOn="{x:Bind IsMehVoteOn, Mode=TwoWay}"/>
         </cc:HeaderCaptionControl>
     </StackPanel>
 </Page>
