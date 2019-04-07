@@ -149,7 +149,7 @@
                         <ui:PersonPicture Height="24" ProfilePicture="{x:Bind CurrentAccount.AvatarImage, TargetNullValue={x:Null}}"/>
                         <Button.Flyout>
                             <MenuFlyout Placement="BottomEdgeAlignedRight">
-                                <cc:MenuFlyoutContentItem Click="AccountDetails_Click">
+                                <cc:MenuFlyoutContentItem Click="AccountDetails_Click" MinWidth="150" MaxWidth="400">
                                     <cc:MenuFlyoutContentItem.Content>
                                         <Grid>
                                             <Grid.ColumnDefinitions>

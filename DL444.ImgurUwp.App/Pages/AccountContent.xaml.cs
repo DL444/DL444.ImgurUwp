@@ -98,40 +98,28 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void NonGalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-            // TODO: Hey! Everything seems wrong from Favorites endpoint.
+            // Hey! Everything seems wrong from Favorites endpoint.
+            // Issues: 
+            // Account information is missing in hidden and secret items.
+            // In gallery information is incorrect for public items.
+            // Fix: 
+            // -  Always treat hidden and secret items as non-owner.
+            // -  For public items, check for Points field. 
+            //    It is reliably null for non-gallery items, and not null for gallery items.
+            // Note:
+            // gallery items may have a hidden/secret privacy level, but account id is still available.
+
             if (e.ClickedItem is ItemViewModel item)
             {
-                if (item.Item.Points != null && item.InGallery)
+                if(item.AccountUrl == null || item.Item.Points == null)
                 {
-                    // Gallery
-                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
+                    // Non-gallery.
+                    // TODO: Implement non-owner non-gallery view.
                 }
                 else
                 {
-                    // Non-gallery own
-                    if (item.IsOwner)
-                    {
-                        if (!item.IsAlbum)
-                        {
-                            Navigation.Navigate(typeof(ImageView), (ViewModel.MyImages, item));
-                        }
-                        else
-                        {
-                            Navigation.Navigate(typeof(Upload), item);
-                        }
-                    }
-                    // Non-gallery others
-                    else
-                    {
-                        if (item.IsAlbum)
-                        {
-
-                        }
-                        else
-                        {
-
-                        }
-                    }
+                    // Gallery.
+                    Navigation.ContentFrame.Navigate(typeof(Pages.GalleryItemDetails), item.Id);
                 }
             }
         }
