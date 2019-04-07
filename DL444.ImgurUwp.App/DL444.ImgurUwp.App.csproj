@@ -118,6 +118,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Controls\CommentTreeViewItem.cs" />
+    <Compile Include="Controls\ImagePickerDialog.xaml.cs">
+      <DependentUpon>ImagePickerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ReportConfirmDialog.xaml.cs">
       <DependentUpon>ReportConfirmDialog.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,7 @@
     <Compile Include="Themes\Templates.cs" />
     <Compile Include="ViewModels\AccountContentPageViewModel.cs" />
     <Compile Include="ViewModels\AccountDetailsPageViewModel.cs" />
+    <Compile Include="ViewModels\AccountImagePickerViewModel.cs" />
     <Compile Include="ViewModels\GalleryViewPageViewModel.cs" />
     <Compile Include="ViewModels\MessageBus\Messages.cs" />
     <Compile Include="ViewModels\MessageBus\ViewModelMessageBus.cs" />
@@ -227,6 +231,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ImagePickerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ReportConfirmDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

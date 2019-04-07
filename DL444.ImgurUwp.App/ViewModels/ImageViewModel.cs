@@ -84,7 +84,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool InGallery => Image.InGallery;
 
         public bool DescriptionChanged => !(originalDescription == Description);
-        public virtual bool Uploaded => true;
+        public virtual bool Uploaded { get; protected set; } = true;
 
         public string Thumbnail { get; private set; }
         public string HugeThumbnail { get; private set; }

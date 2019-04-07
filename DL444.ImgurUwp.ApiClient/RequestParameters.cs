@@ -51,6 +51,11 @@ namespace DL444.ImgurUwp.ApiClient
         Add, Replace, Remove
     }
 
+    public enum ImageUploadMode
+    {
+        Base64, Url
+    }
+
     class PostCommentParams
     {
         public PostCommentParams(string imageId, string content, string parentId = null)
@@ -70,13 +75,21 @@ namespace DL444.ImgurUwp.ApiClient
 
     class ImageUploadParams
     {
-        public ImageUploadParams(string image, string album, string name, string title, string description)
+        public ImageUploadParams(string image, string album, string name, string title, string description, ImageUploadMode mode)
         {
             Image = image ?? throw new ArgumentNullException(nameof(image));
             Album = album;
             Name = name;
             Title = title;
             Description = description;
+            if(mode == ImageUploadMode.Base64)
+            {
+                Type = "base64";
+            }
+            else if(mode == ImageUploadMode.Url)
+            {
+                Type = "URL";
+            }
         }
 
         [JsonProperty(PropertyName = "image")]
@@ -85,7 +98,7 @@ namespace DL444.ImgurUwp.ApiClient
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "album")]
         public string Album { get; set; }
         [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; } = "base64";
+        public string Type { get; set; }
 
         [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore, PropertyName = "name")]
         public string Name { get; set; }

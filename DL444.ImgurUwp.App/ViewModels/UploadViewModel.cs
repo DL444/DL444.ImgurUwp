@@ -15,6 +15,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     class UploadViewModel : INotifyPropertyChanged
     {
         public const int ImageSizeLimit = 10 * 1024 * 1024;
+        private const int MaxUploadCount = 50;
         private string _title;
         private string _albumId;
         private bool _albumCreated;
@@ -99,7 +100,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public bool AddImage(ImageViewModel image)
         {
-            if(Images.Count < 50)
+            if(Images.Count < MaxUploadCount)
             {
                 Images.Add(image);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasImage)));
@@ -116,6 +117,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         }
 
         public AsyncCommand<bool> PickImageCommand { get; private set; }
+        public AsyncCommand<bool> PickUploadedImageCommand { get; private set; }
         public AsyncCommand<string> UploadImagesCommand { get; private set; }
         public AsyncCommand<bool> PostToGalleryCommand { get; private set; }
 
@@ -139,11 +141,25 @@ namespace DL444.ImgurUwp.App.ViewModels
             PickImageCommand.RaiseCanExecuteChanged();
             return allSuccess;
         }
+        async Task<bool> PickUploadedImage()
+        {
+            var dialog = new Controls.ImagePickerDialog(MaxUploadCount - Images.Count);
+            var dialogResult = await dialog.ShowAsync();
+            if(dialogResult == Windows.UI.Xaml.Controls.ContentDialogResult.Primary)
+            {
+                foreach(var i in dialog.ViewModel.SelectedImages)
+                {
+                    AddImage(new UploadExistingImageViewModel(i.Item as Models.Image));
+                }
+            }
+            return true;
+        }
         async Task<string> UploadImages()
         {
             // TODO: Imgur does not return single-image albums. This is a design choice, and many users expect this behavior. 
             // So we should try to avoid creating single-image albums.
             // But if an album BECOMES single-image, there's no need to worry, since we could still get access to them, with Items endpoint.
+            bool newAlbum = false;
             Progress = 0;
             Uploading = true;
             if(!AlbumCreated)
@@ -152,6 +168,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 AlbumId = id;
                 originalTitle = Title;
                 ViewModelCacheManager.Instance.InvalidateCache<AccountContentPageViewModel>(x => x.IsOwner);
+                newAlbum = true;
             }
             else if(originalTitle != Title)
             {
@@ -165,7 +182,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 
             foreach(var i in Images)
             {
-                if(i is UploadImageViewModel upload)
+                if(i is IUploadImageViewModel upload)
                 {
                     if(!i.Uploaded)
                     {
@@ -182,6 +199,11 @@ namespace DL444.ImgurUwp.App.ViewModels
                 {
                     await ApiClient.Client.UpdateImageInfoAsync(i.Id, description: i.Description);
                 }
+            }
+
+            if (newAlbum && Images.All(x => x is UploadExistingImageViewModel))
+            {
+                await ApiClient.Client.UpdateAlbumInfoAsync(AlbumId, coverId: Images.First().Id);
             }
 
             if(DeleteList.Any())
@@ -227,7 +249,8 @@ namespace DL444.ImgurUwp.App.ViewModels
 
         public UploadViewModel()
         {
-            PickImageCommand = new AsyncCommand<bool>(PickImage, () => Images.Count < 50);
+            PickImageCommand = new AsyncCommand<bool>(PickImage, () => Images.Count < MaxUploadCount);
+            PickUploadedImageCommand = new AsyncCommand<bool>(PickUploadedImage, () => Images.Count < MaxUploadCount);
             UploadImagesCommand = new AsyncCommand<string>(UploadImages);
             PostToGalleryCommand = new AsyncCommand<bool>(PostToGallery);
         }
@@ -272,7 +295,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public class UploadImageViewModel : ImageViewModel, INotifyPropertyChanged, IDisposable
+    public class UploadImageViewModel : ImageViewModel, IUploadImageViewModel, INotifyPropertyChanged, IDisposable
     {
         private Stream _imageStream;
         private BitmapImage _image;
@@ -350,5 +373,45 @@ namespace DL444.ImgurUwp.App.ViewModels
             Dispose(true);
         }
         #endregion
+    }
+    public class UploadExistingImageViewModel : ImageViewModel, IUploadImageViewModel, INotifyPropertyChanged
+    {
+        private string _description;
+        public string PreviewDescription
+        {
+            get => _description;
+            set
+            {
+                _description = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PreviewDescription)));
+            }
+        }
+        public override bool Uploaded { get; protected set; }
+
+        public async Task<Models.Image> Upload(string albumId = null)
+        {
+            if(Image == null) { return null; }
+            if (albumId == null)
+            {
+                await ApiClient.Client.UploadImageAsync(new Uri(Image.Link), description: PreviewDescription);
+            }
+            else
+            {
+                await ApiClient.Client.EditAlbumImageAsync(albumId, new string[] { Image.Id }, ImgurUwp.ApiClient.AlbumEditMode.Add);
+            }
+            Uploaded = true;
+            return Image;
+        }
+
+        public UploadExistingImageViewModel() { }
+        public UploadExistingImageViewModel(Models.Image image) => Image = image ?? throw new ArgumentNullException(nameof(image));
+
+        public new event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    interface IUploadImageViewModel
+    {
+        Task<Models.Image> Upload(string albumId);
+        string PreviewDescription { get; }
     }
 }

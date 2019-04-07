@@ -32,6 +32,7 @@ namespace DL444.ImgurUwp.App.Pages
             AlbumEditorTemplateSelector.ImageTemplate = this.Resources["ExistingImageDataTemplate"] as DataTemplate;
             AlbumEditorTemplateSelector.VideoTemplate = this.Resources["ExistingVideoDataTemplate"] as DataTemplate;
             AlbumEditorTemplateSelector.UploadTemplate = this.Resources["UploaderImageDataTemplate"] as DataTemplate;
+            AlbumEditorTemplateSelector.UploadExistingTemplate = this.Resources["UploaderExistingImageDataTemplate"] as DataTemplate;
         }
 
         ShareOperation shareOp = null;
@@ -177,12 +178,20 @@ namespace DL444.ImgurUwp.App.Pages
         public static DataTemplate ImageTemplate { get; set; }
         public static DataTemplate VideoTemplate { get; set; }
         public static DataTemplate UploadTemplate { get; set; }
+        public static DataTemplate UploadExistingTemplate { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
             if (item is ImageViewModel image)
             {
-                if (!image.Uploaded) { return UploadTemplate; }
+                if(item is UploadImageViewModel)
+                {
+                    return UploadTemplate;
+                }
+                else if(item is UploadExistingImageViewModel)
+                {
+                    return UploadExistingTemplate;
+                }
                 else
                 {
                     if (image.IsAnimated) { return VideoTemplate; }

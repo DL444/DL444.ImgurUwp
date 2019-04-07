@@ -72,38 +72,40 @@ namespace DL444.ImgurUwp.ApiClient
             AlbumPrivacy? privacy = null, string coverId = null, IEnumerable<string> deleteHashes = null)
         {
             if(id == null) { throw new ArgumentNullException(nameof(id)); }
-            if (coverId != null)
-            {
-                if (imageIds == null && deleteHashes == null)
-                {
-                    // All null
-                    throw new ArgumentException("The specified cover is not in this album.");
-                }
-                else if (deleteHashes == null)
-                {
-                    // imageIds not null
-                    if (!imageIds.Contains(coverId))
-                    {
-                        throw new ArgumentException("The specified cover is not in this album.");
-                    }
-                }
-                else if (imageIds == null)
-                {
-                    // deleteHashes not null
-                    if (!deleteHashes.Contains(coverId))
-                    {
-                        throw new ArgumentException("The specified cover is not in this album.");
-                    }
-                }
-                else
-                {
-                    // All not null
-                    if ((!imageIds.Contains(coverId)) && (!deleteHashes.Contains(coverId)))
-                    {
-                        throw new ArgumentException("The specified cover is not in this album.");
-                    }
-                }
-            }
+            
+            // Cover not in album is not important after all.
+            //if (coverId != null)
+            //{
+            //    if (imageIds == null && deleteHashes == null)
+            //    {
+            //        // All null
+            //        throw new ArgumentException("The specified cover is not in this album.");
+            //    }
+            //    else if (deleteHashes == null)
+            //    {
+            //        // imageIds not null
+            //        if (!imageIds.Contains(coverId))
+            //        {
+            //            throw new ArgumentException("The specified cover is not in this album.");
+            //        }
+            //    }
+            //    else if (imageIds == null)
+            //    {
+            //        // deleteHashes not null
+            //        if (!deleteHashes.Contains(coverId))
+            //        {
+            //            throw new ArgumentException("The specified cover is not in this album.");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // All not null
+            //        if ((!imageIds.Contains(coverId)) && (!deleteHashes.Contains(coverId)))
+            //        {
+            //            throw new ArgumentException("The specified cover is not in this album.");
+            //        }
+            //    }
+            //}
 
             AlbumCreateParams album = new AlbumCreateParams(title, description, privacy, imageIds, deleteHashes, coverId);
 

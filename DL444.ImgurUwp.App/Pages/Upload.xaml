@@ -68,6 +68,23 @@
                 </Grid>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="UploaderExistingImageDataTemplate" x:DataType="vm:UploadExistingImageViewModel">
+            <Grid Padding="0,0,0,8" Margin="0,8" MaxWidth="{ThemeResource ImageListViewMaxWidth}" RowSpacing="8" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Source="{x:Bind HugeThumbnail}"/>
+                <Grid Grid.Row="1" Margin="8,0,16,0" ColumnSpacing="12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{x:Bind PreviewDescription, Mode=TwoWay}" PlaceholderText="Add description..." TextWrapping="Wrap" Style="{ThemeResource ClickEditTextBoxStyle}"/>
+                    <cc:SymbolTextButton Icon="Remove" Content="Remove" Grid.Column="1" Click="RemoveImageBtn_Click" Tag="{x:Bind}"/>
+                </Grid>
+            </Grid>
+        </DataTemplate>
         <local:AlbumEditorTemplateSelector x:Key="UploaderTemplateSelector"/>
     </Page.Resources>
 
@@ -119,8 +136,11 @@
                     
                     <StackPanel HorizontalAlignment="Center" Spacing="12" Grid.Row="1" Margin="0,0,0,16">
                         <SymbolIcon Symbol="Add" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        <TextBlock Text="Drag image here or" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                        <Button Content="Select file" Command="{x:Bind ViewModel.PickImageCommand, Mode=OneWay}" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Drag image here or browse for" HorizontalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+                            <Button Content="Files on my device" Command="{x:Bind ViewModel.PickImageCommand, Mode=OneWay}"/>
+                            <Button Content="Images I uploaded" Command="{x:Bind ViewModel.PickUploadedImageCommand, Mode=OneWay}"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </ListView.Footer>

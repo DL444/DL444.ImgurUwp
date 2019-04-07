@@ -45,10 +45,17 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
+        public async Task<Image> UploadImageAsync(Uri imageUrl, string album = null, string title = null, string description = null)
+        {
+            if (imageUrl == null)
+            {
+                throw new ArgumentNullException(nameof(imageUrl));
+            }
+
+            return await UploadImageAsync(imageUrl.AbsoluteUri, ImageUploadMode.Url, album, title, description);
+        }
         public async Task<Image> UploadImageAsync(Stream image, string album = null, string title = null, string description = null)
         {
-            // TODO: Implement anonymous upload.
-
             if(image == null) { throw new ArgumentNullException(nameof(image)); }
             if(image.Length > 10 * 1024 * 1024)
             {
@@ -62,14 +69,13 @@ namespace DL444.ImgurUwp.ApiClient
                 imageBytes = str.ToArray();
             }
             string imageBase64 = Convert.ToBase64String(imageBytes);
-            return await UploadImageAsync(imageBase64, album, title, description);
+            return await UploadImageAsync(imageBase64, ImageUploadMode.Base64, album, title, description);
         }
-        private async Task<Image> UploadImageAsync(string imageBase64, string album = null, string title = null, string description = null)
+        private async Task<Image> UploadImageAsync(string imageString, ImageUploadMode mode, string album = null, string title = null, string description = null)
         {
-            if(imageBase64 == null) { throw new ArgumentNullException(nameof(imageBase64)); }
-            // TODO: Find a efficient way to determine the size of image before making this public.
+            if(imageString == null) { throw new ArgumentNullException(nameof(imageString)); }
             
-            ImageUploadParams img = new ImageUploadParams(imageBase64, album, null, title, description);
+            ImageUploadParams img = new ImageUploadParams(imageString, album, null, title, description, mode);
 
             HttpRequestMessage msg = new HttpRequestMessage(HttpMethod.Post, "/3/image");
             msg.Content = new StringContent(JsonConvert.SerializeObject(img));
