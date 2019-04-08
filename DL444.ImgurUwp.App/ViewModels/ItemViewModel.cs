@@ -123,6 +123,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public bool HasTitle => !string.IsNullOrEmpty(Title);
         public bool HasImage => ImageCount > 0;
         public bool IsOwner => AccountUrl == ApiClient.OwnerAccount;
+        public bool CanAddToAlbum => !IsAlbum && IsOwner;
 
         public AsyncCommand<object> DownloadCommand { get; private set; }
         public Command CopyUrlCommand { get; private set; }
@@ -130,6 +131,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         public AsyncCommand<bool> FavoriteItemCommand { get; private set; }
         public Command ShareCommand { get; set; }
         public AsyncCommand<object> OpenBrowserCommand { get; private set; }
+        public AsyncCommand<bool> AddToAlbumCommand { get; private set; }
 
         async Task<object> Download()
         {
@@ -225,6 +227,17 @@ namespace DL444.ImgurUwp.App.ViewModels
             await Windows.System.Launcher.LaunchUriAsync(new Uri(Link));
             return null;
         }
+        async Task<bool> AddToAlbum()
+        {
+            if (IsAlbum) { return false; }
+            var dialog = new Controls.AlbumPickerDialog(this.Item as Image);
+            var result = await dialog.ShowAsync();
+            if (result == Windows.UI.Xaml.Controls.ContentDialogResult.Primary && dialog.ViewModel.SelectedItem != null)
+            {
+                await ApiClient.Client.EditAlbumImageAsync(dialog.ViewModel.SelectedItem.Id, new string[] { Id }, ImgurUwp.ApiClient.AlbumEditMode.Add);
+            }
+            return true;
+        }
 
         private void TransferMgr_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
         {
@@ -241,6 +254,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             FavoriteItemCommand = new AsyncCommand<bool>(FavoriteItem);
             ShareCommand = new Command(Share);
             OpenBrowserCommand = new AsyncCommand<object>(OpenBrowser);
+            AddToAlbumCommand = new AsyncCommand<bool>(AddToAlbum);
         }
         public ItemViewModel(IItem item) : this()
         {

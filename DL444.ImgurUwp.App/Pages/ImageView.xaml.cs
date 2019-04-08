@@ -53,8 +53,6 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
             var index = Images.IndexOf(SelectedItem);
@@ -71,5 +69,7 @@ namespace DL444.ImgurUwp.App.Pages
                 }
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

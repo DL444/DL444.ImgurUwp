@@ -23,7 +23,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Text="{x:Bind SelectCountHintText, Mode=OneWay}" Margin="0,0,0,8"/>
-        <tkc:AdaptiveGridView x:Name="ImageGridView" ItemsSource="{x:Bind ViewModel.Images}"  IsMultiSelectCheckBoxEnabled="True" VerticalAlignment="Top" Grid.Row="1"
+        <tkc:AdaptiveGridView x:Name="ImageGridView" ItemsSource="{x:Bind ViewModel.Images}" IsMultiSelectCheckBoxEnabled="True" VerticalAlignment="Top" Grid.Row="1"
                               DesiredWidth="200" ItemHeight="200" SelectionMode="Multiple" SelectionChanged="ImageGridView_SelectionChanged">
             <GridView.Resources>
                 <SolidColorBrush x:Key="GridViewItemCheckBrush" Color="#FFFFFF" />
@@ -34,7 +34,7 @@
                 </DataTemplate>
             </tkc:AdaptiveGridView.ItemTemplate>
             <tkc:AdaptiveGridView.Footer>
-                <ProgressBar Margin="4" IsIndeterminate="True" Visibility="{x:Bind ViewModel.Images.IsLoading, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"/>
+                <ProgressBar x:Name="LoadBar" Margin="4" IsIndeterminate="True" x:Load="{x:Bind ViewModel.Images.IsLoading, Mode=OneWay}"/>
             </tkc:AdaptiveGridView.Footer>
         </tkc:AdaptiveGridView>
     </Grid>

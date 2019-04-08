@@ -156,7 +156,7 @@
                 <CommandBar.PrimaryCommands>
                     <AppBarButton Icon="Download" Label="Download" Command="{x:Bind SelectedItem.DownloadCommand, Mode=OneWay}"/>
                     <AppBarButton Icon="Copy" Label="Copy link" Command="{x:Bind SelectedItem.CopyUrlCommand, Mode=OneWay}"/>
-                    <AppBarButton Label="Add to album">
+                    <AppBarButton Label="Add to album" Command="{x:Bind SelectedItem.AddToAlbumCommand, Mode=OneWay}">
                         <AppBarButton.Icon>
                             <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE900;"/>
                         </AppBarButton.Icon>

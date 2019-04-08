@@ -78,6 +78,11 @@
                     </ui:CommandBarFlyout.PrimaryCommands>
                     <ui:CommandBarFlyout.SecondaryCommands>
                         <AppBarButton Label="Open in browser" Icon="Globe" Command="{x:Bind OpenBrowserCommand}"/>
+                        <AppBarButton Visibility="{x:Bind CanAddToAlbum, Converter={StaticResource BoolVisibilityConverter}}" Label="Add to album" Command="{x:Bind AddToAlbumCommand}">
+                            <AppBarButton.Icon>
+                                <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE900;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
                         <AppBarButton Icon="Delete" Visibility="{x:Bind IsOwner, Converter={StaticResource BoolVisibilityConverter}}" Label="Delete" Command="{x:Bind DeleteCommand}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
                             <AppBarButton.Resources>
                                 <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
@@ -146,6 +151,31 @@
                               HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
                     <TextBlock Text="GIF"/>
                 </Grid>
+
+                <Grid x:Name="AlbumIndicator" Visibility="{x:Bind ImageCount, Converter={StaticResource ImageCountVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,4,0,0">
+                    <TextBlock Text="{x:Bind ImageCount}"/>
+                </Grid>
+            </StackPanel>
+            <Grid Grid.Row="1" Padding="8" Visibility="{x:Bind HasTitle, Converter={StaticResource BoolVisibilityConverter}}">
+                <TextBlock Text="{x:Bind Title}" Style="{ThemeResource BaseTextBlockStyle}" TextWrapping="Wrap" MaxLines="3" TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="AccountAlbumNoMenuGridTemplate" x:DataType="vm:ItemViewModel">
+        <Grid Margin="4" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock x:Name="EmptyAlbumPlaceholder" Text="Empty" x:Load="{x:Bind HasImage, Converter={StaticResource InvertBoolConverter}}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+            <Image x:Name="AlbumCoverImage" x:Load="{x:Bind HasImage}" Source="{x:Bind Thumbnail}" HorizontalAlignment="Center" VerticalAlignment="Top" Stretch="UniformToFill"/>
+            <StackPanel Height="Auto" Width="Auto" HorizontalAlignment="Right"
+                                    VerticalAlignment="Top" Margin="0,8,8,0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <!--<Grid x:Name="AnimationIndicator" Visibility="{x:Bind IsAnimated, Converter={StaticResource BoolVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                              HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4">
+                    <TextBlock Text="GIF"/>
+                </Grid>-->
 
                 <Grid x:Name="AlbumIndicator" Visibility="{x:Bind ImageCount, Converter={StaticResource ImageCountVisibilityConverter}}" Height="Auto" Width="Auto" Background="{ThemeResource SystemControlAcrylicElementBrush}"
                               HorizontalAlignment="Right" VerticalAlignment="Top" Padding="8,4" Margin="0,4,0,0">

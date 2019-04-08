@@ -26,6 +26,8 @@ namespace DL444.ImgurUwp.App.Pages
     /// </summary>
     public sealed partial class Upload : Page, INotifyPropertyChanged
     {
+        // TODO: Copy URL in Upload page. (For sharing scenarios)
+
         public Upload()
         {
             this.InitializeComponent();
@@ -147,6 +149,10 @@ namespace DL444.ImgurUwp.App.Pages
             {
                 ViewModel = await UploadViewModel.CreateFromAlbumId(albumId);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ViewModel)));
+            }
+            else if(e.Parameter is Models.Image img && img != null)
+            {
+                ViewModel.AddImage(new ImageViewModel(img));
             }
         }
 

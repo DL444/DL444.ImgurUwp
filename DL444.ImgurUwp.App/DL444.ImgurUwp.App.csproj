@@ -117,6 +117,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Controls\AlbumPickerDialog.xaml.cs">
+      <DependentUpon>AlbumPickerDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CommentTreeViewItem.cs" />
     <Compile Include="Controls\ImagePickerDialog.xaml.cs">
       <DependentUpon>ImagePickerDialog.xaml</DependentUpon>
@@ -182,6 +185,7 @@
     <Compile Include="Settings\ViewModels.cs" />
     <Compile Include="StaticData.cs" />
     <Compile Include="Themes\Templates.cs" />
+    <Compile Include="ViewModels\AccountAlbumPickerViewModel.cs" />
     <Compile Include="ViewModels\AccountContentPageViewModel.cs" />
     <Compile Include="ViewModels\AccountDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\AccountImagePickerViewModel.cs" />
@@ -232,6 +236,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AlbumPickerDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ImagePickerDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
