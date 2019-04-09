@@ -45,7 +45,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         {
             var items = await ApiClient.Client.GetAccountItemsAsync("me", page: Page);
             Page++;
-            return from i in items where (i.IsAlbum == true) select (new ItemViewModel(i));
+            return from i in items where (i.IsAlbum == true && !i.InGallery) select (new ItemViewModel(i));
         }
     }
 }

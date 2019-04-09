@@ -133,6 +133,19 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <local:ImageViewTemplateSelector x:Key="ImageViewTemplateSelector"/>
+        <DataTemplate x:Key="AccountImageTemplate" x:DataType="vm:ItemViewModel">
+            <ScrollViewer x:Name="ImageScrollViewer" ZoomMode="Enabled" MinZoomFactor="0.8" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" DoubleTapped="ImageScrollViewer_DoubleTapped">
+                <Grid>
+                    <Image Height="{Binding ElementName=ImageScrollViewer, Path=ViewportHeight, Mode=OneWay}"
+                       Width="{Binding ElementName=ImageScrollViewer, Path=ViewportWidth, Mode=OneWay}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Source="{x:Bind DisplayImage.Link}"/>
+                </Grid>
+            </ScrollViewer>
+        </DataTemplate>
+        <DataTemplate x:Key="AccountVideoTemplate" x:DataType="vm:ItemViewModel">
+            <MediaElement Source="{x:Bind DisplayImage.Mp4}" IsLooping="True" IsMuted="True" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </DataTemplate>
     </Page.Resources>
 
     <Grid>
@@ -143,14 +156,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <FlipView x:Name="ImageFlipView" ItemsSource="{x:Bind Images}" SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}" Padding="0,8" Background="Transparent">
-                <FlipView.ItemTemplate>
-                    <DataTemplate x:DataType="vm:ItemViewModel">
-                        <Image Source="{x:Bind DisplayImage.Link}"/>
-                        <!-- TODO: Video? -->
-                    </DataTemplate>
-                </FlipView.ItemTemplate>
-            </FlipView>
+            <FlipView x:Name="ImageFlipView" ItemsSource="{x:Bind Images}" SelectedItem="{x:Bind SelectedItem, Mode=TwoWay}" Padding="0,8" Background="Transparent" ItemTemplateSelector="{StaticResource ImageViewTemplateSelector}"/>
 
             <CommandBar Grid.Row="1" DefaultLabelPosition="Right" Background="Transparent" Padding="8,0">
                 <CommandBar.PrimaryCommands>

@@ -27,6 +27,8 @@ namespace DL444.ImgurUwp.App.Pages
         public ImageView()
         {
             this.InitializeComponent();
+            ImageViewTemplateSelector.ImageTemplate = this.Resources["AccountImageTemplate"] as DataTemplate;
+            ImageViewTemplateSelector.VideoTemplate = this.Resources["AccountVideoTemplate"] as DataTemplate;
         }
 
         private ItemViewModel _selectedItem;
@@ -70,6 +72,46 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
+        private async void ImageScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if(e.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse)
+            {
+                // Give user enough time to lift finger or pen.
+                await System.Threading.Tasks.Task.Delay(100);
+            }
+            var scrollViewer = sender as ScrollViewer;
+            var offset = e.GetPosition(scrollViewer);
+            var factor = scrollViewer.ZoomFactor;
+            if(Math.Abs(factor - 1.0) > 1e-2)
+            {
+                scrollViewer.ChangeView(offset.X, offset.Y, 1.0f);
+                return;
+            }
+            scrollViewer.ChangeView(offset.X, offset.Y, 2.0f);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public class ImageViewTemplateSelector : DataTemplateSelector
+    {
+        public static DataTemplate ImageTemplate { get; set; }
+        public static DataTemplate VideoTemplate { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
+        {
+            if(item is ItemViewModel i)
+            {
+                if(i.DisplayImage.Animated)
+                {
+                    return VideoTemplate;
+                }
+                else
+                {
+                    return ImageTemplate;
+                }
+            }
+            return base.SelectTemplateCore(item, container);
+        }
     }
 }
