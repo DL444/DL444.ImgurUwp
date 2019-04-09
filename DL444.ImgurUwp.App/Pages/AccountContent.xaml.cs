@@ -114,7 +114,7 @@ namespace DL444.ImgurUwp.App.Pages
                 if(item.AccountUrl == null || item.Item.Points == null)
                 {
                     // Non-gallery.
-                    // TODO: Implement non-owner non-gallery view.
+                    Navigation.Navigate(typeof(Pages.NonGalleryItemDetails), item);
                 }
                 else
                 {

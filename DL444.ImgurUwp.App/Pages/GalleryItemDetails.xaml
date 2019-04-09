@@ -8,159 +8,111 @@
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
     xmlns:ui="using:Microsoft.UI.Xaml.Controls"
     xmlns:vm="using:DL444.ImgurUwp.App.ViewModels"
+    xmlns:app="using:DL444.ImgurUwp.App"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Page.Resources>
-        <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
-        <local:CommentReactionImageTemplateSelector x:Key="CommentReactionImageTemplateSelector"/>
-        <DataTemplate x:Key="ImageTemplate" x:DataType="vm:ImageViewModel">
-            <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                <Grid.ContextFlyout>
-                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
-                        <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
-                            <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
-                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
-                        </ui:CommandBarFlyout.PrimaryCommands>
-                        <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
-                        </ui:CommandBarFlyout.SecondaryCommands>
-                    </ui:CommandBarFlyout>
-                </Grid.ContextFlyout>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Viewbox>
-                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}"/>
-                </Viewbox>
-                <Image Source="{x:Bind HugeThumbnail}" Stretch="UniformToFill"/>
-                <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
-                <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="VideoTemplate" x:DataType="vm:ImageViewModel">
-            <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                <Grid.ContextFlyout>
-                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
-                        <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Share" Icon="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}"/>
-                            <AppBarButton Label="Copy URL" Icon="Copy" ToolTipService.ToolTip="Copy URL" Command="{x:Bind CopyUrlCommand}"/>
-                            <AppBarButton Label="Download" Icon="Download" ToolTipService.ToolTip="Download" Command="{x:Bind DownloadCommand}"/>
-                        </ui:CommandBarFlyout.PrimaryCommands>
-                        <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Label="Report" Icon="Flag" Command="{x:Bind ReportCommand}"/>
-                        </ui:CommandBarFlyout.SecondaryCommands>
-                    </ui:CommandBarFlyout>
-                </Grid.ContextFlyout>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <!-- Implement a custom light-weight transport control. -->
-                <Viewbox>
-                    <Grid Height="{x:Bind Height}" Width="{x:Bind Width}">
-                        <MediaElement Source="{x:Bind Mp4}" Height="{x:Bind Height}" Width="{x:Bind Width}" AreTransportControlsEnabled="False" IsMuted="True" IsLooping="True"/>
-                    </Grid>
-                </Viewbox>
-                <ContentControl Content="{x:Bind RichDescriptionBox}" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Grid.Row="1" Margin="12"/>
-                <!--<TextBlock Grid.Row="1" Margin="12" Visibility="{x:Bind HasDescription, Converter={StaticResource BoolVisibilityConverter}}" Text="{x:Bind Description}" TextWrapping="Wrap"/>-->
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="CommentTemplate" x:DataType="vm:CommentViewModel">
-            <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Padding="12" Margin="0" RowSpacing="4" ColumnSpacing="12">
-                <Grid.ContextFlyout>
-                    <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
-                        <ui:CommandBarFlyout.PrimaryCommands>
-                            <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
-                                <AppBarButton.Icon>
-                                    <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
-                                </AppBarButton.Icon>
-                            </AppBarButton>
-                            <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
-                        </ui:CommandBarFlyout.PrimaryCommands>
-                        <ui:CommandBarFlyout.SecondaryCommands>
-                            <AppBarButton Icon="Delete" Label="Delete" Command="{x:Bind DeleteCommand}" Visibility="{x:Bind IsOwner, Converter={StaticResource BoolVisibilityConverter}, Mode=OneWay}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
-                                <AppBarButton.Resources>
-                                    <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
-                                </AppBarButton.Resources>
-                            </AppBarButton>
-                            <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
-                        </ui:CommandBarFlyout.SecondaryCommands>
-                    </ui:CommandBarFlyout>
-                </Grid.ContextFlyout>
-                
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+        <ResourceDictionary>
+            <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
+            <local:CommentReactionImageTemplateSelector x:Key="CommentReactionImageTemplateSelector"/>
+            <DataTemplate x:Key="CommentTemplate" x:DataType="vm:CommentViewModel">
+                <Grid Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" Padding="12" Margin="0" RowSpacing="4" ColumnSpacing="12">
+                    <Grid.ContextFlyout>
+                        <ui:CommandBarFlyout Placement="BottomEdgeAlignedLeft">
+                            <ui:CommandBarFlyout.PrimaryCommands>
+                                <AppBarButton Label="Reply" ToolTipService.ToolTip="Reply" Command="{x:Bind ShowReplyFieldCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
+                                    <AppBarButton.Icon>
+                                        <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
+                                    </AppBarButton.Icon>
+                                </AppBarButton>
+                                <AppBarButton Icon="Share" Label="Share" ToolTipService.ToolTip="Share" Command="{x:Bind ShareCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
+                            </ui:CommandBarFlyout.PrimaryCommands>
+                            <ui:CommandBarFlyout.SecondaryCommands>
+                                <AppBarButton Icon="Delete" Label="Delete" Command="{x:Bind DeleteCommand}" Visibility="{x:Bind IsOwner, Converter={StaticResource BoolVisibilityConverter}, Mode=OneWay}" Foreground="{ThemeResource AdaptiveRedColorBrush}">
+                                    <AppBarButton.Resources>
+                                        <SolidColorBrush x:Key="AppBarButtonForegroundPointerOver" Color="{ThemeResource AdaptiveRedColor}"/>
+                                    </AppBarButton.Resources>
+                                </AppBarButton>
+                                <AppBarButton Icon="Flag" Label="Report" Command="{x:Bind ReportCommand}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
+                            </ui:CommandBarFlyout.SecondaryCommands>
+                        </ui:CommandBarFlyout>
+                    </Grid.ContextFlyout>
 
-                <TextBlock Text="{x:Bind Author, Mode=OneWay}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
-                    <ContentControl Content="{x:Bind RichContentBox, Mode=OneWay}"/>
-                    <ContentControl ContentTemplateSelector="{StaticResource CommentReactionImageTemplateSelector}" Content="{x:Bind ReactionImage, Mode=OneWay}"/>
-                </StackPanel>
-                <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
-
-                <cc:SymbolTextButton Content="{x:Null}" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}" 
-                                     Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
-                    <cc:SymbolTextButton.Icon>
-                            <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
-                    </cc:SymbolTextButton.Icon>
-                </cc:SymbolTextButton>
-                <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"
-                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
-                <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left"
-                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}" 
-                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
-                    <cc:SymbolTextToggleButton.Icon>
-                        <FontIcon Glyph="&#xE1FD;"/>
-                    </cc:SymbolTextToggleButton.Icon>
-                </cc:SymbolTextToggleButton>
-
-                <Grid Grid.Row="3" Grid.ColumnSpan="4" Margin="0,8,0,0" Visibility="{x:Bind ReplyFieldVisibilty, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox PlaceholderText="Reply..." Text="{x:Bind Reply, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="140"/>
-                    <Button Command="{x:Bind SendReplyCommand}" Grid.Column="1" Margin="4,0" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
-                        <SymbolIcon Symbol="Send"/>
-                    </Button>
+
+                    <TextBlock Text="{x:Bind Author, Mode=OneWay}" Grid.ColumnSpan="3" Style="{ThemeResource CaptionTextBlockStyle}" MaxLines="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    <!--<TextBlock Text="{x:Bind Content}" Grid.Row="1" Grid.ColumnSpan="3" TextWrapping="Wrap"/>-->
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="3">
+                        <ContentControl Content="{x:Bind RichContentBox, Mode=OneWay}"/>
+                        <ContentControl ContentTemplateSelector="{StaticResource CommentReactionImageTemplateSelector}" Content="{x:Bind ReactionImage, Mode=OneWay}"/>
+                    </StackPanel>
+                    <TextBlock Text="{x:Bind DateTime, Converter={StaticResource FriendlyTimeStringConverter}}" Grid.Row="2" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
+
+                    <cc:SymbolTextButton Content="{x:Null}" ToolTipService.ToolTip="Reply" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                     HoverForeground="{ThemeResource SystemControlForegroundBaseHighBrush}" PressedForeground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Command="{x:Bind ShowReplyFieldCommand}" 
+                                     Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
+                        <cc:SymbolTextButton.Icon>
+                            <FontIcon FontFamily="{ThemeResource ImgurMDL2Font}" Glyph="&#xE901;"/>
+                        </cc:SymbolTextButton.Icon>
+                    </cc:SymbolTextButton>
+                    <cc:SymbolTextToggleButton Content="{x:Bind Ups, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" Icon="Up" IsChecked="{x:Bind Upvoted}" Command="{x:Bind UpvoteCommand}" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" 
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveGreenColorBrush}" PressedForeground="DarkGreen" CheckedForeground="{ThemeResource AdaptiveGreenColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveGreenColorBrush}"
+                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}"/>
+                    <cc:SymbolTextToggleButton Content="{x:Bind Downs, Mode=OneWay, Converter={StaticResource NumberStringConverter}}" IsChecked="{x:Bind Downvoted}" Command="{x:Bind DownvoteCommand}" Grid.Row="2" Grid.Column="3" HorizontalAlignment="Left"
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" HoverForeground="{ThemeResource AdaptiveRedColorBrush}" PressedForeground="DarkRed" CheckedForeground="{ThemeResource AdaptiveRedColorBrush}" CheckedHoverForeground="{ThemeResource AdaptiveRedColorBrush}" 
+                                           Visibility="{x:Bind Deleted, Converter={StaticResource InvertedBoolVisibilityConverter}, Mode=OneWay}">
+                        <cc:SymbolTextToggleButton.Icon>
+                            <FontIcon Glyph="&#xE1FD;"/>
+                        </cc:SymbolTextToggleButton.Icon>
+                    </cc:SymbolTextToggleButton>
+
+                    <Grid Grid.Row="3" Grid.ColumnSpan="4" Margin="0,8,0,0" Visibility="{x:Bind ReplyFieldVisibilty, Mode=OneWay}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox PlaceholderText="Reply..." Text="{x:Bind Reply, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" MaxLength="140"/>
+                        <Button Command="{x:Bind SendReplyCommand}" Grid.Column="1" Margin="4,0" Height="{ThemeResource TextControlThemeMinHeight}" Width="{ThemeResource TextControlThemeMinHeight}" Padding="0" Style="{ThemeResource SubtleButtonStyle}">
+                            <SymbolIcon Symbol="Send"/>
+                        </Button>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="GalleryItemTemplate" x:DataType="vm:GalleryItemViewModel">
-            <Grid Padding="8" ColumnSpacing="12" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Image Source="{x:Bind Thumbnail}" Height="80" Width="80" Stretch="UniformToFill"/>
-                <StackPanel Grid.Column="1" Spacing="4">
-                    <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" MaxLines="3"/>
-                    <TextBlock Text="{x:Bind AccountUrl}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
-                </StackPanel>
-            </Grid>
-        </DataTemplate>
-        <DataTemplate x:Key="CommentImageTemplate" x:DataType="vm:CommentReactionImage">
-            <Image Source="{x:Bind Url}" Height="150"/>
-        </DataTemplate>
-        <DataTemplate x:Key="CommentVideoTemplate" x:DataType="vm:CommentReactionImage">
-            <MediaElement Source="{x:Bind Url}" Height="150" IsMuted="True" IsLooping="True" AutoPlay="True" AreTransportControlsEnabled="False"/>
-        </DataTemplate>
+            </DataTemplate>
+            <DataTemplate x:Key="GalleryItemTemplate" x:DataType="vm:GalleryItemViewModel">
+                <Grid Padding="8" ColumnSpacing="12" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Source="{x:Bind Thumbnail}" Height="80" Width="80" Stretch="UniformToFill"/>
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" MaxLines="3"/>
+                        <TextBlock Text="{x:Bind AccountUrl}" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="CommentImageTemplate" x:DataType="vm:CommentReactionImage">
+                <Image Source="{x:Bind Url}" Height="150"/>
+            </DataTemplate>
+            <DataTemplate x:Key="CommentVideoTemplate" x:DataType="vm:CommentReactionImage">
+                <MediaElement Source="{x:Bind Url}" Height="150" IsMuted="True" IsLooping="True" AutoPlay="True" AreTransportControlsEnabled="False"/>
+            </DataTemplate>
+            <ResourceDictionary.MergedDictionaries>
+                <app:Templates/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Page.Resources>
 
     <SplitView x:Name="RootSplitView" PanePlacement="Right" OpenPaneLength="420" IsPaneOpen="True" DisplayMode="Inline">

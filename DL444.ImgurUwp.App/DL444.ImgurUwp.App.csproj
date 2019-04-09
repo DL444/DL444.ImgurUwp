@@ -160,6 +160,9 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="OAuthClient.cs" />
+    <Compile Include="Pages\NonGalleryItemDetails.xaml.cs">
+      <DependentUpon>NonGalleryItemDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Tag.xaml.cs">
       <DependentUpon>Tag.xaml</DependentUpon>
     </Compile>
@@ -192,6 +195,7 @@
     <Compile Include="ViewModels\GalleryViewPageViewModel.cs" />
     <Compile Include="ViewModels\MessageBus\Messages.cs" />
     <Compile Include="ViewModels\MessageBus\ViewModelMessageBus.cs" />
+    <Compile Include="ViewModels\NonGalleryItemDetailsPageViewModel.cs" />
     <Compile Include="ViewModels\TagPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelManager.cs" />
     <Compile Include="ViewModels\AccountAlbumViewModel.cs" />
@@ -319,6 +323,10 @@
     <Page Include="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\NonGalleryItemDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\Tag.xaml">
       <SubType>Designer</SubType>

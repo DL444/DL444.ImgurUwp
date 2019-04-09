@@ -1,0 +1,71 @@
+﻿<Page
+    x:Class="DL444.ImgurUwp.App.Pages.NonGalleryItemDetails"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DL444.ImgurUwp.App.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:app="using:DL444.ImgurUwp.App"
+    xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <ResourceDictionary>
+            <local:SubItemTemplateSelector x:Key="SubItemTemplateSelector"/>
+            <ResourceDictionary.MergedDictionaries>
+                <app:Templates/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <ListView Margin="16,0" Padding="0,12" HorizontalAlignment="Stretch" ItemsSource="{x:Bind ViewModel.Images}" ItemTemplateSelector="{StaticResource SubItemTemplateSelector}"
+                  SelectionMode="None" IsItemClickEnabled="False">
+            <ListView.Header>
+                <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" ColumnSpacing="8" RowSpacing="8" Margin="0,0,0,16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind ViewModel.Item.Title, Mode=OneWay, TargetNullValue=Untitled}" Grid.ColumnSpan="2" Margin="0,0,16,0" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                    <cc:SymbolTextLabel Icon="Clock" Content="{x:Bind ViewModel.Item.DateTime, Converter={StaticResource FriendlyTimeStringConverter}, Mode=OneWay}" Grid.Row="1" HorizontalAlignment="Left" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                </Grid>
+            </ListView.Header>
+            <ListView.Footer>
+                <Grid MaxWidth="{ThemeResource ImageListViewMaxWidth}" Background="{ThemeResource SystemControlBackgroundBaseLowBrush}" ColumnSpacing="16" Padding="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                  
+                    <!--<cc:SymbolTextToggleButton ToolTipService.ToolTip="Favorite" IsChecked="{x:Bind ViewModel.Item.Favorite, Mode=OneWay}" Command="{x:Bind ViewModel.Item.FavoriteCommand, Mode=OneWay}" CheckedForeground="{ThemeResource SystemAccentColorBrush}">
+                        <cc:SymbolTextToggleButton.Icon>
+                            <FontIcon Glyph="{x:Bind ViewModel.Item.Favorite, Converter={StaticResource FavoriteIconConverter}, Mode=OneWay}"/>
+                        </cc:SymbolTextToggleButton.Icon>
+                    </cc:SymbolTextToggleButton>-->
+                    
+                    <cc:SymbolTextButton Icon="Share" Command="{x:Bind ViewModel.Item.ShareCommand, Mode=OneWay}" ToolTipService.ToolTip="Share" Grid.Column="2"/>
+                    <cc:SymbolTextButton Icon="Download" ToolTipService.ToolTip="Download all" Grid.Column="3"/>
+                </Grid>
+            </ListView.Footer>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0,8"/>
+                    <Setter Property="MaxWidth" Value="{ThemeResource ImageListViewMaxWidth}" />
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
+    </Grid>
+</Page>
