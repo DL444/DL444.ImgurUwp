@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using DL444.ImgurUwp.App.ViewModels;
-using System.ComponentModel;
 using DL444.ImgurUwp.ApiClient;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +24,7 @@ namespace DL444.ImgurUwp.App.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class GalleryView : Page, INotifyPropertyChanged
+    public sealed partial class GalleryView : Page
     {
         public GalleryView()
         {
@@ -44,16 +43,12 @@ namespace DL444.ImgurUwp.App.Pages
                 if (cache != null && cache.Section == sect)
                 {
                     ViewModel = cache;
-                    PopularSortOption.IsChecked = ViewModel.Sort == DisplayParams.Sort.Viral;
-                    NewestSortOption.IsChecked = ViewModel.Sort == DisplayParams.Sort.Time;
                     Bindings.Update();
                     await ViewModel.RecoverScrollPosition(RootListView);
                 }
                 else
                 {
                     DisplayParams.Sort sort = sect == DisplayParams.Section.User ? DisplayParams.Sort.Time : DisplayParams.Sort.Viral;
-                    PopularSortOption.IsChecked = sort == DisplayParams.Sort.Viral;
-                    NewestSortOption.IsChecked = sort == DisplayParams.Sort.Time;
                     ViewModel = new GalleryViewPageViewModel(sect, sort);
                     Bindings.Update();
                     ViewModelCacheManager.Instance.Push(ViewModel);
@@ -74,28 +69,11 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void FrontPageGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
             var item = e.ClickedItem as GalleryItemViewModel;
             GalleryIncrementalSource source = new GalleryIncrementalSource(ViewModel.Section, ViewModel.Sort, ViewModel.Items, ViewModel.Items.Source.Page);
             Navigation.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(item, source));
-        }
-
-        private void PopularSortOption_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeSort(DisplayParams.Sort.Viral);
-        }
-        private void NewestSortOption_Click(object sender, RoutedEventArgs e)
-        {
-            ChangeSort(DisplayParams.Sort.Time);
-        }
-        private void ChangeSort(DisplayParams.Sort sort)
-        {
-            PopularSortOption.IsChecked = sort == DisplayParams.Sort.Viral;
-            NewestSortOption.IsChecked = sort == DisplayParams.Sort.Time;
-            ViewModel.Sort = sort;
         }
 
         private void GoUpButton_Click(object sender, RoutedEventArgs e)

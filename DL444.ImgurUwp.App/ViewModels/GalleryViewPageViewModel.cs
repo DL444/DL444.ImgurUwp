@@ -49,10 +49,17 @@ namespace DL444.ImgurUwp.App.ViewModels
                     _sort = value;
                     var source = new GalleryIncrementalSource(Section, value);
                     Items = new IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel>(source);
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SortByPopularity)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SortByTime)));
                 }
             }
         }
 
+        public bool SortByPopularity => Sort == DisplayParams.Sort.Viral;
+        public bool SortByTime => Sort == DisplayParams.Sort.Time;
+
+        public Command SortByPopularityCommand { get; }
+        public Command SortByTimeCommand { get; }
 
         public GalleryViewPageViewModel() : this(DisplayParams.Section.Hot, DisplayParams.Sort.Viral) { }
         public GalleryViewPageViewModel(DisplayParams.Section sect, DisplayParams.Sort sort)
@@ -61,6 +68,8 @@ namespace DL444.ImgurUwp.App.ViewModels
             _sort = sort;
             var source = new GalleryIncrementalSource(Section, Sort);
             Items = new IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel>(source);
+            SortByPopularityCommand = new Command(() => Sort = DisplayParams.Sort.Viral);
+            SortByTimeCommand = new Command(() => Sort = DisplayParams.Sort.Time);
             favoriteChangedHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>
             {
                 var item = Items.FirstOrDefault(i => i.Id == x.Id && i.IsAlbum == x.IsAlbum);

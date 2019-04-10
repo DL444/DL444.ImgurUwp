@@ -76,8 +76,8 @@
                 <AppBarButton Label="Sort" Icon="Sort">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <ToggleMenuFlyoutItem x:Name="PopularSortOption" Text="Popular" Click="PopularSortOption_Click"/>
-                            <ToggleMenuFlyoutItem x:Name="NewestSortOption" Text="Newest" Click="NewestSortOption_Click"/>
+                            <ToggleMenuFlyoutItem x:Name="PopularSortOption" Text="Popular" IsChecked="{x:Bind ViewModel.SortByPopularity, Mode=OneWay}" Command="{x:Bind ViewModel.SortByPopularityCommand}"/>
+                            <ToggleMenuFlyoutItem x:Name="NewestSortOption" Text="Recent" IsChecked="{x:Bind ViewModel.SortByTime, Mode=OneWay}" Command="{x:Bind ViewModel.SortByTimeCommand}"/>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>

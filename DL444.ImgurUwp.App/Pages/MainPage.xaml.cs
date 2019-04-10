@@ -145,6 +145,14 @@ namespace DL444.ImgurUwp.App.Pages
             Bindings.Update();
         }
 
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if(args.QueryText != null)
+            {
+                Navigation.Navigate(typeof(SearchResult), args.QueryText);
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

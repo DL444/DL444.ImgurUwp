@@ -136,7 +136,7 @@
                 <!--<ui:NavigationViewItem Content="Random" Icon="Shuffle" Tag="random"/>--> <!-- API deprecated. -->
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.AutoSuggestBox>
-                <AutoSuggestBox PlaceholderText="Search gallery" Width="180" QueryIcon="Find"/>
+                <AutoSuggestBox PlaceholderText="Search gallery" Width="180" QueryIcon="Find" QuerySubmitted="AutoSuggestBox_QuerySubmitted"/>
             </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.PaneFooter>
                 <StackPanel Orientation="Horizontal">

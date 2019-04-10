@@ -163,6 +163,9 @@
     <Compile Include="Pages\NonGalleryItemDetails.xaml.cs">
       <DependentUpon>NonGalleryItemDetails.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SearchResult.xaml.cs">
+      <DependentUpon>SearchResult.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Tag.xaml.cs">
       <DependentUpon>Tag.xaml</DependentUpon>
     </Compile>
@@ -196,6 +199,7 @@
     <Compile Include="ViewModels\MessageBus\Messages.cs" />
     <Compile Include="ViewModels\MessageBus\ViewModelMessageBus.cs" />
     <Compile Include="ViewModels\NonGalleryItemDetailsPageViewModel.cs" />
+    <Compile Include="ViewModels\SearchResultViewModel.cs" />
     <Compile Include="ViewModels\TagPageViewModel.cs" />
     <Compile Include="ViewModels\ViewModelManager.cs" />
     <Compile Include="ViewModels\AccountAlbumViewModel.cs" />
@@ -325,6 +329,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\NonGalleryItemDetails.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SearchResult.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
