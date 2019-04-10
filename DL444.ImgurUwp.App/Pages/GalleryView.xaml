@@ -76,13 +76,12 @@
                 <AppBarButton Label="Sort" Icon="Sort">
                     <AppBarButton.Flyout>
                         <MenuFlyout>
-                            <ToggleMenuFlyoutItem Text="Popular" Icon="Like"/>
-                            <ToggleMenuFlyoutItem Text="Newest" Icon="Clock"/>
+                            <ToggleMenuFlyoutItem x:Name="PopularSortOption" Text="Popular" Click="PopularSortOption_Click"/>
+                            <ToggleMenuFlyoutItem x:Name="NewestSortOption" Text="Newest" Click="NewestSortOption_Click"/>
                         </MenuFlyout>
                     </AppBarButton.Flyout>
                 </AppBarButton>
-                <AppBarButton Label="Random" Icon="Shuffle"/>
-                <AppBarButton Label="Go Top" Icon="Up"/>
+                <AppBarButton Label="Go Top" Icon="Up" Click="GoUpButton_Click"/>
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

@@ -133,7 +133,7 @@
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="Most Viral" Icon="OutlineStar" Tag="viral"/>
                 <ui:NavigationViewItem Content="User Submitted" Icon="People" Tag="user"/>
-                <ui:NavigationViewItem Content="Random" Icon="Shuffle" Tag="random"/>
+                <!--<ui:NavigationViewItem Content="Random" Icon="Shuffle" Tag="random"/>--> <!-- API deprecated. -->
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.AutoSuggestBox>
                 <AutoSuggestBox PlaceholderText="Search gallery" Width="180" QueryIcon="Find"/>
