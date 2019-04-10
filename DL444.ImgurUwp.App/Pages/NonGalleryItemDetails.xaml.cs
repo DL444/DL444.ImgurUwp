@@ -26,6 +26,8 @@ namespace DL444.ImgurUwp.App.Pages
         public NonGalleryItemDetails()
         {
             this.InitializeComponent();
+            SubItemTemplateSelector.ImageTemplate = this.Resources["ImageTemplate"] as DataTemplate;
+            SubItemTemplateSelector.VideoTemplate = this.Resources["VideoTemplate"] as DataTemplate;
         }
 
         NonGalleryItemDetailsPageViewModel ViewModel { get; set; }
