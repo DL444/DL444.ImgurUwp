@@ -233,6 +233,12 @@ namespace DL444.ImgurUwp.ApiClient
             }
         }
 
+        /// <summary>
+        /// Get all the items in gallery favorited by the specified user.
+        /// </summary>
+        /// <param name="username">The account to get items for.</param>
+        /// <param name="page">The page number. Defaults to 0.</param>
+        /// <returns>The items in gallery favorited by the user.</returns>
         public async Task<IEnumerable<IGalleryItem>> GetAccountLikesAsync(string username, int page = 0)
         {
             if (username == null) { throw new ArgumentNullException(nameof(username)); }

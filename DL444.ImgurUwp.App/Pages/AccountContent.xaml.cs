@@ -93,7 +93,7 @@ namespace DL444.ImgurUwp.App.Pages
 
         private void GalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
-            Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(e.ClickedItem as GalleryItemViewModel, new StaticIncrementalSource<GalleryItemViewModel>(ViewModel.GalleryFavorites)));
+            Navigation.ContentFrame.Navigate(typeof(GalleryItemDetails), new GalleryItemDetailsNavigationParameter(e.ClickedItem as GalleryItemViewModel, ViewModel.GalleryFavorites.Source));
         }
 
         private void NonGalleryFavGrid_ItemClick(object sender, ItemClickEventArgs e)
@@ -147,7 +147,7 @@ namespace DL444.ImgurUwp.App.Pages
             }
         }
 
-        private void AllItemGrd_ItemClick(object sender, ItemClickEventArgs e)
+        private void AllItemGrid_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (e.ClickedItem is ItemViewModel item)
             {
@@ -166,6 +166,14 @@ namespace DL444.ImgurUwp.App.Pages
                         Navigation.Navigate(typeof(Upload), item);
                     }
                 }
+            }
+        }
+
+        private void CommentList_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if(e.ClickedItem is CommentViewModel c)
+            {
+                Navigation.Navigate(typeof(GalleryItemDetails), c.ImageId);
             }
         }
     }

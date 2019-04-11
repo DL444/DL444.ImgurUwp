@@ -20,7 +20,7 @@
 
     <Grid>
         <tkc:AdaptiveGridView x:Name="RootList" ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}" SelectionMode="None" IsItemClickEnabled="True"
-                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="ResultGrid_ItemClick"
+                              ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemClick="ResultGrid_ItemClick" StretchContentForSingleRow="False"
                               DesiredWidth="300" ItemHeight="300" Padding="16,0" VerticalAlignment="Top">
             <tkc:AdaptiveGridView.Header>
                 <tkc:ScrollHeader Mode="QuickReturn">

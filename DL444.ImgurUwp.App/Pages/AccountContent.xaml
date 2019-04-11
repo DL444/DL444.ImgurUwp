@@ -38,14 +38,14 @@
         <Pivot x:Name="RootPivot" Grid.Row="1" Margin="20,0">
             <PivotItem Header="Favorites" Tag="Favorites" VerticalContentAlignment="Stretch">
                 <Grid>
-                    <tkc:AdaptiveGridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind ViewModel.IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                    <tkc:AdaptiveGridView x:Name="GalleryFavGrid" Padding="0,8" x:Load="{x:Bind ViewModel.IsNotOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" StretchContentForSingleRow="False"
                               ItemTemplate="{ThemeResource GalleryItemGridTemplate}" ItemsSource="{x:Bind ViewModel.GalleryFavorites}" ItemClick="GalleryFavGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
-                    <tkc:AdaptiveGridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind ViewModel.IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None"
+                    <tkc:AdaptiveGridView x:Name="FavGrid" Padding="0,8" Grid.Row="1" x:Load="{x:Bind ViewModel.IsOwner, Mode=OneWay}" IsItemClickEnabled="True" SelectionMode="None" StretchContentForSingleRow="False"
                               ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" ItemsSource="{x:Bind ViewModel.NonGalleryFavorites}" ItemClick="NonGalleryFavGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
                 </Grid>
             </PivotItem>
             <PivotItem Header="Comments" Tag="Comments">
-                <ListView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.Comments}">
+                <ListView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.Comments}" ItemClick="CommentList_ItemClick">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="vm:CommentViewModel">
                             <Grid Padding="12,8" ColumnSpacing="12">
@@ -80,16 +80,16 @@
                 </ListView>
             </PivotItem>
             <PivotItem x:Name="AlbumPivot" Header="Albums" Tag="Albums" x:Load="{x:Bind ViewModel.IsOwner}">
-                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.MyAlbums, Mode=OneWay}"
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemsSource="{x:Bind ViewModel.MyAlbums, Mode=OneWay}" StretchContentForSingleRow="False"
                           ItemClick="AlbumGrid_ItemClick" ItemTemplate="{ThemeResource AccountAlbumGridTemplate}" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
             <PivotItem x:Name="ImagePivot" Header="Images" Tag="Images" x:Load="{x:Bind ViewModel.IsOwner}">
-                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" StretchContentForSingleRow="False"
                                       ItemsSource="{x:Bind ViewModel.MyImages, Mode=OneWay}" ItemClick="ImageGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
             <PivotItem x:Name="ItemsPivot" Header="All uploads" Tag="Items" x:Load="{x:Bind ViewModel.IsOwner}">
-                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" 
-                                      ItemsSource="{x:Bind ViewModel.MyItems, Mode=OneWay}" ItemClick="AllItemGrd_ItemClick" DesiredWidth="300" ItemHeight="300"/>
+                <tkc:AdaptiveGridView Padding="0,8" IsItemClickEnabled="True" SelectionMode="None" ItemTemplate="{ThemeResource NonGalleryItemGridTemplate}" StretchContentForSingleRow="False"
+                                      ItemsSource="{x:Bind ViewModel.MyItems, Mode=OneWay}" ItemClick="AllItemGrid_ItemClick" DesiredWidth="300" ItemHeight="300"/>
             </PivotItem>
         </Pivot>
     </Grid>
