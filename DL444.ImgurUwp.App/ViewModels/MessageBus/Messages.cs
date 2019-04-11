@@ -170,4 +170,22 @@ namespace DL444.ImgurUwp.App.ViewModels.MessageBus
     {
         public CommentDeleteMessageListener(Func<CommentDeleteMessage, bool> handler) : base(handler) { }
     }
+
+    class GalleryItemVoteMessage : Message
+    {
+        public GalleryItemVoteMessage(string id, bool upvoted, bool downvoted)
+        {
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Upvoted = upvoted;
+            Downvoted = downvoted;
+        }
+
+        public string Id { get; }
+        public bool Upvoted { get; }
+        public bool Downvoted { get; }
+    }
+    class GalleryItemVoteMessageListener : MessageListener<GalleryItemVoteMessage>
+    {
+        public GalleryItemVoteMessageListener(Func<GalleryItemVoteMessage, bool> handler) : base(handler) { }
+    }
 }

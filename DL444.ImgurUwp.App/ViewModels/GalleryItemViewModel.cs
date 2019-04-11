@@ -227,6 +227,17 @@ namespace DL444.ImgurUwp.App.ViewModels
             Votes votes = await ApiClient.Client.GetGalleryVotesAsync(Id);
             Ups = votes.Ups;
             Downs = votes.Downs;
+            if(result == true)
+            {
+                if(vote == ImgurUwp.ApiClient.Vote.Up) { Upvoted = !Upvoted; }
+                else { Downvoted = !Downvoted; }
+                MessageBus.ViewModelMessageBus.Instance.SendMessage(new MessageBus.GalleryItemVoteMessage(Id, Upvoted, Downvoted));
+            }
+            else
+            {
+                if (vote == ImgurUwp.ApiClient.Vote.Up) { Upvoted = Upvoted; }
+                else { Downvoted = Downvoted; }
+            }
             return result;
         }
         public async Task<bool> FavoriteItem()

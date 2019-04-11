@@ -13,6 +13,8 @@ namespace DL444.ImgurUwp.App.ViewModels
     class GalleryViewPageViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
         readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
+        readonly Func<MessageBus.GalleryItemVoteMessage, bool> itemVoteHandler;
+
         private IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> _items;
         public IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> Items
         {
@@ -77,6 +79,16 @@ namespace DL444.ImgurUwp.App.ViewModels
                 item.Favorite = true;
                 return true;
             });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.FavoriteChangedMessageListener(favoriteChangedHandler));
+            itemVoteHandler = new Func<MessageBus.GalleryItemVoteMessage, bool>(x =>
+            {
+                var item = Items.FirstOrDefault(i => i.Id == x.Id);
+                if (item == null) { return false; }
+                item.Upvoted = x.Upvoted;
+                item.Downvoted = x.Downvoted;
+                return true;
+            });
+            MessageBus.ViewModelMessageBus.Instance.RegisterListener(new MessageBus.GalleryItemVoteMessageListener(itemVoteHandler));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

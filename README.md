@@ -31,7 +31,7 @@ __Private Beta 0.1.0__
 - [x] Share Target  
 - [x] Tags  
 - [x] My Posts  
-- [ ] My Private Uploads (in work)  
+- [x] My Private Uploads  
 - [x] User Account  
 - [ ] Settings  
 - [ ] Adaptive Design  
@@ -51,3 +51,4 @@ __Public Beta 0.2.0__
 - [ ] Keyboard shortcut  
 ## Known issues
 - It is said that Imgur might block some China users from completing OAuth authentication, and Imgur is inaccessible for some China users. If you are in China and are experiencing issues, please try again from _outside_ of China.
+- The _Adjust video based on lighting_ option in Windows Settings may trigger a bug in some Intel graphics drivers that results in video rendering glitches. This issue is not related to this app, but if you're having problem (in any video-playing app), try turning it off.
