@@ -45,7 +45,7 @@ namespace DL444.ImgurUwp.App.Pages
             this.InitializeComponent();
             SetTitleBarButtonColor();
             this.ActualThemeChanged += (sender, e) => SetTitleBarButtonColor();
-            Navigation.InitializeNavigationHelper(ContentFrame);
+            Navigation.InitializeNavigationHelper(ContentFrame, InAppNotification);
             ContentFrame.CacheSize = 5;
         }
 
@@ -53,10 +53,17 @@ namespace DL444.ImgurUwp.App.Pages
         {
             base.OnNavigatedTo(e);
 
-            ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
-
-            await RefreshAccount();
+            try
+            {
+                await RefreshAccount();
+            }
+            catch (Exception)
+            {
+                (Window.Current.Content as Frame).Navigate(typeof(GeneralLoadingErrorView), null, new Windows.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo());
+                return;
+            }
             ApiClient.OwnerAccount = CurrentAccount.Username;
+            ContentFrame.Navigate(typeof(GalleryView), DisplayParams.Section.Hot);
         }
 
         void SetTitleBarButtonColor()

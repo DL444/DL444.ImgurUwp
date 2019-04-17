@@ -1,6 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Toolkit.Uwp.UI.Controls;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 
 namespace DL444.ImgurUwp.App
@@ -53,15 +56,27 @@ namespace DL444.ImgurUwp.App
     static class Navigation
     {
         public static Frame ContentFrame { get; private set; }
+        public static InAppNotification InAppNotification { get; private set; }
 
         public static void Navigate(Type pageType, object parameter)
         {
             ContentFrame.Navigate(pageType, parameter);
         }
+        public static void ShowNotification(string message, int duration = 5000)
+        {
+            if(message == null) { return; }
+            InAppNotification.Show(message, duration);
+        }
 
-        public static void InitializeNavigationHelper(Frame contentFrame)
+        public static void ShowItemFetchError(int duration = 5000)
+        {
+            ShowNotification("Something happened fetching new items.", duration);
+        }
+
+        public static void InitializeNavigationHelper(Frame contentFrame, InAppNotification inAppNotification)
         {
             ContentFrame = contentFrame;
+            InAppNotification = inAppNotification;
         }
     }
 }

@@ -11,6 +11,7 @@ namespace DL444.ImgurUwp.App.ViewModels
 {
     class TagPageViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
+        static readonly Action<Exception> loadFaultHandler = x => Navigation.ShowItemFetchError();
         public TagViewModel ViewModel { get; set; }
 
         private IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel> _items;
@@ -41,7 +42,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             {
                 images.Add(new GalleryItemViewModel(i));
             }
-            vm.Items = new IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel>(new TagItemsSource(tagName, images, 1));
+            vm.Items = new IncrementalLoadingCollection<TagItemsSource, GalleryItemViewModel>(new TagItemsSource(tagName, images, 1), onError: loadFaultHandler);
             return vm;
         }
 

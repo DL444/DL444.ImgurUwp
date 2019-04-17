@@ -12,6 +12,8 @@ namespace DL444.ImgurUwp.App.ViewModels
 {
     class SearchResultViewModel : CachingViewModel, INotifyPropertyChanged, IListViewPersistent
     {
+        static readonly Action<Exception> loadFaultHandler = x => Navigation.ShowItemFetchError();
+
         private DisplayParams.Sort _sort;
 
         public IncrementalLoadingCollection<SearchResultIncrementalSource, GalleryItemViewModel> Items { get; private set; }
@@ -24,7 +26,7 @@ namespace DL444.ImgurUwp.App.ViewModels
                 if(_sort == value) { return; }
                 _sort = value;
                 SearchResultIncrementalSource source = new SearchResultIncrementalSource(Terms, value);
-                Items = new IncrementalLoadingCollection<SearchResultIncrementalSource, GalleryItemViewModel>(source);
+                Items = new IncrementalLoadingCollection<SearchResultIncrementalSource, GalleryItemViewModel>(source, onError: loadFaultHandler);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Sort)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Items)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SortByPopularity)));
@@ -40,7 +42,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             Terms = terms ?? throw new ArgumentNullException(nameof(terms));
             Sort = sort;
             SearchResultIncrementalSource source = new SearchResultIncrementalSource(Terms, sort);
-            Items = new IncrementalLoadingCollection<SearchResultIncrementalSource, GalleryItemViewModel>(source);
+            Items = new IncrementalLoadingCollection<SearchResultIncrementalSource, GalleryItemViewModel>(source, onError: loadFaultHandler);
             SortByPopularityCommand = new Command(() => Sort = DisplayParams.Sort.Viral);
             SortByTimeCommand = new Command(() => Sort = DisplayParams.Sort.Time);
         }

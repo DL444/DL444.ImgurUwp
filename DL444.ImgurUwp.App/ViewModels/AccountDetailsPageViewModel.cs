@@ -19,6 +19,7 @@ namespace DL444.ImgurUwp.App.ViewModels
         readonly Func<MessageBus.GalleryRemoveMessage, bool> galleryRemoveHandler;
         readonly Func<MessageBus.BioChangedMessage, bool> bioChangeHandler;
         readonly Func<MessageBus.GalleryPostMessage, bool> galleryPostHandler;
+        static readonly Action<Exception> itemLoadFaultHandler = x => Navigation.ShowItemFetchError();
 
         public AccountViewModel ViewModel
         {
@@ -95,7 +96,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             r.HiddenTrophiesCount = r.Trophies.Count - r.DisplayedTrophies.Count;
 
             AccountPostSource source = new AccountPostSource(vm.Username);
-            r.Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source);
+            r.Posts = new IncrementalLoadingCollection<AccountPostSource, GalleryItemViewModel>(source, onError: itemLoadFaultHandler);
             return r;
         }
 

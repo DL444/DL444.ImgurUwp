@@ -8,8 +8,10 @@ namespace DL444.ImgurUwp.App.ViewModels
 {
     class AccountImagePickerViewModel
     {
+        static readonly Action<Exception> loadFaultHandler = x => Navigation.ShowItemFetchError();
+
         public IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel> Images { get; } 
-            = new IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>();
+            = new IncrementalLoadingCollection<MyImageIncrementalSource, ItemViewModel>(onError: loadFaultHandler);
         public List<ItemViewModel> SelectedImages { get; } = new List<ItemViewModel>();
 
         public void UpdateSelection(IEnumerable<ItemViewModel> addedItems, IEnumerable<ItemViewModel> removedItems)

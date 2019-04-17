@@ -14,6 +14,7 @@ namespace DL444.ImgurUwp.App.ViewModels
     {
         readonly Func<MessageBus.FavoriteChangedMessage, bool> favoriteChangedHandler;
         readonly Func<MessageBus.GalleryItemVoteMessage, bool> itemVoteHandler;
+        static readonly Action<Exception> loadFaultHandler = x => Navigation.ShowItemFetchError();
 
         private IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> _items;
         public IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel> Items
@@ -69,7 +70,7 @@ namespace DL444.ImgurUwp.App.ViewModels
             _section = sect;
             _sort = sort;
             var source = new GalleryIncrementalSource(Section, Sort);
-            Items = new IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel>(source);
+            Items = new IncrementalLoadingCollection<GalleryIncrementalSource, GalleryItemViewModel>(source, onError: loadFaultHandler);
             SortByPopularityCommand = new Command(() => Sort = DisplayParams.Sort.Viral);
             SortByTimeCommand = new Command(() => Sort = DisplayParams.Sort.Time);
             favoriteChangedHandler = new Func<MessageBus.FavoriteChangedMessage, bool>(x =>

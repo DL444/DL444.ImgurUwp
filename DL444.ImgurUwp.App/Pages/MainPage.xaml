@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Microsoft.UI.Xaml.Controls"
     xmlns:cc="using:DL444.ImgurUwp.App.Controls"
+    xmlns:tkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -198,5 +199,7 @@
             <Frame x:Name="ContentFrame" Navigated="ContentFrame_Navigated"/>
 
         </ui:NavigationView>
+
+        <tkc:InAppNotification x:Name="InAppNotification"/>
     </Grid>
 </Page>
